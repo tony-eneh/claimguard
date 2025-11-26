@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import { config, validateConfig } from "./config";
 import { createProvider } from "./blockchain";
 import { accessRouter } from "./routes/access";
+import { policyRouter } from "./routes/policy";
 
 async function main() {
   validateConfig();
@@ -17,6 +18,7 @@ async function main() {
   });
 
   app.use("/api", accessRouter(provider));
+  app.use("/api", policyRouter(provider));
 
   app.listen(config.port, () => {
     console.log(`ClaimGuard PEG listening on port ${config.port}`);
