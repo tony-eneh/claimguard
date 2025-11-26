@@ -1,5 +1,5 @@
 {
-  "name": "blockchain_action_aware_abac_for_auto_insurance",
+  "name": "claimguard",
   "version": "1.0.0",
   "type": "module",
   "devDependencies": {
