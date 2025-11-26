@@ -1,0 +1,42 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-caf1d51c8354e96d6c089868c9787cebdbb90fdf",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "userSourceNameMap": {
+    "contracts/SubjectAttributeRegistry.sol": "project/contracts/SubjectAttributeRegistry.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/SubjectAttributeRegistry.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.20;\r\n\r\nimport \"./Types.sol\";\r\n\r\n/// ------------------------------------------------------------------------\r\n/// Contract: SubjectAttributeRegistry\r\n/// ------------------------------------------------------------------------\r\n\r\ncontract SubjectAttributeRegistry {\r\n    address public admin;\r\n\r\n    mapping(address => SubjectAttrs) private _subjects;\r\n\r\n    event AdminChanged(address indexed oldAdmin, address indexed newAdmin);\r\n\r\n    event SubjectAttributesSet(\r\n        address indexed subject,\r\n        Role role,\r\n        bytes32 orgId,\r\n        bytes32 jurisdiction,\r\n        bool isActive\r\n    );\r\n\r\n    modifier onlyAdmin() {\r\n        require(msg.sender == admin, \"SubjectAttr: only admin\");\r\n        _;\r\n    }\r\n\r\n    constructor() {\r\n        admin = msg.sender;\r\n        emit AdminChanged(address(0), msg.sender);\r\n    }\r\n\r\n    function setAdmin(address newAdmin) external onlyAdmin {\r\n        require(newAdmin != address(0), \"SubjectAttr: zero addr\");\r\n        emit AdminChanged(admin, newAdmin);\r\n        admin = newAdmin;\r\n    }\r\n\r\n    /// @notice Set attributes for a subject (user, organization agent, etc.).\r\n    function setSubjectAttributes(\r\n        address subject,\r\n        Role role,\r\n        bytes32 orgId,\r\n        bytes32 jurisdiction,\r\n        bool isActive\r\n    ) external onlyAdmin {\r\n        _subjects[subject] = SubjectAttrs({\r\n            role: role,\r\n            orgId: orgId,\r\n            jurisdiction: jurisdiction,\r\n            isActive: isActive\r\n        });\r\n\r\n        emit SubjectAttributesSet(subject, role, orgId, jurisdiction, isActive);\r\n    }\r\n\r\n    /// @notice Get full attribute struct for a subject.\r\n    function getSubjectAttrs(address subject) external view returns (SubjectAttrs memory) {\r\n        return _subjects[subject];\r\n    }\r\n}\r\n"
+      },
+      "project/contracts/Types.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.20;\r\n\r\n/// ------------------------------------------------------------------------\r\n/// Shared Types for ClaimGuard\r\n/// ------------------------------------------------------------------------\r\n\r\n/// @dev High-level subject roles in the auto-insurance ecosystem.\r\nenum Role {\r\n    NONE,\r\n    DRIVER,\r\n    INSURER,\r\n    REINSURER,\r\n    ADJUSTER,\r\n    POLICE,\r\n    COURT,\r\n    GARAGE,\r\n    REGULATOR,\r\n    CLOUD_PROVIDER\r\n}\r\n\r\n/// @dev Generic resource types (FNOL, medical, PDF, video, logs, etc.).\r\nenum ResourceType {\r\n    GENERIC,\r\n    FNOL,\r\n    MEDICAL_REPORT,\r\n    REPAIR_ESTIMATE,\r\n    POLICE_REPORT,\r\n    IMAGE,\r\n    VIDEO,\r\n    PDF,\r\n    TELEMATICS,\r\n    LOG,\r\n    OTHER\r\n}\r\n\r\n/// @dev Actions that can be controlled by policies (CRUD + domain-specific).\r\nenum Action {\r\n    READ,       // view/download\r\n    APPEND,     // add new related evidence\r\n    UPDATE,     // change/annotate existing evidence\r\n    DELETE,     // delete (usually highly restricted)\r\n    APPROVE,    // approve/endorse (e.g. claim decision)\r\n    SHARE       // explicitly share with another org/entity\r\n}\r\n\r\n/// @dev Global attributes for a subject (address).\r\nstruct SubjectAttrs {\r\n    Role role;\r\n    bytes32 orgId;          // e.g. insurer code, police department, hospital ID\r\n    bytes32 jurisdiction;   // e.g. region/country code\r\n    bool   isActive;\r\n}\r\n\r\n/// @dev Registered resource/evidence metadata (off-chain payload referenced by URI + hash).\r\nstruct Resource {\r\n    uint256 id;\r\n    bytes32 contentHash;    // hash of the off-chain object (video, PDF, JSON, etc.)\r\n    string  uri;            // pointer: s3://..., ipfs://..., https://..., etc.\r\n    bytes32 caseId;         // claims/case identifier\r\n    ResourceType rType;\r\n    uint8   sensitivity;    // 0 = low, higher = more sensitive (e.g. medical)\r\n    address owner;          // entity that registered it (insurer, court, etc.)\r\n    bool    exists;\r\n}\r\n\r\n/// @dev A single ABAC-style policy rule.\r\n///\r\n/// Matching semantics:\r\n///   - If a field is zero/wildcard (orgId, jurisdiction, caseId), it does not constrain.\r\n///   - If rType == GENERIC, any resource type is allowed (subject to sensitivity).\r\n///   - Resource.sensitivity must be <= maxSensitivity.\r\n///   - Time window enforced via notBefore / notAfter (0 = unbounded).\r\nstruct PolicyRule {\r\n    uint256 id;\r\n    Role role;              // subject role required\r\n    bytes32 orgId;          // optional: constrain to org\r\n    bytes32 jurisdiction;   // optional: constrain to jurisdiction\r\n    ResourceType rType;     // resource type (or GENERIC)\r\n    bytes32 caseId;         // optional: constrain to specific case\r\n    Action action;          // action this policy governs\r\n    uint8  maxSensitivity;  // maximum sensitivity allowed under this rule\r\n    uint64 notBefore;       // unix timestamp; 0 = no lower bound\r\n    uint64 notAfter;        // unix timestamp; 0 = no upper bound\r\n    bool   allow;           // for now only ALLOW rules are used\r\n    bool   active;\r\n}\r\n"
+      }
+    }
+  }
+}

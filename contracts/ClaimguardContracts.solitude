@@ -1,0 +1,432 @@
+// // SPDX-License-Identifier: MIT
+// pragma solidity ^0.8.20;
+
+// /// ------------------------------------------------------------------------
+// /// Shared Types for ClaimGuard
+// /// ------------------------------------------------------------------------
+
+// /// @dev High-level subject roles in the auto-insurance ecosystem.
+// enum Role {
+//     NONE,
+//     DRIVER,
+//     INSURER,
+//     REINSURER,
+//     ADJUSTER,
+//     POLICE,
+//     COURT,
+//     GARAGE,
+//     REGULATOR,
+//     CLOUD_PROVIDER
+// }
+
+// /// @dev Generic resource types (FNOL, medical, PDF, video, logs, etc.).
+// enum ResourceType {
+//     GENERIC,
+//     FNOL,
+//     MEDICAL_REPORT,
+//     REPAIR_ESTIMATE,
+//     POLICE_REPORT,
+//     IMAGE,
+//     VIDEO,
+//     PDF,
+//     TELEMATICS,
+//     LOG,
+//     OTHER
+// }
+
+// /// @dev Actions that can be controlled by policies (CRUD + domain-specific).
+// enum Action {
+//     READ, // view/download
+//     APPEND, // add new related evidence
+//     UPDATE, // change/annotate existing evidence
+//     DELETE, // delete (usually highly restricted)
+//     APPROVE, // approve/endorse (e.g. claim decision)
+//     SHARE // explicitly share with another org/entity
+// }
+
+// /// @dev Global attributes for a subject (address).
+// struct SubjectAttrs {
+//     Role role;
+//     bytes32 orgId; // e.g. insurer code, police department, hospital ID
+//     bytes32 jurisdiction; // e.g. region/country code
+//     bool isActive;
+// }
+
+// /// @dev Registered resource/evidence metadata (off-chain payload referenced by URI + hash).
+// struct Resource {
+//     uint256 id;
+//     bytes32 contentHash; // hash of the off-chain object (video, PDF, JSON, etc.)
+//     string uri; // pointer: s3://..., ipfs://..., https://..., etc.
+//     bytes32 caseId; // claims/case identifier
+//     ResourceType rType;
+//     uint8 sensitivity; // 0 = low, higher = more sensitive (e.g. medical)
+//     address owner; // entity that registered it (insurer, court, etc.)
+//     bool exists;
+// }
+
+// /// @dev A single ABAC-style policy rule.
+// ///
+// /// Matching semantics:
+// ///   - If a field is zero/wildcard (orgId, jurisdiction, caseId), it does not constrain.
+// ///   - If rType == GENERIC, any resource type is allowed (subject to sensitivity).
+// ///   - Resource.sensitivity must be <= maxSensitivity.
+// ///   - Time window enforced via notBefore / notAfter (0 = unbounded).
+// struct PolicyRule {
+//     uint256 id;
+//     Role role; // subject role required
+//     bytes32 orgId; // optional: constrain to org
+//     bytes32 jurisdiction; // optional: constrain to jurisdiction
+//     ResourceType rType; // resource type (or GENERIC)
+//     bytes32 caseId; // optional: constrain to specific case
+//     Action action; // action this policy governs
+//     uint8 maxSensitivity; // maximum sensitivity allowed under this rule
+//     uint64 notBefore; // unix timestamp; 0 = no lower bound
+//     uint64 notAfter; // unix timestamp; 0 = no upper bound
+//     bool allow; // for now only ALLOW rules are used
+//     bool active;
+// }
+
+// /// ------------------------------------------------------------------------
+// /// Contract: EvidenceRegistry
+// /// ------------------------------------------------------------------------
+
+// contract EvidenceRegistry {
+//     address public admin;
+
+//     uint256 public nextResourceId = 1;
+
+//     mapping(uint256 => Resource) private _resources;
+//     mapping(bytes32 => uint256[]) private _resourcesByCase;
+
+//     event AdminChanged(address indexed oldAdmin, address indexed newAdmin);
+
+//     event ResourceRegistered(
+//         uint256 indexed resourceId,
+//         bytes32 indexed caseId,
+//         ResourceType rType,
+//         uint8 sensitivity,
+//         address indexed owner,
+//         bytes32 contentHash,
+//         string uri
+//     );
+
+//     modifier onlyAdmin() {
+//         require(msg.sender == admin, "EvidenceReg: only admin");
+//         _;
+//     }
+
+//     constructor() {
+//         admin = msg.sender;
+//         emit AdminChanged(address(0), msg.sender);
+//     }
+
+//     function setAdmin(address newAdmin) external onlyAdmin {
+//         require(newAdmin != address(0), "EvidenceReg: zero addr");
+//         emit AdminChanged(admin, newAdmin);
+//         admin = newAdmin;
+//     }
+
+//     /// @notice Register a new resource/evidence object.
+//     function registerResource(
+//         bytes32 contentHash,
+//         string calldata uri,
+//         bytes32 caseId,
+//         ResourceType rType,
+//         uint8 sensitivity
+//     ) external onlyAdmin returns (uint256 resourceId) {
+//         require(contentHash != bytes32(0), "EvidenceReg: empty hash");
+
+//         resourceId = nextResourceId++;
+//         Resource storage r = _resources[resourceId];
+
+//         r.id = resourceId;
+//         r.contentHash = contentHash;
+//         r.uri = uri;
+//         r.caseId = caseId;
+//         r.rType = rType;
+//         r.sensitivity = sensitivity;
+//         r.owner = msg.sender;
+//         r.exists = true;
+
+//         if (caseId != bytes32(0)) {
+//             _resourcesByCase[caseId].push(resourceId);
+//         }
+
+//         emit ResourceRegistered(
+//             resourceId,
+//             caseId,
+//             rType,
+//             sensitivity,
+//             msg.sender,
+//             contentHash,
+//             uri
+//         );
+//     }
+
+//     /// @notice Get full resource metadata.
+//     function getResource(
+//         uint256 resourceId
+//     ) external view returns (Resource memory) {
+//         return _resources[resourceId];
+//     }
+
+//     /// @notice Get all resource IDs associated with a case.
+//     function getResourcesByCase(
+//         bytes32 caseId
+//     ) external view returns (uint256[] memory) {
+//         return _resourcesByCase[caseId];
+//     }
+// }
+
+// /// ------------------------------------------------------------------------
+// /// Contract: SubjectAttributeRegistry
+// /// ------------------------------------------------------------------------
+
+// contract SubjectAttributeRegistry {
+//     address public admin;
+
+//     mapping(address => SubjectAttrs) private _subjects;
+
+//     event AdminChanged(address indexed oldAdmin, address indexed newAdmin);
+
+//     event SubjectAttributesSet(
+//         address indexed subject,
+//         Role role,
+//         bytes32 orgId,
+//         bytes32 jurisdiction,
+//         bool isActive
+//     );
+
+//     modifier onlyAdmin() {
+//         require(msg.sender == admin, "SubjectAttr: only admin");
+//         _;
+//     }
+
+//     constructor() {
+//         admin = msg.sender;
+//         emit AdminChanged(address(0), msg.sender);
+//     }
+
+//     function setAdmin(address newAdmin) external onlyAdmin {
+//         require(newAdmin != address(0), "SubjectAttr: zero addr");
+//         emit AdminChanged(admin, newAdmin);
+//         admin = newAdmin;
+//     }
+
+//     /// @notice Set attributes for a subject (user, organization agent, etc.).
+//     function setSubjectAttributes(
+//         address subject,
+//         Role role,
+//         bytes32 orgId,
+//         bytes32 jurisdiction,
+//         bool isActive
+//     ) external onlyAdmin {
+//         _subjects[subject] = SubjectAttrs({
+//             role: role,
+//             orgId: orgId,
+//             jurisdiction: jurisdiction,
+//             isActive: isActive
+//         });
+
+//         emit SubjectAttributesSet(subject, role, orgId, jurisdiction, isActive);
+//     }
+
+//     /// @notice Get full attribute struct for a subject.
+//     function getSubjectAttrs(
+//         address subject
+//     ) external view returns (SubjectAttrs memory) {
+//         return _subjects[subject];
+//     }
+// }
+
+// /// ------------------------------------------------------------------------
+// /// Contract: AccessPolicyManager
+// /// ------------------------------------------------------------------------
+
+// contract AccessPolicyManager {
+//     address public admin;
+
+//     SubjectAttributeRegistry public subjectRegistry;
+//     EvidenceRegistry public evidenceRegistry;
+
+//     uint256 public nextPolicyId = 1;
+//     mapping(uint256 => PolicyRule) private _policies;
+
+//     event AdminChanged(address indexed oldAdmin, address indexed newAdmin);
+
+//     event PolicyCreated(
+//         uint256 indexed policyId,
+//         Role role,
+//         bytes32 orgId,
+//         bytes32 jurisdiction,
+//         ResourceType rType,
+//         bytes32 caseId,
+//         Action action,
+//         uint8 maxSensitivity,
+//         uint64 notBefore,
+//         uint64 notAfter,
+//         bool allow
+//     );
+
+//     event PolicyRevoked(uint256 indexed policyId, address indexed by);
+
+//     event AccessChecked(
+//         address indexed subject,
+//         uint256 indexed resourceId,
+//         Action action,
+//         bool allowed
+//     );
+
+//     modifier onlyAdmin() {
+//         require(msg.sender == admin, "PolicyMgr: only admin");
+//         _;
+//     }
+
+//     constructor(address subjectRegistry_, address evidenceRegistry_) {
+//         require(subjectRegistry_ != address(0), "PolicyMgr: subj reg zero");
+//         require(evidenceRegistry_ != address(0), "PolicyMgr: evid reg zero");
+
+//         admin = msg.sender;
+//         emit AdminChanged(address(0), msg.sender);
+
+//         subjectRegistry = SubjectAttributeRegistry(subjectRegistry_);
+//         evidenceRegistry = EvidenceRegistry(evidenceRegistry_);
+//     }
+
+//     function setAdmin(address newAdmin) external onlyAdmin {
+//         require(newAdmin != address(0), "PolicyMgr: zero addr");
+//         emit AdminChanged(admin, newAdmin);
+//         admin = newAdmin;
+//     }
+
+//     /// @notice Create a new policy rule.
+//     function createPolicy(
+//         Role role,
+//         bytes32 orgId,
+//         bytes32 jurisdiction,
+//         ResourceType rType,
+//         bytes32 caseId,
+//         Action action,
+//         uint8 maxSensitivity,
+//         uint64 notBefore,
+//         uint64 notAfter,
+//         bool allow
+//     ) external onlyAdmin returns (uint256 policyId) {
+//         require(role != Role.NONE, "PolicyMgr: role=NONE");
+//         if (notAfter != 0) {
+//             require(notAfter > notBefore, "PolicyMgr: time window invalid");
+//         }
+
+//         policyId = nextPolicyId++;
+//         PolicyRule storage p = _policies[policyId];
+
+//         p.id = policyId;
+//         p.role = role;
+//         p.orgId = orgId;
+//         p.jurisdiction = jurisdiction;
+//         p.rType = rType;
+//         p.caseId = caseId;
+//         p.action = action;
+//         p.maxSensitivity = maxSensitivity;
+//         p.notBefore = notBefore;
+//         p.notAfter = notAfter;
+//         p.allow = allow;
+//         p.active = true;
+
+//         emit PolicyCreated(
+//             policyId,
+//             role,
+//             orgId,
+//             jurisdiction,
+//             rType,
+//             caseId,
+//             action,
+//             maxSensitivity,
+//             notBefore,
+//             notAfter,
+//             allow
+//         );
+//     }
+
+//     /// @notice Deactivate a policy rule (revocation).
+//     function revokePolicy(uint256 policyId) external onlyAdmin {
+//         PolicyRule storage p = _policies[policyId];
+//         require(p.id != 0, "PolicyMgr: policy not found");
+//         require(p.active, "PolicyMgr: already inactive");
+//         p.active = false;
+//         emit PolicyRevoked(policyId, msg.sender);
+//     }
+
+//     /// @notice View a policy rule.
+//     function getPolicy(
+//         uint256 policyId
+//     ) external view returns (PolicyRule memory) {
+//         return _policies[policyId];
+//     }
+
+//     /// @notice Core ABAC decision: can `subject` perform `action` on `resourceId`?
+//     function checkAccess(
+//         address subject,
+//         uint256 resourceId,
+//         Action action
+//     ) public view returns (bool) {
+//         // Load resource and subject attributes from the registries
+//         Resource memory r = evidenceRegistry.getResource(resourceId);
+//         if (!r.exists) {
+//             return false;
+//         }
+
+//         SubjectAttrs memory s = subjectRegistry.getSubjectAttrs(subject);
+//         if (!s.isActive || s.role == Role.NONE) {
+//             return false;
+//         }
+
+//         // Linear scan over policies: 1..nextPolicyId-1
+//         for (uint256 pid = 1; pid < nextPolicyId; pid++) {
+//             PolicyRule storage p = _policies[pid];
+//             if (!p.active || !p.allow) continue;
+
+//             // Role must match.
+//             if (p.role != s.role) continue;
+
+//             // Optional org and jurisdiction constraints.
+//             if (p.orgId != bytes32(0) && p.orgId != s.orgId) continue;
+//             if (
+//                 p.jurisdiction != bytes32(0) && p.jurisdiction != s.jurisdiction
+//             ) continue;
+
+//             // Resource type constraint (GENERIC serves as wildcard).
+//             if (p.rType != ResourceType.GENERIC && p.rType != r.rType) continue;
+
+//             // Case constraint (0 = any case).
+//             if (p.caseId != bytes32(0) && p.caseId != r.caseId) continue;
+
+//             // Action must match.
+//             if (p.action != action) continue;
+
+//             // Sensitivity constraint.
+//             if (r.sensitivity > p.maxSensitivity) continue;
+
+//             // Time window constraint.
+//             uint64 nowTs = uint64(block.timestamp);
+//             if (p.notBefore != 0 && nowTs < p.notBefore) continue;
+//             if (p.notAfter != 0 && nowTs > p.notAfter) continue;
+
+//             // First matching allow rule wins.
+//             return true;
+//         }
+
+//         return false;
+//     }
+
+//     /// @notice checkAccess + emit event for on-chain audit / off-chain listeners.
+//     function checkAccessAndEmit(
+//         address subject,
+//         uint256 resourceId,
+//         Action action
+//     ) external returns (bool) {
+//         bool allowed = checkAccess(subject, resourceId, action);
+//         emit AccessChecked(subject, resourceId, action, allowed);
+//         return allowed;
+//     }
+// }
