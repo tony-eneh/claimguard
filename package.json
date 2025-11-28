@@ -5,7 +5,7 @@
   "scripts": {
     "deploy:purechain": "ts-node scripts/compile-and-deploy-contracts.ts",
     "test": "hardhat test",
-    "deploy": "ts-node scripts/compile-and-deploy-contracts.ts"
+    "deploy": "ts-node scripts/deploy.ts"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ethers": "^4.0.3",

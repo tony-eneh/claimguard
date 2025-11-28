@@ -1,29 +1,18 @@
-import express, { Request, Response } from "express";
-import { ethers } from "ethers";
-import { createSigner, getContracts } from "../blockchain";
+// src/routes/policy.ts
+import express, { Request, Response } from 'express';
+import { Hex } from 'viem';
+import { publicClient, walletClient } from '../viemClients';
+import accessPolicyManagerArtifact from '../../../artifacts/contracts/AccessPolicyManager.sol/AccessPolicyManager.json';
+const apmAbi = accessPolicyManagerArtifact.abi;
 
-/**
- * Body format (all fields required):
- * {
- *   "role": number,
- *   "orgId": string,        // bytes32 hex, or "0x0" for wildcard
- *   "jurisdiction": string, // bytes32 hex, or "0x0"
- *   "rType": number,
- *   "caseId": string,       // bytes32 hex, or "0x0"
- *   "action": number,
- *   "maxSensitivity": number,
- *   "notBefore": number,    // uint64 unix timestamp, 0 for "any"
- *   "notAfter": number,     // uint64 unix timestamp, 0 for "any"
- *   "allow": boolean
- * }
- */
-export function policyRouter(provider: ethers.JsonRpcProvider) {
+const apmAddress = process.env.ACCESS_POLICY_MANAGER_ADDRESS as `0x${string}`;
+
+export function policyRouter() {
   const router = express.Router();
-  const signer = createSigner(provider);
-  const { apm } = getContracts(signer);
 
-  router.post("/policy", async (req: Request, res: Response) => {
+  router.post('/policy', async (req: Request, res: Response) => {
     try {
+      const body = req.body ?? {};
       const {
         role,
         orgId,
@@ -34,9 +23,10 @@ export function policyRouter(provider: ethers.JsonRpcProvider) {
         maxSensitivity,
         notBefore,
         notAfter,
-        allow
-      } = req.body ?? {};
+        allow,
+      } = body;
 
+      // Basic validation
       if (
         role === undefined ||
         rType === undefined ||
@@ -47,49 +37,70 @@ export function policyRouter(provider: ethers.JsonRpcProvider) {
         caseId === undefined ||
         allow === undefined
       ) {
-        return res.status(400).json({ error: "Missing required fields" });
+        return res.status(400).json({
+          error:
+            'Missing required fields (role, orgId, jurisdiction, rType, caseId, action, maxSensitivity, allow)',
+        });
       }
 
       const roleNum = Number(role);
       const rTypeNum = Number(rType);
       const actionNum = Number(action);
       const maxSensNum = Number(maxSensitivity);
-      const nbNum = Number(notBefore || 0);
-      const naNum = Number(notAfter || 0);
+      const nbNum = Number(notBefore ?? 0);
+      const naNum = Number(notAfter ?? 0);
 
-      const orgIdBytes = orgId === "0x0" ? ethers.ZeroHash : orgId;
-      const jurBytes = jurisdiction === "0x0" ? ethers.ZeroHash : jurisdiction;
-      const caseIdBytes = caseId === "0x0" ? ethers.ZeroHash : caseId;
+      const orgIdBytes: Hex =
+        orgId === '0x0' || orgId === '' || orgId === null
+          ? (('0x' + '0'.repeat(64)) as Hex)
+          : (orgId as Hex);
+
+      const jurBytes: Hex =
+        jurisdiction === '0x0' || jurisdiction === '' || jurisdiction === null
+          ? (('0x' + '0'.repeat(64)) as Hex)
+          : (jurisdiction as Hex);
+
+      const caseIdBytes: Hex =
+        caseId === '0x0' || caseId === '' || caseId === null
+          ? (('0x' + '0'.repeat(64)) as Hex)
+          : (caseId as Hex);
 
       const start = Date.now();
 
-      const tx = await apm.createPolicy(
-        roleNum,
-        orgIdBytes,
-        jurBytes,
-        rTypeNum,
-        caseIdBytes,
-        actionNum,
-        maxSensNum,
-        nbNum,
-        naNum,
-        Boolean(allow)
-      );
-      const receipt = await tx.wait();
+      // Send tx via viem – this handles nonce correctly
+      const hash = await walletClient.writeContract({
+        address: apmAddress,
+        abi: apmAbi,
+        functionName: 'createPolicy', // or addOrUpdatePolicy if that's your fn
+        args: [
+          roleNum,
+          orgIdBytes,
+          jurBytes,
+          rTypeNum,
+          caseIdBytes,
+          actionNum,
+          maxSensNum,
+          BigInt(nbNum),
+          BigInt(naNum),
+          Boolean(allow),
+        ],
+      });
+
+      const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
       const end = Date.now();
 
       return res.json({
-        txHash: receipt?.hash,
-        blockNumber: receipt?.blockNumber,
-        gasUsed: receipt?.gasUsed?.toString(),
-        latencyMs: end - start
+        txHash: hash,
+        blockNumber: Number(receipt.blockNumber),
+        gasUsed: receipt.gasUsed.toString(),
+        latencyMs: end - start,
       });
     } catch (err: any) {
-      console.error("Error in /policy:", err);
+      console.error('Error in /policy:', err);
       return res.status(500).json({
-        error: "Internal error",
-        details: String(err.message || err)
+        error: 'Internal error',
+        details: String(err?.message ?? err),
       });
     }
   });

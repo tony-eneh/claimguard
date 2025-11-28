@@ -4011,9 +4011,9 @@
     "resourceId": 502,
     "caseIdHex": "0x99eb73cb5a476884edee939bdb51ae9b08bdfc5c651f696abc8a4967f5613362",
     "caseLabel": "CASE_0101",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-101/2-501.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-101/1-501.bin"
   },
   {
     "resourceId": 503,
@@ -4027,9 +4027,9 @@
     "resourceId": 504,
     "caseIdHex": "0x55445f9fcf4cf46398ce505f4f1f2f8924b6cab7127b5cfecee61201ddc41112",
     "caseLabel": "CASE_0103",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-103/1-503.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-103/2-503.bin"
   },
   {
     "resourceId": 505,
@@ -4067,9 +4067,9 @@
     "resourceId": 509,
     "caseIdHex": "0x411f9230eb70563baa3d81af67d1b7bd0bec8513a99a5d7bdc4e7b0ed84e3468",
     "caseLabel": "CASE_0108",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-108/2-508.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-108/1-508.bin"
   },
   {
     "resourceId": 510,
@@ -4083,17 +4083,17 @@
     "resourceId": 511,
     "caseIdHex": "0x3b89c2ba02fdca33beadcad7a6ac94d708a5b2430fa9cf09c1e3d73126de5188",
     "caseLabel": "CASE_0110",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-110/2-510.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-110/1-510.bin"
   },
   {
     "resourceId": 512,
     "caseIdHex": "0x2cf756fb46762f5d258972c16dbcb8aa7a22bcd311f1737e0133c946e92e2b9a",
     "caseLabel": "CASE_0111",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-111/2-511.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-111/1-511.bin"
   },
   {
     "resourceId": 513,
@@ -4115,9 +4115,9 @@
     "resourceId": 515,
     "caseIdHex": "0x4ea2b068ceba221f1dee86b624d9207bbb6ed969cd5d3efd66501b0a2538ab79",
     "caseLabel": "CASE_0114",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-114/2-514.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-114/1-514.bin"
   },
   {
     "resourceId": 516,
@@ -4139,9 +4139,9 @@
     "resourceId": 518,
     "caseIdHex": "0x97a039af6f5d696e5f3f398f82ec7df8e34f63caad3e73a2625f90834eade1e0",
     "caseLabel": "CASE_0117",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-117/1-517.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-117/2-517.bin"
   },
   {
     "resourceId": 519,
@@ -4155,9 +4155,9 @@
     "resourceId": 520,
     "caseIdHex": "0x06c7729df53af3aa9f08a47b9a4dea9a9a777665c2a54826f3c18bee0e380a06",
     "caseLabel": "CASE_0119",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-119/2-519.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-119/1-519.bin"
   },
   {
     "resourceId": 521,
@@ -4171,9 +4171,9 @@
     "resourceId": 522,
     "caseIdHex": "0xeea013116292768b112492ff3c5f96d12038b83f19d42f99b87954acafe41fb3",
     "caseLabel": "CASE_0121",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-121/2-521.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-121/1-521.bin"
   },
   {
     "resourceId": 523,
@@ -4187,73 +4187,73 @@
     "resourceId": 524,
     "caseIdHex": "0x1467038e990918adc218442f28387fa7cc93b72b2849c7e377e260dd7a7bc41a",
     "caseLabel": "CASE_0123",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-123/1-523.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-123/2-523.bin"
   },
   {
     "resourceId": 525,
     "caseIdHex": "0xf0bbea0b8aad500f143e1d5974baa7d3879a0b3145618af5d93a6063b593fcb8",
     "caseLabel": "CASE_0124",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-124/1-524.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-124/2-524.bin"
   },
   {
     "resourceId": 526,
     "caseIdHex": "0x7a94c5a328e5d4b3ce6657db9289394e508d589bd326da04537e9ebd78c5e483",
     "caseLabel": "CASE_0125",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-125/2-525.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-125/1-525.bin"
   },
   {
     "resourceId": 527,
     "caseIdHex": "0xd7c18920c3aca75bef7109d379a6029db3480e997274c3af26a48dcbe23c53dc",
     "caseLabel": "CASE_0126",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-126/2-526.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-126/1-526.bin"
   },
   {
     "resourceId": 528,
     "caseIdHex": "0x5901516446de8b5979eeb9af19d58572cfc67da8219e2f87cda8450186b845f6",
     "caseLabel": "CASE_0127",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-127/1-527.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-127/2-527.bin"
   },
   {
     "resourceId": 529,
     "caseIdHex": "0x8f685654fe95fcfacfe8016043b68d28a4d49ec0f8d6aaecd0ed21beb657c35b",
     "caseLabel": "CASE_0128",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-128/1-528.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-128/2-528.bin"
   },
   {
     "resourceId": 530,
     "caseIdHex": "0xa1e9b1052d8fd07bc82e3ddcdf264c6c3ff4e1906de8fba0f204870ca7b26a03",
     "caseLabel": "CASE_0129",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-129/2-529.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-129/1-529.bin"
   },
   {
     "resourceId": 531,
     "caseIdHex": "0x411417f28fc0f452fafcb0b43058c5b5fb554874877a81ce60db42dd68240b56",
     "caseLabel": "CASE_0130",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-130/1-530.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-130/2-530.bin"
   },
   {
     "resourceId": 532,
     "caseIdHex": "0x27fc8ff28ea5e7787d6a180f8bd3e87c4c5bd7eded15bc7671c1ffd681e57dad",
     "caseLabel": "CASE_0131",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-131/2-531.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-131/1-531.bin"
   },
   {
     "resourceId": 533,
@@ -4267,57 +4267,57 @@
     "resourceId": 534,
     "caseIdHex": "0x79711756aa8a074ee7cb7d611e67f7519dc93684c1a318fd751644529d74ef18",
     "caseLabel": "CASE_0133",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-133/2-533.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-133/1-533.bin"
   },
   {
     "resourceId": 535,
     "caseIdHex": "0x292078f1b29e699bf9516ac8e651a2921acfe83792792339352582cac4558c72",
     "caseLabel": "CASE_0134",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-134/2-534.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-134/1-534.bin"
   },
   {
     "resourceId": 536,
     "caseIdHex": "0x1645f31cdf5eefc6a822af07ac1d7d9c88a2a087e75366d5fe8bfbaaa77457ef",
     "caseLabel": "CASE_0135",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-135/2-535.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-135/1-535.bin"
   },
   {
     "resourceId": 537,
     "caseIdHex": "0x27c18df55d7f24b2b1a761d5586444b14ade741c9d54f704ea71ae1bf2bd3adb",
     "caseLabel": "CASE_0136",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-136/1-536.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-136/2-536.bin"
   },
   {
     "resourceId": 538,
     "caseIdHex": "0x90cd2a5e465e14ebe24fccea7bff1dd786ea348424e8c06f98ebafe49a74a30e",
     "caseLabel": "CASE_0137",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-137/2-537.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-137/1-537.bin"
   },
   {
     "resourceId": 539,
     "caseIdHex": "0x604de69919398803bd948039273fd7e76dce20c63adbcbde435b12b75792d5ac",
     "caseLabel": "CASE_0138",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-138/1-538.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-138/2-538.bin"
   },
   {
     "resourceId": 540,
     "caseIdHex": "0x728627bf65cf5fe35b4f886a2d0f5f685fa3cb723a42c7c5339ad5f7e7e57fd7",
     "caseLabel": "CASE_0139",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-139/1-539.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-139/2-539.bin"
   },
   {
     "resourceId": 541,
@@ -4339,17 +4339,17 @@
     "resourceId": 543,
     "caseIdHex": "0x9f65a861eb06e58cc03b5e7ac06ede880fb16f5987573176a1c4d954c634286a",
     "caseLabel": "CASE_0142",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-142/2-542.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-142/1-542.bin"
   },
   {
     "resourceId": 544,
     "caseIdHex": "0xa44e287377cc2e80a604009fff25cb288168883e71425f7513c852fec6af4773",
     "caseLabel": "CASE_0143",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-143/2-543.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-143/1-543.bin"
   },
   {
     "resourceId": 545,
@@ -4371,9 +4371,9 @@
     "resourceId": 547,
     "caseIdHex": "0xe820eecb5ebb840d5b343fdd6b1f272b7a3215b4cb7c33a3e8dffc016abbe9cb",
     "caseLabel": "CASE_0146",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-146/1-546.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-146/2-546.bin"
   },
   {
     "resourceId": 548,
@@ -4387,9 +4387,9 @@
     "resourceId": 549,
     "caseIdHex": "0x668bbce4e5b06986e23f8e1e77869d80e362cd1364d61a80ed6508480ed2d002",
     "caseLabel": "CASE_0148",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-148/2-548.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-148/1-548.bin"
   },
   {
     "resourceId": 550,
@@ -4403,25 +4403,25 @@
     "resourceId": 551,
     "caseIdHex": "0x33201d9764f73d7a7bdfba5997d9f0ff6f97b533a3f6e2dff16c7460fddf7502",
     "caseLabel": "CASE_0150",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-150/1-550.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-150/2-550.bin"
   },
   {
     "resourceId": 552,
     "caseIdHex": "0x1d7df516ed309d23387009f99cc992108edf53a7c7a0ce1240898968b7b761b8",
     "caseLabel": "CASE_0151",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-151/1-551.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-151/2-551.bin"
   },
   {
     "resourceId": 553,
     "caseIdHex": "0x735c59c5cbe3a1559ab3fc58664c547409ff4e8e7a0a083c3640566a8ebcaf8c",
     "caseLabel": "CASE_0152",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-152/1-552.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-152/2-552.bin"
   },
   {
     "resourceId": 554,
@@ -4435,25 +4435,25 @@
     "resourceId": 555,
     "caseIdHex": "0xaa11b1af8e24af7c66c9da3e861e791ad8266843f75f3d69f98a45ba2ed9c27e",
     "caseLabel": "CASE_0154",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-154/2-554.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-154/1-554.bin"
   },
   {
     "resourceId": 556,
     "caseIdHex": "0x69301a9862fcaf7a93704cb12fafbe7240081370a48a972b4fa752b9b1b20e71",
     "caseLabel": "CASE_0155",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-155/2-555.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-155/1-555.bin"
   },
   {
     "resourceId": 557,
     "caseIdHex": "0x11af57a789c0b7b2c02a3b5c687c99db865e58c0dfc0c4622dff0e98e3bfac40",
     "caseLabel": "CASE_0156",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-156/1-556.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-156/2-556.bin"
   },
   {
     "resourceId": 558,
@@ -4475,33 +4475,33 @@
     "resourceId": 560,
     "caseIdHex": "0x059377d6d442f00c1c09232cb7f1fa348d6f41c90bffba3787299153222c5fa0",
     "caseLabel": "CASE_0159",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-159/2-559.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-159/1-559.bin"
   },
   {
     "resourceId": 561,
     "caseIdHex": "0x18ce7b4ce1878867ebf6693afbc181f80c99ec4f089a0bdabe1c4a741330df58",
     "caseLabel": "CASE_0160",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-160/2-560.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-160/1-560.bin"
   },
   {
     "resourceId": 562,
     "caseIdHex": "0x511fe610a1c59b4454053d781505e051f490c59861ef71ff6416bdada482f0be",
     "caseLabel": "CASE_0161",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-161/2-561.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-161/1-561.bin"
   },
   {
     "resourceId": 563,
     "caseIdHex": "0x8267e6d1c636e69c63b53e3c396ee5fc1c7f226dacecc61e2697502a2ccb2a06",
     "caseLabel": "CASE_0162",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-162/2-562.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-162/1-562.bin"
   },
   {
     "resourceId": 564,
@@ -4531,9 +4531,9 @@
     "resourceId": 567,
     "caseIdHex": "0x8e31a7293046efb4eb7f31bcf9e39468aaf37b5a9d33138f95ac7e4fb36198e9",
     "caseLabel": "CASE_0166",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-166/2-566.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-166/1-566.bin"
   },
   {
     "resourceId": 568,
@@ -4579,17 +4579,17 @@
     "resourceId": 573,
     "caseIdHex": "0xae59c5a9e820bc3b94b76fb6622a1a250c3d1c1d6d56425aeb0bcbe9f64300aa",
     "caseLabel": "CASE_0172",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-172/2-572.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-172/1-572.bin"
   },
   {
     "resourceId": 574,
     "caseIdHex": "0xf0385fba504da88566843c2f2507034f09c0c9126f2a41de6b1aa317ed4c5aa6",
     "caseLabel": "CASE_0173",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-173/2-573.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-173/1-573.bin"
   },
   {
     "resourceId": 575,
@@ -4611,33 +4611,33 @@
     "resourceId": 577,
     "caseIdHex": "0x4184af499adbf897e2cb561d9923cb0cedb9faa9ae1c7ce727e1252a23f84193",
     "caseLabel": "CASE_0176",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-176/1-576.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-176/2-576.bin"
   },
   {
     "resourceId": 578,
     "caseIdHex": "0xfbbd02f47cb8636279edc20f1465fb6f9a86531d0e209bffec9869efb9fc210e",
     "caseLabel": "CASE_0177",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-177/2-577.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-177/1-577.bin"
   },
   {
     "resourceId": 579,
     "caseIdHex": "0x1907d6879d56ee170b1a14a15988b7c0f5e7bbf3ec53e6afb3548b33d703e479",
     "caseLabel": "CASE_0178",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-178/2-578.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-178/1-578.bin"
   },
   {
     "resourceId": 580,
     "caseIdHex": "0x6a53c04447552e8f9c46754308b832054eaeee3af1314cfca1ef6a62819d1b91",
     "caseLabel": "CASE_0179",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-179/2-579.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-179/1-579.bin"
   },
   {
     "resourceId": 581,
@@ -4659,9 +4659,9 @@
     "resourceId": 583,
     "caseIdHex": "0xf3b569dd924ed091f03a2e20fcf9abc66132f9dc3adeeb950e611296d84e1fdc",
     "caseLabel": "CASE_0182",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-182/1-582.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-182/2-582.bin"
   },
   {
     "resourceId": 584,
@@ -4683,41 +4683,41 @@
     "resourceId": 586,
     "caseIdHex": "0x4c1568b16ebb87ada934f8d5a45fb4e0abcd73f5a1c99dd3531a2ce01c47fdd4",
     "caseLabel": "CASE_0185",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-185/1-585.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-185/2-585.bin"
   },
   {
     "resourceId": 587,
     "caseIdHex": "0x6331359ab034a174aa9a5cc564482fe4f142eb2b4a5de0e0170aec6df4759878",
     "caseLabel": "CASE_0186",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-186/1-586.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-186/2-586.bin"
   },
   {
     "resourceId": 588,
     "caseIdHex": "0xe6316a7ee42e3d9d20ee0e06c89926d2ff181e52bf1c347ac3e1ee3fd1d90ad8",
     "caseLabel": "CASE_0187",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-187/2-587.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-187/1-587.bin"
   },
   {
     "resourceId": 589,
     "caseIdHex": "0x3dd9c709b29db16e53e1bd1e5f84e0a52ca11eb470017e2f91a676e6d13ad77a",
     "caseLabel": "CASE_0188",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-188/2-588.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-188/1-588.bin"
   },
   {
     "resourceId": 590,
     "caseIdHex": "0x03a21625718ea1b1a9db28872b508256e4bbf59b34e9e54bf8682e9e0c437fde",
     "caseLabel": "CASE_0189",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-189/2-589.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-189/1-589.bin"
   },
   {
     "resourceId": 591,
@@ -4763,9 +4763,9 @@
     "resourceId": 596,
     "caseIdHex": "0x7e96af7706590e913571a0e24c39b62f32666aafc600dcf2ec118f01b85b11f9",
     "caseLabel": "CASE_0195",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-195/2-595.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-195/1-595.bin"
   },
   {
     "resourceId": 597,
@@ -4811,9 +4811,9 @@
     "resourceId": 602,
     "caseIdHex": "0x14314059311cab77b28a8f90e1c5d26fc7dda2c0f575116b7efbc5f0cf02f598",
     "caseLabel": "CASE_0001",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-1/2-601.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-1/1-601.bin"
   },
   {
     "resourceId": 603,
@@ -4835,33 +4835,33 @@
     "resourceId": 605,
     "caseIdHex": "0xc351dec40a9456e4b3990ab2ee8d4d09d33a2f3d052b8403fe7a0fb6ab458871",
     "caseLabel": "CASE_0004",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-4/2-604.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-4/1-604.bin"
   },
   {
     "resourceId": 606,
     "caseIdHex": "0xb7a3a06e9aa82056482c0b9f1f0aa0f621cbe80cb0072dbf28bbad665884b035",
     "caseLabel": "CASE_0005",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-5/2-605.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-5/1-605.bin"
   },
   {
     "resourceId": 607,
     "caseIdHex": "0x898f839f845c936a00318430590feb59733b35639a8fdbc73f3cd34108f1cfe5",
     "caseLabel": "CASE_0006",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-6/1-606.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-6/2-606.bin"
   },
   {
     "resourceId": 608,
     "caseIdHex": "0x9d446c1e942e241c2ceb3fe83e981cebd994a39c0afac50f82d52cd259f60a62",
     "caseLabel": "CASE_0007",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-7/2-607.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-7/1-607.bin"
   },
   {
     "resourceId": 609,
@@ -4875,9 +4875,9 @@
     "resourceId": 610,
     "caseIdHex": "0x5257e898426b8ddda78a6d5f5c9409ee3c273ce8b020fdce3a0725b06e445e86",
     "caseLabel": "CASE_0009",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-9/2-609.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-9/1-609.bin"
   },
   {
     "resourceId": 611,
@@ -4891,17 +4891,17 @@
     "resourceId": 612,
     "caseIdHex": "0x04a280f777018dbf647866cc08f88b2ac5b6eb8a6073bb4aeac83b1fa2bce330",
     "caseLabel": "CASE_0011",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-11/1-611.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-11/2-611.bin"
   },
   {
     "resourceId": 613,
     "caseIdHex": "0x3ae88ed0b36d1f6856ae3f12c8476cb31afbe9ac216b6470584da9a69a90fbf2",
     "caseLabel": "CASE_0012",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-12/2-612.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-12/1-612.bin"
   },
   {
     "resourceId": 614,
@@ -4923,17 +4923,17 @@
     "resourceId": 616,
     "caseIdHex": "0x75609fd07eca30394b329497dfdababcecdc4063b358a810feb932c232bfb588",
     "caseLabel": "CASE_0015",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-15/2-615.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-15/1-615.bin"
   },
   {
     "resourceId": 617,
     "caseIdHex": "0xb8934c7defd8db9838de23d4d51c3462a1c72f164267ab88a95fda1a0881e2a0",
     "caseLabel": "CASE_0016",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-16/1-616.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-16/2-616.bin"
   },
   {
     "resourceId": 618,
@@ -4955,9 +4955,9 @@
     "resourceId": 620,
     "caseIdHex": "0x7c5a7c712d9f3244bf59f852c13bf59b446c3becf6e5905277632831f4c64641",
     "caseLabel": "CASE_0019",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-19/1-619.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-19/2-619.bin"
   },
   {
     "resourceId": 621,
@@ -4971,17 +4971,17 @@
     "resourceId": 622,
     "caseIdHex": "0x65accd588de77471666e4782003a664a17af80bb8137ed196da5ba282f89cded",
     "caseLabel": "CASE_0021",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-21/2-621.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-21/1-621.bin"
   },
   {
     "resourceId": 623,
     "caseIdHex": "0x6c59e407650a7f391ea8b0a47c68c32f7d27e83a6bf60bac77640457c2728277",
     "caseLabel": "CASE_0022",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-22/2-622.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-22/1-622.bin"
   },
   {
     "resourceId": 624,
@@ -5027,9 +5027,9 @@
     "resourceId": 629,
     "caseIdHex": "0xec452bac5dea95ba4bebb37a0cb0af73c9e4d7e7bd0d1a778d83b7daecb35e34",
     "caseLabel": "CASE_0028",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-28/2-628.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-28/1-628.bin"
   },
   {
     "resourceId": 630,
@@ -5083,9 +5083,9 @@
     "resourceId": 636,
     "caseIdHex": "0xd6dca3f50cd42af824e1465a735b38f0e7333d070fcae2487cc51097e88cf577",
     "caseLabel": "CASE_0035",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-35/2-635.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-35/1-635.bin"
   },
   {
     "resourceId": 637,
@@ -5099,9 +5099,9 @@
     "resourceId": 638,
     "caseIdHex": "0xc92f61bc1b8098d74921aaa142aeaa340ac8b83de10932c5e1635ec20bf21b17",
     "caseLabel": "CASE_0037",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-37/2-637.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-37/1-637.bin"
   },
   {
     "resourceId": 639,
@@ -5123,17 +5123,17 @@
     "resourceId": 641,
     "caseIdHex": "0xeb5fee822f36ad385b4ca332fb59a813564bc0dc442dea7f383e4a241fd2e58c",
     "caseLabel": "CASE_0040",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-40/2-640.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-40/1-640.bin"
   },
   {
     "resourceId": 642,
     "caseIdHex": "0x0620e3f18d046101db2d40db0ad6e82a1750e89008df1e03f8273d69fdf642ff",
     "caseLabel": "CASE_0041",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-41/1-641.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-41/2-641.bin"
   },
   {
     "resourceId": 643,
@@ -5147,33 +5147,33 @@
     "resourceId": 644,
     "caseIdHex": "0x073f8377611918449b40e29e796bacf2008525d47972e445767ba25270b85e17",
     "caseLabel": "CASE_0043",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-43/2-643.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-43/1-643.bin"
   },
   {
     "resourceId": 645,
     "caseIdHex": "0x3776b35484097703c7d22ae0e0a6bd5e27f00055e56c49aead10aeb11486b8ad",
     "caseLabel": "CASE_0044",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-44/1-644.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-44/2-644.bin"
   },
   {
     "resourceId": 646,
     "caseIdHex": "0xf8cc412ac28d797c2660276b41b3e0f0669cd4badc978fd91f580c36f86decda",
     "caseLabel": "CASE_0045",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-45/2-645.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-45/1-645.bin"
   },
   {
     "resourceId": 647,
     "caseIdHex": "0x9706e009c379d02296b4dfc95eb6f038439829b34eaca47d34ccfad0c14f0b61",
     "caseLabel": "CASE_0046",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-46/2-646.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-46/1-646.bin"
   },
   {
     "resourceId": 648,
@@ -5187,9 +5187,9 @@
     "resourceId": 649,
     "caseIdHex": "0xd6e63385a2fc38fb90671c150744abd1bcebe8f9a4ea296dff5ed170bf252b7b",
     "caseLabel": "CASE_0048",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-48/2-648.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-48/1-648.bin"
   },
   {
     "resourceId": 650,
@@ -5203,9 +5203,9 @@
     "resourceId": 651,
     "caseIdHex": "0xb99e20c167b6a99295396bae0d8bac341c617ca1814634ac116105069fbed5b3",
     "caseLabel": "CASE_0050",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-50/2-650.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-50/1-650.bin"
   },
   {
     "resourceId": 652,
@@ -5219,33 +5219,33 @@
     "resourceId": 653,
     "caseIdHex": "0xdd2c3d161bcfd9ff2f8d8d0d8a16ce46542b5935fd32de85c72b774f01158531",
     "caseLabel": "CASE_0052",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-52/2-652.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-52/1-652.bin"
   },
   {
     "resourceId": 654,
     "caseIdHex": "0x45ba1d238fefd4da25e928c9e8cd8873732c0515f3fdbdf9c331eda847dbb365",
     "caseLabel": "CASE_0053",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-53/1-653.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-53/2-653.bin"
   },
   {
     "resourceId": 655,
     "caseIdHex": "0x048600921e0d1d89751b31120705a56d66bde5ef2bf3daa6fd8ae5da9410ed47",
     "caseLabel": "CASE_0054",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-54/1-654.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-54/2-654.bin"
   },
   {
     "resourceId": 656,
     "caseIdHex": "0x23157b013f74bc8fd59e548cdf2fb6103f058ab510c031135455753590194a73",
     "caseLabel": "CASE_0055",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-55/1-655.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-55/2-655.bin"
   },
   {
     "resourceId": 657,
@@ -5259,57 +5259,57 @@
     "resourceId": 658,
     "caseIdHex": "0x3a8b9f1ac49c425c2ff9c180465a69ce339bf594b10ef95f3c27e0aa49efc657",
     "caseLabel": "CASE_0057",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-57/1-657.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-57/2-657.bin"
   },
   {
     "resourceId": 659,
     "caseIdHex": "0x2f19c070c849bc14d95ed56e8e995f0761dfe9bac390cfc462bf517575ff0d86",
     "caseLabel": "CASE_0058",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-58/1-658.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-58/2-658.bin"
   },
   {
     "resourceId": 660,
     "caseIdHex": "0x63d893da066391a55164a607b6e32adc40d890b99d733ca589b8a9fac956fe52",
     "caseLabel": "CASE_0059",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-59/1-659.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-59/2-659.bin"
   },
   {
     "resourceId": 661,
     "caseIdHex": "0x3ab58387b9cba51fbeb2c71b02de256b13112e5e6f58c6a820802f8565e8ef2a",
     "caseLabel": "CASE_0060",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-60/2-660.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-60/1-660.bin"
   },
   {
     "resourceId": 662,
     "caseIdHex": "0x65cb546f11d2913a43b68260fa34215191c028fe446e732fd82bc15823c2e757",
     "caseLabel": "CASE_0061",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-61/2-661.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-61/1-661.bin"
   },
   {
     "resourceId": 663,
     "caseIdHex": "0x5201adbb284c2f7b30deae7f06b4d8e34be4ccddfb437c5bec9fdc51185ea2b8",
     "caseLabel": "CASE_0062",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-62/1-662.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-62/2-662.bin"
   },
   {
     "resourceId": 664,
     "caseIdHex": "0x1b0a23995e8d3e2b43fbb917f3f36004cf183690925477a8d6d0267750a3d0fe",
     "caseLabel": "CASE_0063",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-63/1-663.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-63/2-663.bin"
   },
   {
     "resourceId": 665,
@@ -5371,9 +5371,9 @@
     "resourceId": 672,
     "caseIdHex": "0xb4675947b51448614fe17270e9cfdaf645c6694e619c97ec537f0ebfec70bc27",
     "caseLabel": "CASE_0071",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-71/1-671.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-71/2-671.bin"
   },
   {
     "resourceId": 673,
@@ -5395,9 +5395,9 @@
     "resourceId": 675,
     "caseIdHex": "0xe04ecb7a33aaf88f1405f543dbb77f359d9a5534b4561c6b15bfd24180a55344",
     "caseLabel": "CASE_0074",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-74/1-674.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-74/2-674.bin"
   },
   {
     "resourceId": 676,
@@ -5419,17 +5419,17 @@
     "resourceId": 678,
     "caseIdHex": "0x479176b1c62989bd480493a129d53073a4c829328ef4b80e0cf344484c2df5b9",
     "caseLabel": "CASE_0077",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-77/1-677.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-77/2-677.bin"
   },
   {
     "resourceId": 679,
     "caseIdHex": "0x6ab6d9ddf89ed699e50ae423582e9a22727215971f03e7a5acbda552825d99b7",
     "caseLabel": "CASE_0078",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-78/1-678.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-78/2-678.bin"
   },
   {
     "resourceId": 680,
@@ -5443,9 +5443,9 @@
     "resourceId": 681,
     "caseIdHex": "0x7796fa0bbfa72ea079cfd2de13a529ca965e9788cc93e23c84454323e1c42d51",
     "caseLabel": "CASE_0080",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-80/1-680.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-80/2-680.bin"
   },
   {
     "resourceId": 682,
@@ -5459,9 +5459,9 @@
     "resourceId": 683,
     "caseIdHex": "0xe5fe21816139bc0d935a84b7d30c3bca0f7e88f825e199946dc36329d021ce1a",
     "caseLabel": "CASE_0082",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-82/2-682.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-82/1-682.bin"
   },
   {
     "resourceId": 684,
@@ -5491,9 +5491,9 @@
     "resourceId": 687,
     "caseIdHex": "0x1fdcfab765e2f9789e34bdb687f7be3ee3bcd44b75b37716d3d03413eac5cc5c",
     "caseLabel": "CASE_0086",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-86/1-686.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-86/2-686.bin"
   },
   {
     "resourceId": 688,
@@ -5507,17 +5507,17 @@
     "resourceId": 689,
     "caseIdHex": "0x378b4b6ec47336f10a339637ff9eeb967b8c021d436dd23a4433f09f012c8dad",
     "caseLabel": "CASE_0088",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-88/1-688.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-88/2-688.bin"
   },
   {
     "resourceId": 690,
     "caseIdHex": "0xf31ca179ed73b0db9fa4e72abca98f41ad6d43fd7e6cf3a350808513c5e747e2",
     "caseLabel": "CASE_0089",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-89/1-689.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-89/2-689.bin"
   },
   {
     "resourceId": 691,
@@ -5531,17 +5531,17 @@
     "resourceId": 692,
     "caseIdHex": "0xaba1b42a31584403e84249e70cdbf649262c1cfb9614fb101a2a86298225b830",
     "caseLabel": "CASE_0091",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-91/2-691.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-91/1-691.bin"
   },
   {
     "resourceId": 693,
     "caseIdHex": "0x415a460347ea5df298c3253e3c4a8a9e41f7e0a266f39db677e8077e9aaacbd0",
     "caseLabel": "CASE_0092",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-92/2-692.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-92/1-692.bin"
   },
   {
     "resourceId": 694,
@@ -5555,49 +5555,49 @@
     "resourceId": 695,
     "caseIdHex": "0x9909d1dcf8111bafbb7096dab364c4517d5e20587828158940718cc6a816bc38",
     "caseLabel": "CASE_0094",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-94/2-694.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-94/1-694.bin"
   },
   {
     "resourceId": 696,
     "caseIdHex": "0x2e4ad8caa6fb6a851d33c1eab2fd7ff90610306b4d635d693fdab660a85513a8",
     "caseLabel": "CASE_0095",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-95/1-695.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-95/2-695.bin"
   },
   {
     "resourceId": 697,
     "caseIdHex": "0xa9163f7e89ce1153921f2d54a5f16c5c0e9f911e27a3f31150890b14504d8b64",
     "caseLabel": "CASE_0096",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-96/1-696.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-96/2-696.bin"
   },
   {
     "resourceId": 698,
     "caseIdHex": "0x92a10388587878c066cc61875bcb3f2ea6d8ab55baa65df18de3bacf9ed96e85",
     "caseLabel": "CASE_0097",
-    "rType": "MEDICAL_REPORT",
-    "sensitivity": 5,
-    "uri": "s3://claimguard/case-97/2-697.bin"
+    "rType": "FNOL",
+    "sensitivity": 4,
+    "uri": "s3://claimguard/case-97/1-697.bin"
   },
   {
     "resourceId": 699,
     "caseIdHex": "0xba7c7b070b243470f13dec0928242aab02e45b16f66b210dbf40694ce3e00cf6",
     "caseLabel": "CASE_0098",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-98/1-698.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-98/2-698.bin"
   },
   {
     "resourceId": 700,
     "caseIdHex": "0xb9f18dc78953873d40f1d70ad85f59d5453f99690e6638cf9035ffedfcd410e6",
     "caseLabel": "CASE_0099",
-    "rType": "FNOL",
-    "sensitivity": 4,
-    "uri": "s3://claimguard/case-99/1-699.bin"
+    "rType": "MEDICAL_REPORT",
+    "sensitivity": 5,
+    "uri": "s3://claimguard/case-99/2-699.bin"
   },
   {
     "resourceId": 701,
