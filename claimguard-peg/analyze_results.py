@@ -46,7 +46,76 @@ def compute_latency_stats():
 
 
 # ----------------------------
-# 2. THROUGHPUT PLOT
+# 2. LATENCY BAR CHART
+# ----------------------------
+
+
+def plot_latency_bar_chart():
+    """
+    Generate a bar chart showing P50, P90, and P99 latencies
+    for different request counts from latency_read_n*.csv files
+    """
+    rows = []
+    files = sorted(glob.glob(os.path.join(RESULT_DIR, "latency_read_n*.csv")))
+
+    if not files:
+        print("No latency_read_n*.csv files found")
+        return
+
+    for path in files:
+        df = pd.read_csv(path)
+        lat = df["latency_ms"].dropna().astype(float)
+
+        if lat.empty:
+            continue
+
+        p50 = float(np.percentile(lat, 50))
+        p90 = float(np.percentile(lat, 90))
+        p99 = float(np.percentile(lat, 99))
+
+        basename = os.path.basename(path).replace(".csv", "")
+        # e.g. latency_read_n50_c10 → n=50
+        parts = basename.split("_")
+        n_part = [p for p in parts if p.startswith("n")][0]
+        n_req = int(n_part[1:])
+
+        rows.append([n_req, p50, p90, p99])
+
+    df_lat = pd.DataFrame(rows, columns=["requests", "P50", "P90", "P99"])
+    df_lat = df_lat.sort_values("requests")
+
+    print("Latency Data for Bar Chart:")
+    print(df_lat)
+    print()
+
+    # Create bar chart
+    x = np.arange(len(df_lat))
+    width = 0.25
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    bars1 = ax.bar(x - width, df_lat["P50"], width, label="P50", alpha=0.8)
+    bars2 = ax.bar(x, df_lat["P90"], width, label="P90", alpha=0.8)
+    bars3 = ax.bar(x + width, df_lat["P99"], width, label="P99", alpha=0.8)
+
+    ax.set_xlabel("Number of Requests", fontsize=12)
+    ax.set_ylabel("Latency (ms)", fontsize=12)
+    # ax.set_title("PureChain ABAC Latency Distribution", fontsize=14)
+    ax.set_xticks(x)
+    ax.set_xticklabels([f"n={n}" for n in df_lat["requests"]])
+    ax.legend()
+    ax.grid(True, axis='y', alpha=0.3)
+
+    plt.tight_layout()
+
+    out_path = os.path.join(OUTPUT_DIR, "latency_bar_chart.png")
+    plt.savefig(out_path, dpi=300, bbox_inches="tight")
+    print(f"Saved latency bar chart → {out_path}\n")
+    plt.close()
+
+
+# ----------------------------
+# 3. THROUGHPUT PLOT
 # ----------------------------
 
 
@@ -94,7 +163,7 @@ def plot_throughput():
     plt.plot(df_thr["concurrency"], df_thr["throughput_rps"], marker="o")
     plt.xlabel("Concurrency (users)")
     plt.ylabel("Throughput (req/s)")
-    plt.title("PureChain ABAC Throughput")
+    # plt.title("PureChain ABAC Throughput")
     plt.grid(True)
 
     out_path = os.path.join(OUTPUT_DIR, "throughput.png")
@@ -103,7 +172,7 @@ def plot_throughput():
 
 
 # ----------------------------
-# 3. POLICY UPDATE COSTS
+# 4. POLICY UPDATE COSTS
 # ----------------------------
 
 
@@ -136,7 +205,7 @@ def extract_policy_update_costs():
 
 
 # ----------------------------
-# 4. AUTHORIZATION CORRECTNESS
+# 5. AUTHORIZATION CORRECTNESS
 # ----------------------------
 
 
@@ -190,6 +259,7 @@ def compute_correctness():
 # ----------------------------
 if __name__ == "__main__":
     compute_latency_stats()
+    plot_latency_bar_chart()
     plot_throughput()
     extract_policy_update_costs()
     compute_correctness()
