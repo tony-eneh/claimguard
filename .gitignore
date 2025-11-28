@@ -21,3 +21,4 @@
 
 # dotenv environment variables file
 .env
+.venv
