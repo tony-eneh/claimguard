@@ -98,12 +98,13 @@ def plot_latency_bar_chart():
     bars2 = ax.bar(x, df_lat["P90"], width, label="P90", alpha=0.8)
     bars3 = ax.bar(x + width, df_lat["P99"], width, label="P99", alpha=0.8)
 
-    ax.set_xlabel("Number of Requests", fontsize=12)
-    ax.set_ylabel("Latency (ms)", fontsize=12)
+    ax.set_xlabel("Number of Requests", fontsize=24)
+    ax.set_ylabel("Latency (ms)", fontsize=24)
     # ax.set_title("PureChain ABAC Latency Distribution", fontsize=14)
     ax.set_xticks(x)
-    ax.set_xticklabels([f"n={n}" for n in df_lat["requests"]])
-    ax.legend()
+    ax.set_xticklabels([f"n={n}" for n in df_lat["requests"]], fontsize=24)
+    ax.tick_params(axis='y', labelsize=24)
+    ax.legend(fontsize=24)
     ax.grid(True, axis='y', alpha=0.3)
 
     plt.tight_layout()
