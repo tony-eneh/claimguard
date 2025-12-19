@@ -5,6 +5,7 @@ import { createProvider } from "./blockchain";
 import { accessRouter } from "./routes/access";
 import { rbacAccessRouter } from "./routes/rbac";
 import { hybridAccessRouter } from "./routes/hybrid";
+import { createFileServer } from "./fileServer";
 
 async function main() {
   validateConfig();
@@ -35,8 +36,15 @@ async function main() {
     app.use("/api", hybridAccessRouter(provider));
   }
 
+  // Start gateway on primary port
   app.listen(config.port, () => {
     console.log(`ClaimGuard PEG (${config.mode}) listening on port ${config.port}`);
+  });
+
+  // Optionally start file server on port 5000 (for E3 testing)
+  const fileServer = createFileServer();
+  fileServer.listen(5000, () => {
+    console.log(`File Server listening on port 5000`);
   });
 }
 

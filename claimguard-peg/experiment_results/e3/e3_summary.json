@@ -1,0 +1,17 @@
+{
+  "role_spoofing": {
+    "test": "role_spoofing",
+    "total_attempts": 12,
+    "total_blocked": 6
+  },
+  "cloud_bypass": {
+    "test": "cloud_bypass",
+    "total_attempts": 5,
+    "total_blocked": 4
+  },
+  "gateway_abuse": {
+    "test": "gateway_abuse",
+    "total_attempts": 9,
+    "total_blocked": 7
+  }
+}

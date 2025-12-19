@@ -1,0 +1,27 @@
+{
+  "test": "cloud_bypass",
+  "bypass_attempts": 5,
+  "bypass_blocked": 4,
+  "details": [
+    {
+      "attempt": "no_token",
+      "status": "blocked",
+      "http_status": 400
+    },
+    {
+      "attempt": "empty_token",
+      "status": "blocked",
+      "http_status": 400
+    },
+    {
+      "attempt": "missing_token",
+      "status": "blocked",
+      "http_status": 400
+    },
+    {
+      "attempt": "null_token",
+      "status": "blocked",
+      "http_status": 400
+    }
+  ]
+}

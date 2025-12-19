@@ -43,6 +43,7 @@ const blockchain_1 = require("./blockchain");
 const access_1 = require("./routes/access");
 const rbac_1 = require("./routes/rbac");
 const hybrid_1 = require("./routes/hybrid");
+const fileServer_1 = require("./fileServer");
 async function main() {
     (0, config_1.validateConfig)();
     const app = (0, express_1.default)();
@@ -66,8 +67,14 @@ async function main() {
         const provider = (0, blockchain_1.createProvider)();
         app.use("/api", (0, hybrid_1.hybridAccessRouter)(provider));
     }
+    // Start gateway on primary port
     app.listen(config_1.config.port, () => {
         console.log(`ClaimGuard PEG (${config_1.config.mode}) listening on port ${config_1.config.port}`);
+    });
+    // Optionally start file server on port 5000 (for E3 testing)
+    const fileServer = (0, fileServer_1.createFileServer)();
+    fileServer.listen(5000, () => {
+        console.log(`File Server listening on port 5000`);
     });
 }
 main().catch((err) => {

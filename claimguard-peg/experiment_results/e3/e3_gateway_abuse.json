@@ -1,0 +1,59 @@
+{
+  "test": "gateway_abuse",
+  "abuse_attempts": 9,
+  "gracefully_rejected": 7,
+  "error_responses": 101,
+  "unexpected_success": 0,
+  "details": [
+    {
+      "request": "empty_body",
+      "status": "rejected_400",
+      "healthy": true
+    },
+    {
+      "request": "missing_subject",
+      "status": "rejected_400",
+      "healthy": true
+    },
+    {
+      "request": "missing_action",
+      "status": "rejected_400",
+      "healthy": true
+    },
+    {
+      "request": "invalid_action",
+      "status": "rejected_400",
+      "healthy": true
+    },
+    {
+      "request": "negative_resource",
+      "status": "error_500",
+      "healthy": false
+    },
+    {
+      "request": "huge_resource_id",
+      "status": "rejected_403",
+      "healthy": true
+    },
+    {
+      "request": "null_subject",
+      "status": "rejected_400",
+      "healthy": true
+    },
+    {
+      "request": "null_resource",
+      "status": "rejected_400",
+      "healthy": true
+    },
+    {
+      "request": "string_resource",
+      "status": "exception",
+      "error": "[WinError 64] The specified network name is no lon"
+    },
+    {
+      "flood_test": "100 rapid requests",
+      "successful": 0,
+      "status": "completed"
+    }
+  ]
+}
