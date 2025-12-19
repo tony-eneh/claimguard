@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "node": "hardhat node",
     "deploy:purechain": "ts-node scripts/compile-and-deploy-contracts.ts",
     "test": "hardhat test",
     "deploy": "ts-node scripts/deploy.ts"

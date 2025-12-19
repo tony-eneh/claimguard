@@ -20,6 +20,11 @@ export default defineConfig({
     },
   },
   networks: {
+    // Default local development network so `npx hardhat node` works out of the box
+    hardhat: {
+      type: "edr-simulated",
+      chainType: "l1",
+    },
     hardhatMainnet: {
       type: "edr-simulated",
       chainType: "l1",
