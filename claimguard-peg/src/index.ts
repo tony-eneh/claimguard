@@ -20,8 +20,10 @@ async function main() {
   if (config.mode === "claimguard") {
     const provider = createProvider();
     const { policyRouter } = await import("./routes/policy");
+    const { measureRouter } = await import("./routes/measure");
     app.use("/api", accessRouter(provider));
     app.use("/api", policyRouter());
+    app.use("/api", measureRouter());
   }
 
   if (config.mode === "rbac") {

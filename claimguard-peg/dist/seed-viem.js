@@ -266,7 +266,7 @@ async function main() {
         resourcesData.push({
             resourceId,
             contentHash,
-            caseId,
+            caseId: caseId,
             rType: ResourceType[rType],
             sensitivity,
             uri,
