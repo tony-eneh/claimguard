@@ -22,3 +22,76 @@
 # dotenv environment variables file
 .env
 .venv
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.idx
+*.ind
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.gls*
+*.ist
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.xdv
+*.nav
+*.snm
+*.vrb
+*.dvi
+*.ps
+*.ilg
+texput.log
+*.pdf
+
+# BibLaTeX / Biber
+*.run.xml
+*.blx.bib
+
+# minted output
+_minted*/
+
+# TikZ/PGF externalization
+*.tikz
+*.pgf
+*.auxlock
+
+# epstopdf conversions
+*-eps-converted-to.pdf
+
+# arara
+arara.log
+
+# Editor/OS noise
+.vscode/
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Common build dirs
+build/
+out/
+dist/
+
+# Temp/backup files
+*.bak
+*.tmp
+*~
+
+# Python caches
+__pycache__/
+*.pyc
