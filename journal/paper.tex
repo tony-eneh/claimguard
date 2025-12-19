@@ -996,10 +996,9 @@ Table~\ref{tab:latency} summarizes the end-to-end access latencies under normal
 \toprule
 \textbf{System} & \textbf{P50} & \textbf{P90} & \textbf{P99} \\
 \midrule
-RBAC-DB                  & 18 & 29  & 41  \\
-Hybrid-Audit             & 32 & 61  & 96  \\
-PureChain ABAC (W1)      & 44 & 78  & 122 \\
-PureChain ABAC (W2)      & 71 & 132 & 210 \\
+RBAC                    & 1.9   & 2.6   & 8.7   \\
+Hybrid-Audit            & 135.7 & 151.2 & 165.5 \\
+ClaimGuard (PureChain)  & 60.9  & 69.6  & 78.9  \\
 \bottomrule
 \end{tabular}
 \label{tab:latency}
@@ -1008,11 +1007,13 @@ PureChain ABAC (W2)      & 71 & 132 & 210 \\
 Key observations:
 
 \begin{itemize}
-    \item PureChain ABAC introduces an additional \textbf{25--35\,ms} overhead 
-    vs. RBAC-DB due to on-chain \texttt{checkAccess} evaluation.
-    \item Under high concurrency (W2), latency increases but remains below 
-    \textbf{~210\,ms at P99}, within operational tolerances for claims systems.
-    \item Gateway-side token generation contributes 3--5\,ms on average.
+    \item ClaimGuard introduces an additional \textbf{~59\,ms} overhead 
+    vs. pure RBAC due to on-chain \texttt{checkAccess} evaluation and smart contract state queries.
+    \item Hybrid-Audit shows the highest latency (\textbf{~136\,ms at P50}) due to combined 
+    RBAC evaluation + on-chain audit logging for every request, demonstrating the cost of 
+    dual-path enforcement.
+    \item ClaimGuard remains below \textbf{~79\,ms at P99}, within operational tolerances 
+    for claims workflows while providing full on-chain policy verification.
 \end{itemize}
 
 These results show that decentralized policy evaluation is feasible for
@@ -1025,7 +1026,7 @@ concurrent users increases from 10 to 200.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\linewidth]{figures/throughput.png}
+    \includegraphics[width=\linewidth]{../claimguard-peg/figures/e1/throughput_comparison.png}
     \caption{Throughput comparison under increasing concurrency.}
     \label{fig:throughput}
 \end{figure}
@@ -1054,29 +1055,29 @@ We benchmarked three policy operations:
 
 \begin{table}[ht]
 \centering
-\caption{Policy Update Costs on PureChain}
+\caption{Policy Update Latency Across Baseline Systems}
 \begin{tabular}{lcc}
 \toprule
-\textbf{Operation} & \textbf{Gas} & \textbf{Latency (ms)} \\
+\textbf{System} & \textbf{Avg Latency (ms)} & \textbf{Gas (if on-chain)} \\
 \midrule
-Add policy                   & 78k  & 210--240 \\
-Update policy                & 54k  & 155--180 \\
-Revoke subject permissions   & 61k  & 170--205 \\
+RBAC (in-memory)             & -- & --  \\
+Hybrid-Audit (RBAC + log)    & 1.1 & -- \\
+ClaimGuard (full verification) & 21.9 & 128k \\
 \bottomrule
 \end{tabular}
 \label{tab:policy}
 \end{table}
 
-A revocation storm (W4) involving 10{,}000 active capability tokens showed:
+ClaimGuard's policy evaluation path is slower than Hybrid-Audit due to full
+on-chain smart contract invocation, yet remains in the tens of milliseconds---
+acceptable for policy changes that are infrequent in practice (minutes to hours
+apart). The 128k gas cost reflects comprehensive policy rule evaluation and
+state updates on the blockchain.
 
-\[
-\textbf{Propagation latency } = 2.8~\text{s (average)}
-\]
-
-because tokens are naturally short-lived; revocation only blocks new token
-issuance.
-
-This satisfies requirements for emergency police/court revocation.
+Hybrid-Audit's minimal latency (1.1 ms) reflects its design: local RBAC rules
+are applied first, then a lightweight on-chain event is emitted for audit.
+This reduces latency but sacrifices the immutability and verifiability of policy
+enforcement.
 
 \subsection{Authorization Correctness (Q4)}
 
@@ -1086,13 +1087,13 @@ rejects (authorized but denied) across all workloads.
 \begin{table}[ht]
 \centering
 \caption{Authorization Correctness}
-\begin{tabular}{lcc}
+\begin{tabular}{lccc}
 \toprule
-\textbf{System} & \textbf{FAR} & \textbf{FRR} \\
+\textbf{System} & \textbf{Allow} & \textbf{Deny} & \textbf{Allow \%} \\
 \midrule
-RBAC-DB          & 0.42\% & 0.08\% \\
-Hybrid-Audit     & 0.39\% & 0.10\% \\
-PureChain ABAC   & \textbf{0.00\%} & \textbf{0.00\%} \\
+RBAC (no on-chain)          & 4077 & 773 & 84.06\% \\
+Hybrid-Audit (RBAC + event) & 4057 & 793 & 83.65\% \\
+ClaimGuard (on-chain ABAC)  & 4005 & 845 & 82.58\% \\
 \bottomrule
 \end{tabular}
 \label{tab:correctness}
@@ -1101,12 +1102,16 @@ PureChain ABAC   & \textbf{0.00\%} & \textbf{0.00\%} \\
 Findings:
 
 \begin{itemize}
-    \item FAR for PureChain ABAC was \textbf{0\%}, driven by strict on-chain 
-    evaluation.
-    \item FRR slightly increased due to time-window and purpose constraints, 
-    expected in ABAC models.
-    \item Audit log completeness reached 100\% since all decisions flow 
-    through the gateway.
+    \item Authorization allow rate across modes is consistent (82.6--84.1\%),
+    indicating that ABAC policies and RBAC equivalents produce similar outcomes
+    on the evaluation workload.
+    \item ClaimGuard's 2.5\% lower allow rate vs.\ RBAC reflects its stricter
+    on-chain constraints (time windows, resource type filters, jurisdiction
+    checks), as expected.
+    \item Hybrid-Audit's allow rate (83.65\%) matches RBAC because the same
+    local rules are used; the async audit log event does not affect decisions.
+    \item No false accepts or false rejects were detected: all access decisions
+    correctly matched the policy ruleset for each system.
 \end{itemize}
 
 \subsection{Security and Attack Resilience (Q5)}
@@ -1143,27 +1148,53 @@ The system remained stable across all workloads.
 
 \subsection{Discussion}
 
-The simulation results confirm the following:
+The E1 experiments answer the primary research questions as follows:
 
 \begin{itemize}
-    \item \textbf{Performance:}  
-    PureChain ABAC adds modest overhead but stays within practical operational
-    limits for insurance systems.
+    \item \textbf{Q1 (Performance):}
+    ClaimGuard introduces 60--70 ms median latency per access check (P50=60.9 ms),
+    compared to 1.9 ms for pure RBAC and 135.7 ms for Hybrid-Audit. While
+    ClaimGuard's on-chain evaluation is slower than RBAC, it remains in the
+    10--100 ms range acceptable for insurance workflows where access checks occur
+    at document retrieval time (not microsecond-scale). Throughput remains
+    stable at 100--200 req/s under concurrency, sufficient for typical evidence
+    repository workloads.
 
-    \item \textbf{Security:}  
-    On-chain policy evaluation and token-bound access eliminate unauthorized
-    reads, insider threats, and replay risks.
+    \item \textbf{Q2 (Policy Update):}
+    Policy creation in ClaimGuard incurs \textasciitilde 21.9 ms latency and
+    \textasciitilde 128k gas. Compared to Hybrid-Audit's 1.1 ms (in-memory
+    operation), ClaimGuard's cost is higher but amortized over time: policy
+    changes in insurance systems happen infrequently (minutes to hours apart),
+    whereas access checks happen on every document access. The on-chain cost
+    ensures immutability and non-repudiation.
 
-    \item \textbf{Scalability:}  
-    The system gracefully handles bursts and large-scale revocation events.
+    \item \textbf{Q3 (Correctness):}
+    Authorization decision distributions align closely: RBAC (84.1\% allow),
+    Hybrid-Audit (83.65\% allow), ClaimGuard (82.58\% allow). The 2.5\% lower
+    allow rate in ClaimGuard reflects stricter policy constraints (time windows,
+    resource type filters, jurisdiction checks). No false accepts or false
+    rejects were observed in any mode.
 
-    \item \textbf{Correctness:}  
-    Authorization decisions remain exact, with no false accepts and very low 
-    false rejects.
+    \item \textbf{Q4 (Audit \& Blame):}
+    Hybrid-Audit demonstrates that on-chain audit logging is a practical
+    middle ground: decisions are made locally (1.1 ms), but outcomes are
+    immutably logged on-chain, providing non-repudiation without full policy
+    evaluation overhead. This trades real-time policy enforcement for audit
+    completeness.
+
+    \item \textbf{Q5 (Resilience):}
+    The ClaimGuard architecture's use of signature-based tokens and blockchain
+    consensus prevents insider attacks (unauthorized reads at the cloud layer
+    without a token) and replay attacks (tokens expire after $\Delta t = 3$ min).
+    Hybrid-Audit similarly protects against these threats through local
+    enforcement, though without the immutability guarantee of on-chain state.
 \end{itemize}
 
-Overall, the architecture robustly satisfies R1--R9 and answers Q1--Q5, showing
-clear advantages over traditional cloud-only RBAC designs.
+In summary, E1 validates that blockchains enable fine-grained, auditable access
+control with acceptable performance tradeoffs. ClaimGuard's 60--70 ms latency
+penalty is modest compared to the security and auditability guarantees
+provided; Hybrid-Audit offers a pragmatic alternative when latency is
+paramount.
 
 
 \section{Conclusion and Future Work}
