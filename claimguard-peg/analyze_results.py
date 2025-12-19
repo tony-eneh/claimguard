@@ -4,8 +4,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-RESULT_DIR = "claimguard-peg/experiment_results"
-OUTPUT_DIR = "claimguard-peg/figures"
+RESULT_SUBDIR = os.environ.get("CLAIMGUARD_RESULT_SUBDIR", "")
+FIGURES_SUBDIR = os.environ.get("CLAIMGUARD_FIGURES_SUBDIR", "")
+
+RESULT_DIR = os.path.join("claimguard-peg", "experiment_results", RESULT_SUBDIR)
+OUTPUT_DIR = os.path.join("claimguard-peg", "figures", FIGURES_SUBDIR)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # ----------------------------

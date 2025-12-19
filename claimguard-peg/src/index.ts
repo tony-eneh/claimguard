@@ -13,24 +13,33 @@ async function main() {
   const app = express();
   app.use(bodyParser.json());
 
-  const provider = createProvider();
-
   app.get("/health", (_req, res) => {
     res.json({ status: "ok" });
   });
 
-  // claimguard-peg RBAC routes
-  app.use("/api", accessRouter(provider));
-  app.use("/api", policyRouter());
+  // Mount based on mode
+  if (config.mode === "claimguard") {
+    const provider = createProvider();
+    app.use("/api", accessRouter(provider));
+    app.use("/api", policyRouter());
+  }
 
-  // RBAC policy store and access routes
-  app.use("/api", rbacAccessRouter());
+  if (config.mode === "rbac") {
+    app.use("/api", rbacAccessRouter());
+  }
 
-  // hybrid rbac+ on-chain logs routes
-  app.use("/api", hybridAccessRouter(provider));
+  if (config.mode === "hybrid") {
+    const provider = createProvider();
+    app.use("/api", hybridAccessRouter(provider));
+  }
 
   app.listen(config.port, () => {
-    console.log(`ClaimGuard PEG listening on port ${config.port}`);
+    console.log(`ClaimGuard PEG (${config.mode}) listening on port ${config.port}`);
   });
 }
+
+main().catch((err) => {
+  console.error("PEG failed to start:", err);
+  process.exit(1);
+});
 

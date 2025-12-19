@@ -28,6 +28,7 @@ THROUGHPUT_CONCURRENCY = [10, 50, 100, 200]
 POLICY_UPDATE_COUNT = 10
 
 BASE_URL = os.environ.get("CLAIMGUARD_BASE_URL", "http://localhost:4000/api")
+SKIP_POLICY_UPDATES = os.environ.get("CLAIMGUARD_SKIP_POLICY_UPDATES", "false").lower() in {"1", "true", "yes"}
 
 # ---------- PATHS ----------------------------------------------------------
 
@@ -35,7 +36,12 @@ BASE_URL = os.environ.get("CLAIMGUARD_BASE_URL", "http://localhost:4000/api")
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
 TEST_DIR = os.path.join(ROOT, "experiment_tests")
-RESULT_DIR = os.path.join(ROOT, "experiment_results")
+RESULT_SUBDIR = os.environ.get("CLAIMGUARD_RESULT_SUBDIR", "")
+RESULT_DIR = os.path.join(
+    ROOT,
+    "experiment_results",
+    RESULT_SUBDIR.strip() if RESULT_SUBDIR else "",
+)
 OUTPUT_DIR = os.path.join(ROOT, "outputs")
 
 ACCESS_TEST = os.path.join(TEST_DIR, "access_test.py")
@@ -83,7 +89,11 @@ def run_latency_tests() -> None:
         RESOURCES_JSON, ROOT)  # "outputs/resources.json"
 
     for n in LATENCY_REQUESTS:
-        out_rel = f"experiment_results/latency_read_n{n}_c{LATENCY_CONCURRENCY}.csv"
+        out_rel = os.path.join(
+            "experiment_results",
+            RESULT_SUBDIR,
+            f"latency_read_n{n}_c{LATENCY_CONCURRENCY}.csv",
+        )
         cmd = [
             PY_EXE,
             ACCESS_TEST,
@@ -104,7 +114,11 @@ def run_throughput_tests() -> None:
     resources_rel = os.path.relpath(RESOURCES_JSON, ROOT)
 
     for c in THROUGHPUT_CONCURRENCY:
-        out_rel = f"experiment_results/throughput_read_n{THROUGHPUT_TOTAL_REQUESTS}_c{c}.csv"
+        out_rel = os.path.join(
+            "experiment_results",
+            RESULT_SUBDIR,
+            f"throughput_read_n{THROUGHPUT_TOTAL_REQUESTS}_c{c}.csv",
+        )
         cmd = [
             PY_EXE,
             ACCESS_TEST,
@@ -121,7 +135,11 @@ def run_throughput_tests() -> None:
 
 def run_policy_update_tests() -> None:
     print("\n=== Policy update tests ===")
-    out_rel = f"experiment_results/policy_updates_{POLICY_UPDATE_COUNT}.csv"
+    out_rel = os.path.join(
+        "experiment_results",
+        RESULT_SUBDIR,
+        f"policy_updates_{POLICY_UPDATE_COUNT}.csv",
+    )
     cmd = [
         PY_EXE,
         POLICY_TEST,
@@ -136,5 +154,6 @@ if __name__ == "__main__":
     ensure_paths()
     run_latency_tests()
     run_throughput_tests()
-    run_policy_update_tests()
+    if not SKIP_POLICY_UPDATES:
+        run_policy_update_tests()
     print("\nAll experiments finished. CSVs are in claimguard-peg/experiment_results/")
