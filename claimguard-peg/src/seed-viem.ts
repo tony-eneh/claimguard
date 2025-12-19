@@ -293,8 +293,8 @@ async function main() {
 
   const resourcesData: Array<{
     resourceId: number;
-    caseIdHex: string;
-    caseLabel: string;
+    contentHash: string;
+    caseId: string;
     rType: string;
     sensitivity: number;
     uri: string;
@@ -302,8 +302,7 @@ async function main() {
 
   for (let i = 0; i < totalResources; i++) {
     const caseIndex = i % numCases;
-    const caseIdStr = `CASE_${caseIndex.toString().padStart(4, '0')}`;
-    const caseId = stringToBytes32(caseIdStr);
+    const caseId = stringToBytes32(`CASE_${caseIndex.toString().padStart(4, '0')}`);
 
     const rType = pickResourceType(i);
     const sensitivity = pickSensitivity(rType);
@@ -328,8 +327,8 @@ async function main() {
     // Store resource data
     resourcesData.push({
       resourceId,
-      caseIdHex: caseId,
-      caseLabel: caseIdStr,
+      contentHash,
+      caseId: caseId,
       rType: ResourceType[rType],
       sensitivity,
       uri,

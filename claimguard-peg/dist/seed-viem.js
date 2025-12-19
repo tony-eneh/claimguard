@@ -246,8 +246,7 @@ async function main() {
     const resourcesData = [];
     for (let i = 0; i < totalResources; i++) {
         const caseIndex = i % numCases;
-        const caseIdStr = `CASE_${caseIndex.toString().padStart(4, '0')}`;
-        const caseId = stringToBytes32(caseIdStr);
+        const caseId = stringToBytes32(`CASE_${caseIndex.toString().padStart(4, '0')}`);
         const rType = pickResourceType(i);
         const sensitivity = pickSensitivity(rType);
         // Fake URI and hash
@@ -266,8 +265,8 @@ async function main() {
         // Store resource data
         resourcesData.push({
             resourceId,
-            caseIdHex: caseId,
-            caseLabel: caseIdStr,
+            contentHash,
+            caseId,
             rType: ResourceType[rType],
             sensitivity,
             uri,
