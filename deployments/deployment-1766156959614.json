@@ -1,0 +1,12 @@
+{
+  "network": "unknown",
+  "chainId": "31337",
+  "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "timestamp": "2025-12-19T15:09:19.614Z",
+  "contracts": {
+    "EvidenceRegistry": "0x17975FB494576ae89D627F904Ec723B87c7C35c8",
+    "SubjectAttributeRegistry": "0x1C9f974DF781C6EB3764F21Fe961ba38305213df",
+    "AccessPolicyManager": "0xC138B397Be84Ec53E2654eEf1D0D63355E459791",
+    "AccessAuditLog": "0xa513902CE47191a5D4b63deFBa4f337347C512BE"
+  }
+}

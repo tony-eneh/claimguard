@@ -6,7 +6,7 @@ import { ethers } from "ethers";
 import { Action, AccessRequestBody, Capability } from "../types";
 import { config } from "../config";
 import { saveCapability } from "../capabilityStore";
-import { RbacStore } from "../rbac/store";
+import { RbacStore, RbacRule } from "../rbac/store";
 import { buildStoresFromOutputs } from "../rbac/load";
 
 // You’ll deploy this small contract: AccessAuditLog.sol (emit event)
@@ -27,6 +27,9 @@ export function hybridAccessRouter(provider: ethers.JsonRpcProvider) {
 
     const store = new RbacStore();
     buildStoresFromOutputs({ store, subjectsPath: SUBJECTS_JSON, resourcesPath: RESOURCES_JSON });
+
+    // Seed baseline RBAC rules to mirror ABAC policies (same as /rbac)
+    seedBaselineRules(store);
 
     const auditAddress = process.env.ACCESS_AUDIT_LOG_ADDRESS;
     if (!auditAddress) {
@@ -124,4 +127,35 @@ export function hybridAccessRouter(provider: ethers.JsonRpcProvider) {
     });
 
     return router;
+}
+
+function seedBaselineRules(store: RbacStore) {
+    const now = Math.floor(Date.now() / 1000);
+    const oneMonth = 30 * 24 * 60 * 60;
+
+    const rules: RbacRule[] = [
+        // Insurers: READ any type, sensitivity <= 5
+        { role: "INSURER", action: "READ", allow: true, maxSensitivity: 5 },
+
+        // Adjusters: READ/APPEND/UPDATE, sensitivity <= 4
+        { role: "ADJUSTER", action: "READ", allow: true, maxSensitivity: 4 },
+        { role: "ADJUSTER", action: "APPEND", allow: true, maxSensitivity: 4 },
+        { role: "ADJUSTER", action: "UPDATE", allow: true, maxSensitivity: 4 },
+
+        // Police: READ VIDEO + IMAGE, sensitivity <= 3, time-bounded
+        { role: "POLICE", action: "READ", rType: "VIDEO", allow: true, maxSensitivity: 3, notBefore: now, notAfter: now + oneMonth },
+        { role: "POLICE", action: "READ", rType: "IMAGE", allow: true, maxSensitivity: 3, notBefore: now, notAfter: now + oneMonth },
+
+        // Court: READ any, sensitivity <= 5
+        { role: "COURT", action: "READ", allow: true, maxSensitivity: 5 },
+
+        // Garage: READ IMAGE + REPAIR_ESTIMATE, sensitivity <= 2
+        { role: "GARAGE", action: "READ", rType: "IMAGE", allow: true, maxSensitivity: 2 },
+        { role: "GARAGE", action: "READ", rType: "REPAIR_ESTIMATE", allow: true, maxSensitivity: 2 },
+
+        // Regulator: READ any, max sensitivity
+        { role: "REGULATOR", action: "READ", allow: true, maxSensitivity: 5 },
+    ];
+
+    store.rules.push(...rules);
 }

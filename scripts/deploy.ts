@@ -32,6 +32,9 @@ async function main() {
   const accessPolicyManagerArtifact = JSON.parse(
     fs.readFileSync(path.join(__dirname, '../artifacts/contracts/AccessPolicyManager.sol/AccessPolicyManager.json'), 'utf8')
   );
+  const accessAuditLogArtifact = JSON.parse(
+    fs.readFileSync(path.join(__dirname, '../artifacts/contracts/AccessAuditLog.sol/AccessAuditLog.json'), 'utf8')
+  );
 
   // Deploy EvidenceRegistry
   console.log('Deploying EvidenceRegistry...');
@@ -91,6 +94,25 @@ async function main() {
   const accessPolicyManagerAddress = await accessPolicyManager.getAddress();
   console.log('✓ AccessPolicyManager deployed to:', accessPolicyManagerAddress);
 
+  // Wait a bit to ensure state is updated
+  await sleep(500);
+
+  // Deploy AccessAuditLog (for Hybrid mode audit events)
+  console.log('\nDeploying AccessAuditLog...');
+  nonce = await provider.getTransactionCount(deployer.address, 'latest');
+  console.log('  Using nonce:', nonce);
+
+  const AccessAuditLog = new ethers.ContractFactory(
+    accessAuditLogArtifact.abi,
+    accessAuditLogArtifact.bytecode,
+    deployer
+  );
+  const accessAuditLog = await AccessAuditLog.deploy({ nonce });
+  const receipt4 = await accessAuditLog.deploymentTransaction()?.wait();
+  console.log('  Transaction mined in block:', receipt4?.blockNumber);
+  const accessAuditLogAddress = await accessAuditLog.getAddress();
+  console.log('✓ AccessAuditLog deployed to:', accessAuditLogAddress);
+
   // Save deployment addresses
   const network = await provider.getNetwork();
   const deploymentInfo = {
@@ -102,6 +124,7 @@ async function main() {
       EvidenceRegistry: evidenceRegistryAddress,
       SubjectAttributeRegistry: subjectAttributeRegistryAddress,
       AccessPolicyManager: accessPolicyManagerAddress,
+      AccessAuditLog: accessAuditLogAddress,
     },
   };
 
@@ -123,6 +146,7 @@ async function main() {
   console.log('  EvidenceRegistry:', evidenceRegistryAddress);
   console.log('  SubjectAttributeRegistry:', subjectAttributeRegistryAddress);
   console.log('  AccessPolicyManager:', accessPolicyManagerAddress);
+  console.log('  AccessAuditLog:', accessAuditLogAddress);
   console.log('\nDeployment info saved to:', deploymentFile);
   console.log('='.repeat(60));
 
@@ -131,6 +155,7 @@ async function main() {
   console.log(`EVIDENCE_REGISTRY_ADDRESS=${evidenceRegistryAddress}`);
   console.log(`SUBJECT_ATTRIBUTE_REGISTRY_ADDRESS=${subjectAttributeRegistryAddress}`);
   console.log(`ACCESS_POLICY_MANAGER_ADDRESS=${accessPolicyManagerAddress}`);
+  console.log(`ACCESS_AUDIT_LOG_ADDRESS=${accessAuditLogAddress}`);
 }
 
 main()
