@@ -3,7 +3,6 @@ import bodyParser from "body-parser";
 import { config, validateConfig } from "./config";
 import { createProvider } from "./blockchain";
 import { accessRouter } from "./routes/access";
-import { policyRouter } from "./routes/policy";
 import { rbacAccessRouter } from "./routes/rbac";
 import { hybridAccessRouter } from "./routes/hybrid";
 
@@ -20,6 +19,7 @@ async function main() {
   // Mount based on mode
   if (config.mode === "claimguard") {
     const provider = createProvider();
+    const { policyRouter } = await import("./routes/policy");
     app.use("/api", accessRouter(provider));
     app.use("/api", policyRouter());
   }
