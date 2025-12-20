@@ -1315,6 +1315,148 @@ These findings strengthen the claim that ClaimGuard provides resilience against
 insider threats, replay attacks, token tampering, and direct cloud bypass attempts---
 differentiating it from traditional RBAC systems that assume honest cloud operators.
 
+\subsection{Realistic Network Conditions: Local vs Public Testnet (E2)}
+
+To assess ClaimGuard's real-world viability, we deployed the full system on both 
+a local Hardhat development node (representing optimal conditions) and the public 
+Sepolia testnet (representing realistic blockchain network latency, RPC provider 
+variability, and block confirmation times). This comparison isolates the overhead 
+introduced by \emph{public blockchain infrastructure} while holding the gateway, 
+application logic, and workload characteristics constant.
+
+\subsubsection{Access Latency}
+
+Table~\ref{tab:e2-latency} compares end-to-end latency for the 
+\texttt{POST /api/access} endpoint under local and public network conditions.
+
+\input{../claimguard-peg/figures/e2_latency_table.tex}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{../claimguard-peg/figures/e2_latency_comparison.pdf}
+    \caption{Access latency: local vs public network (E2).}
+    \label{fig:e2-latency}
+\end{figure}
+
+Key observations:
+\begin{itemize}
+    \item The median (P50) latency increases from \textbf{16.0\,ms} on local Hardhat 
+    to \textbf{226.3\,ms} on Sepolia, a \textbf{14.1$\times$} overhead.
+    \item P90 and P99 latencies exhibit similar scaling: P90 grows from 28.5\,ms to 
+    241.2\,ms, and P99 from 34.0\,ms to 517.3\,ms.
+    \item The increased latency is attributed to network round-trip time to public 
+    RPC endpoints, Sepolia's \textasciitilde12--15\,s block confirmation time, and 
+    potential rate-limiting on free-tier RPC providers.
+\end{itemize}
+
+Despite the overhead, access latency on Sepolia remains under \textbf{250\,ms at P90}, 
+which is acceptable for document retrieval workflows in insurance systems where 
+users expect sub-second response times. The local results (16--34\,ms) confirm 
+that gateway and smart contract logic introduces minimal overhead; the bulk of 
+delay originates from public RPC infrastructure.
+
+\subsubsection{Throughput}
+
+Table~\ref{tab:e2-throughput} and Fig.~\ref{fig:e2-throughput} show throughput 
+performance under concurrency levels 10, 50, and 100.
+
+\input{../claimguard-peg/figures/e2_throughput_table.tex}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{../claimguard-peg/figures/e2_throughput_comparison.pdf}
+    \caption{Access throughput: local vs public network (E2).}
+    \label{fig:e2-throughput}
+\end{figure}
+
+Findings:
+\begin{itemize}
+    \item Local Hardhat achieves throughput between \textbf{569--993\,req/s} at 
+    concurrency 10--100, reflecting the absence of network and consensus delays.
+    \item Sepolia throughput drops to \textbf{142--373\,req/s}, a reduction of 
+    \textbf{62--75\%}, primarily due to RPC provider rate limits, network latency, 
+    and per-request blockchain query overhead.
+    \item At concurrency 100, Sepolia sustains 373\,req/s, demonstrating that 
+    public blockchain infrastructure can support moderate production workloads 
+    (tens of concurrent users per insurer).
+\end{itemize}
+
+The throughput gap between local and public networks emphasizes the importance 
+of caching, read-replica strategies, and premium RPC provider tiers for 
+production deployments. Nonetheless, even under public network constraints, 
+ClaimGuard's throughput exceeds typical insurance evidence access patterns 
+(estimated at 10--50\,req/s per organization during peak claim processing).
+
+\subsubsection{Policy Update Confirmation Time}
+
+Table~\ref{tab:e2-policy} and Fig.~\ref{fig:e2-policy} compare policy creation 
+and confirmation times.
+
+\input{../claimguard-peg/figures/e2_policy_table.tex}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{../claimguard-peg/figures/e2_policy_comparison.pdf}
+    \caption{Policy confirmation time: local vs public network (E2).}
+    \label{fig:e2-policy}
+\end{figure}
+
+Results:
+\begin{itemize}
+    \item On local Hardhat, policy creation completes in an average of 
+    \textbf{0.02\,s} (20\,ms), consistent with instant block mining.
+    \item On Sepolia, confirmation time increases dramatically to an average of 
+    \textbf{24.8\,s}, reflecting Sepolia's \textasciitilde12--15\,s block time 
+    plus transaction queuing and RPC variability.
+    \item The maximum confirmation time on Sepolia reached \textbf{89.4\,s}, 
+    likely due to transient RPC provider issues or mempool congestion.
+\end{itemize}
+
+This confirms that policy updates on public testnets are \emph{asynchronous 
+operations} unsuitable for synchronous API workflows. In production, policy 
+creation should be treated as a background administrative task with status 
+polling or webhook-based notifications. The \textasciitilde15--25\,s confirmation 
+time aligns with Sepolia's block time and is acceptable for infrequent policy 
+governance operations (minutes to hours apart).
+
+\subsubsection{Discussion}
+
+The E2 results validate ClaimGuard's \emph{functional correctness} under realistic 
+network conditions while revealing infrastructure-driven performance gaps:
+
+\begin{itemize}
+    \item \textbf{Access latency overhead (14$\times$):} The majority of delay 
+    originates from public RPC endpoints and block confirmation, not gateway or 
+    smart contract evaluation. Organizations can mitigate this by deploying 
+    dedicated blockchain nodes, using premium RPC tiers (e.g., Alchemy, Infura), 
+    or adopting consortium networks with faster block times.
+    
+    \item \textbf{Throughput sufficiency:} Despite 62--75\% reduction on Sepolia, 
+    the observed 142--373\,req/s exceeds typical insurer access rates. For larger 
+    organizations, horizontal scaling (multiple gateway instances, load balancing, 
+    read replicas) can further increase capacity.
+    
+    \item \textbf{Asynchronous policy updates:} The \textasciitilde15--25\,s 
+    confirmation time on public networks necessitates asynchronous policy workflows. 
+    This is consistent with real-world governance practices where policy changes 
+    are reviewed, approved, and applied in batch cycles rather than in real time.
+    
+    \item \textbf{Production deployment implications:} E2 confirms that ClaimGuard 
+    is deployable on public blockchains with acceptable performance for insurance 
+    workflows. For mission-critical or high-throughput scenarios, deploying on 
+    private or consortium networks (e.g., PureChain, Hyperledger Fabric, Polygon 
+    Edge) reduces latency to near-local levels while preserving the auditability 
+    and tamper-resistance benefits of blockchain-backed access control.
+\end{itemize}
+
+In summary, E2 establishes ClaimGuard's real-world feasibility by demonstrating 
+that while public blockchain infrastructure introduces measurable overhead, the 
+resulting latency and throughput remain within operational tolerances for 
+auto-insurance evidence access workflows. The comparison further clarifies 
+design tradeoffs for production deployment: local/consortium networks for 
+latency-sensitive use cases, public networks for decentralization and 
+cross-organizational trust.
+
 
 \section{Conclusion and Future Work}
 

@@ -1,0 +1,26 @@
+{
+  "test": "throughput",
+  "results": [
+    {
+      "concurrency": 10,
+      "requests": 100,
+      "successful": 100,
+      "duration_s": 0.7,
+      "throughput_rps": 142.16
+    },
+    {
+      "concurrency": 50,
+      "requests": 500,
+      "successful": 500,
+      "duration_s": 1.59,
+      "throughput_rps": 315.07
+    },
+    {
+      "concurrency": 100,
+      "requests": 1000,
+      "successful": 1000,
+      "duration_s": 2.68,
+      "throughput_rps": 373.45
+    }
+  ]
+}

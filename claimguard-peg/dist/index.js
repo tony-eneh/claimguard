@@ -45,7 +45,9 @@ const rbac_1 = require("./routes/rbac");
 const hybrid_1 = require("./routes/hybrid");
 const fileServer_1 = require("./fileServer");
 async function main() {
+    console.log(`[STARTUP] Validating config...`);
     (0, config_1.validateConfig)();
+    console.log(`[STARTUP] Config validated, mode=${config_1.config.mode}, rpc=${config_1.config.rpcUrl}`);
     const app = (0, express_1.default)();
     app.use(body_parser_1.default.json());
     app.get("/health", (_req, res) => {
@@ -53,12 +55,16 @@ async function main() {
     });
     // Mount based on mode
     if (config_1.config.mode === "claimguard") {
+        console.log(`[STARTUP] Creating provider for claimguard mode...`);
         const provider = (0, blockchain_1.createProvider)();
+        console.log(`[STARTUP] Provider created, loading routes...`);
         const { policyRouter } = await Promise.resolve().then(() => __importStar(require("./routes/policy")));
         const { measureRouter } = await Promise.resolve().then(() => __importStar(require("./routes/measure")));
+        console.log(`[STARTUP] Routes loaded, mounting...`);
         app.use("/api", (0, access_1.accessRouter)(provider));
         app.use("/api", policyRouter());
         app.use("/api", measureRouter());
+        console.log(`[STARTUP] Routes mounted`);
     }
     if (config_1.config.mode === "rbac") {
         app.use("/api", (0, rbac_1.rbacAccessRouter)());
@@ -68,13 +74,34 @@ async function main() {
         app.use("/api", (0, hybrid_1.hybridAccessRouter)(provider));
     }
     // Start gateway on primary port
-    app.listen(config_1.config.port, () => {
-        console.log(`ClaimGuard PEG (${config_1.config.mode}) listening on port ${config_1.config.port}`);
+    console.log(`[STARTUP] Starting server on port ${config_1.config.port}...`);
+    const server = app.listen(config_1.config.port, () => {
+        console.log(`✓ ClaimGuard PEG (${config_1.config.mode}) listening on port ${config_1.config.port}`);
     });
-    // Optionally start file server on port 5000 (for E3 testing)
-    const fileServer = (0, fileServer_1.createFileServer)();
-    fileServer.listen(5000, () => {
-        console.log(`File Server listening on port 5000`);
+    // Handle server errors
+    server.on("error", (err) => {
+        console.error(`[ERROR] Server error:`, err);
+    });
+    server.on("clientError", (err) => {
+        console.error(`[ERROR] Client error:`, err);
+    });
+    // Set timeout for unresponsive requests
+    server.setTimeout(30000);
+    // Defer file server startup to next event loop iteration
+    setImmediate(() => {
+        try {
+            console.log(`[STARTUP] Starting file server...`);
+            const fileServer = (0, fileServer_1.createFileServer)();
+            const fileServerInstance = fileServer.listen(5000, () => {
+                console.log(`✓ File Server listening on port 5000`);
+            });
+            fileServerInstance.on("error", (err) => {
+                console.error(`[ERROR] File server error:`, err);
+            });
+        }
+        catch (err) {
+            console.error(`[ERROR] Failed to start file server:`, err);
+        }
     });
 }
 main().catch((err) => {
