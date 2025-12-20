@@ -133,14 +133,14 @@ Across insurance- and healthcare-oriented blockchain systems, the following limi
 	\toprule
 	\textbf{Work} & \textbf{Domain} & \textbf{Evidence Types} & \textbf{Access Model} & \textbf{Action-Aware} & \textbf{On-Chain Policies} & \textbf{Off-Chain Enforcement} & \textbf{Evaluation Style} \\
 \midrule
-Sun et al. (2020) \cite{sun2020insurance} & Insurance data & Images / records & CP-ABE & No & Partial (ABE policies) & No & Cryptographic analysis \\
+Sun et al. (2020) \cite{sun2020insurance} & Insurance data & Images / records & CP-ABE & No & Partial (ABE policies) & No & Crypto\-graphic analysis \\
 Liu et al. (2021) \cite{liu2021auto} & Auto insurance & Claim documents & Proxy Re-Enc. & No & Limited & No & Security + cost analysis \\
 Raikwar et al. (2018) \cite{raikwar2018insurance} & Generic insurance & Process states & RBAC (workflow) & Limited & Yes & No & Qualitative \\
 Tekale \& Rahul (2023) \cite{tekale2023claims} & Claim settlement & Claim states & RBAC (roles) & Yes (states only) & Yes & No & Conceptual \\
 Sun et al. (2020) EMR \cite{sun2020emr} & Healthcare & EMR bundles & ABE & No & No (ABE only) & No & Scenario-driven \\
 Rana et al. (2022) \cite{rana2022healthcare} & Healthcare & EMR, identity & Smart-contract ABAC & Partial & Yes & No & Conceptual \\
 Liang et al. (2017) \cite{liang2017mhealth} & Mobile healthcare & Patient data & Permission protocol & No & Yes & No & Conceptual \\
-Theodouli et al. (2018) \cite{theodouli2018healthcare} & Healthcare sharing & Records & Smart contracts & No & Yes & No & Architectural \\
+Theodouli et al. (2018) \cite{theodouli2018healthcare} & Healthcare sharing & Records & Smart contracts & No & Yes & No & Architec\-tural \\
 \midrule
 	\textbf{This Work} & \textbf{Auto-insurance evidence} & \textbf{FNOL, PDFs, images, telematics, videos} & \textbf{PureChain ABAC} & \textbf{Yes (CRUD, append, adjudicate)} & \textbf{Yes (Verifiable contract rules)} & \textbf{Yes (Gateway + capabilities)} & \textbf{Simulation vs RBAC baseline} \\
 \bottomrule
@@ -363,14 +363,14 @@ ClaimGuard anchors authorization decisions on PureChain smart contracts and enfo
         font=\small,
         box/.style={
             draw, rounded corners, fill=gray!5,
-            minimum width=2.6cm, minimum height=0.9cm,
-            text width=2.6cm,
+            minimum width=2.25cm, minimum height=0.9cm,
+            text width=2.25cm,
             align=center,
             inner sep=3pt
         },
         arrow/.style={-Latex, thick},
         dataarrow/.style={-Latex, thick, dashed},
-        node distance=1.1cm
+        node distance=1.0cm
     ]
 
     % Vertical layout
@@ -378,8 +378,8 @@ ClaimGuard anchors authorization decisions on PureChain smart contracts and enfo
     \node[box, below=of client] (peg) {Policy\\Enforcement\\Gateway};
     \node[box, below=of peg] (policy) {Access Policy\\Manager};
 
-    \node[box, below left=0.9cm and 0.9cm of policy] (subject) {Subject\\Registry};
-    \node[box, below right=0.9cm and 0.9cm of policy] (evidence) {Evidence\\Registry};
+    \node[box, below left=0.8cm and 0.6cm of policy] (subject) {Subject\\Registry};
+    \node[box, below right=0.8cm and 0.6cm of policy] (evidence) {Evidence\\Registry};
 
     \node[box, below=1.6cm of policy] (storage) {Cloud / IPFS\\Storage};
 
@@ -396,7 +396,7 @@ ClaimGuard anchors authorization decisions on PureChain smart contracts and enfo
     \draw[dataarrow] (storage) to[bend left=20] node[midway, left] {7. data} (client);
 
     \end{tikzpicture}
-    \caption{ABAC evaluation flow: PEG calls \texttt{checkAccess}; contracts evaluate attributes/metadata; PEG returns a capability.}
+    \caption{ABAC evaluation flow: PEG calls \texttt{checkAccess}; contracts evaluate attributes and metadata; PEG returns a capability.}
     \label{fig:abac-flow-compact}
 \end{figure}
 
@@ -427,7 +427,7 @@ To prevent cloud-side bypass (e.g., object enumeration by privileged operators),
 
 \subsubsection{Capability Token Model}
 
-A capability encodes the subject, resource, action, and an expiration timestamp, plus a gateway ECDSA signature. Storage backends accept requests only if the signature verifies and the capability is unexpired and matches the requested resource/action, preventing unmediated access and limiting token replay via short expirations.
+A capability encodes the subject, resource, action, and an expiration timestamp, plus a gateway ECDSA signature. Storage backends accept requests only if the signature verifies and the capability is unexpired and matches the requested resource and action, preventing unmediated access and limiting token replay via short expirations.
 
 \subsubsection{Comparison with Encryption-Based Approaches}
 
@@ -450,12 +450,12 @@ Cloud administrators cannot fetch evidence via direct API calls because storage 
         font=\footnotesize,
         participant/.style={
             draw, rounded corners, fill=gray!5,
-            minimum width=1.8cm, minimum height=0.6cm,
+            minimum width=1.55cm, minimum height=0.6cm,
             align=center
         },
         lifeline/.style={densely dashed},
         msg/.style={-Latex, thick},
-        node distance=2.2cm
+        node distance=1.7cm
     ]
 
     % Participants
@@ -482,20 +482,20 @@ Cloud administrators cannot fetch evidence via direct API calls because storage 
 
     % 4) Chain -> PEG: decision
     \draw[msg] ([yshift=-2.4cm]chain.south) --
-               node[above,sloped]{4) allow / deny} ([yshift=-2.4cm]peg.south);
+               node[above,sloped]{4) allow or deny} ([yshift=-2.4cm]peg.south);
 
     % 5) PEG -> Client: capability or error
     \draw[msg] ([yshift=-3.0cm]peg.south) --
-               node[above,sloped]{5) capability / error} ([yshift=-3.0cm]client.south);
+               node[above,sloped]{5) capability or error} ([yshift=-3.0cm]client.south);
 
     \end{tikzpicture}
-    \caption{Gateway sequence: authenticate; call \texttt{checkAccess}; return allow/deny.}
+    \caption{Gateway sequence: authenticate; call \texttt{checkAccess}; return allow or deny.}
     \label{fig:gateway-sequence}
 \end{figure}
 
 
 
-The PEG is a stateless policy enforcement point that authenticates clients (e.g., OAuth/JWT), maps identities to blockchain addresses, queries \texttt{checkAccess} on-chain (with subject, resource, and action parameters), and issues short-lived capabilities (e.g., presigned URLs) only when allowed. It does not re-implement authorization logic locally; it simply enforces the contract decision and limits access duration.
+The PEG is a stateless policy enforcement point that authenticates clients (e.g., OAuth or JWT), maps identities to blockchain addresses, queries \texttt{checkAccess} on-chain (with subject, resource, and action parameters), and issues short-lived capabilities (e.g., presigned URLs) only when allowed. It does not re-implement authorization logic locally; it simply enforces the contract decision and limits access duration.
 
 We implemented the ClaimGuard contracts and Policy Enforcement Gateway as a
 working prototype on a local PureChain network. The following section discusses
