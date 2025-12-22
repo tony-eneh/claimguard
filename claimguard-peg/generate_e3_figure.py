@@ -67,15 +67,16 @@ def generate_e3_chart(input_dir: str = "experiment_results/e3", output_dir: str 
         height = bar.get_height()
         ax.text(bar.get_x() + bar.get_width()/2., height,
                 f'{rate:.0f}%',
-                ha='center', va='bottom', fontsize=12, fontweight='bold')
+                ha='center', va='bottom', fontsize=16, fontweight='bold')
     
     # Add threshold line at 80%
     ax.axhline(y=80, color='gray', linestyle='--', linewidth=2, label='Pass Threshold (80%)')
     
-    ax.set_ylabel('Block Rate (%)', fontsize=12, fontweight='bold')
+    ax.set_ylabel('Block Rate (%)', fontsize=18, fontweight='bold')
     ax.set_ylim(0, 120)
-    ax.set_title('E3: Attack Block Rates by Vector', fontsize=14, fontweight='bold')
-    ax.legend(fontsize=10)
+    ax.tick_params(axis='x', labelsize=18)
+    ax.tick_params(axis='y', labelsize=18)
+    ax.legend(fontsize=18)
     ax.grid(axis='y', alpha=0.3)
     
     plt.tight_layout()

@@ -150,12 +150,12 @@ def generate_latency_comparison_chart():
     bars1 = ax.bar([i - width/2 for i in x], local_vals, width, label='Local (Hardhat)', color='#2563eb')
     bars2 = ax.bar([i + width/2 for i in x], sepolia_vals, width, label='Sepolia (Public)', color='#dc2626')
     
-    ax.set_xlabel('Latency Percentile', fontsize=12)
-    ax.set_ylabel('Latency (ms)', fontsize=12)
-    ax.set_title('Access Latency: Local vs Public Network', fontsize=14, fontweight='bold')
+    ax.set_xlabel('Latency Percentile', fontsize=18)
+    ax.set_ylabel('Latency (ms)', fontsize=18)
     ax.set_xticks(x)
-    ax.set_xticklabels(labels)
-    ax.legend()
+    ax.set_xticklabels(labels, fontsize=18)
+    ax.tick_params(axis='y', labelsize=18)
+    ax.legend(fontsize=18)
     ax.grid(axis='y', alpha=0.3)
     
     # Add value labels on bars
@@ -164,11 +164,11 @@ def generate_latency_comparison_chart():
             height = bar.get_height()
             ax.text(bar.get_x() + bar.get_width()/2., height,
                    f'{height:.1f}',
-                   ha='center', va='bottom', fontsize=9)
+                   ha='center', va='bottom', fontsize=20)
     
     plt.tight_layout()
-    output_path = OUTPUT_DIR / "e2_latency_comparison.pdf"
-    plt.savefig(output_path, format='pdf', bbox_inches='tight')
+    output_path = OUTPUT_DIR / "e2_latency_comparison.png"
+    plt.savefig(output_path, format='png', dpi=300, bbox_inches='tight')
     plt.close()
     print(f"✓ Generated {output_path}")
 
@@ -188,12 +188,12 @@ def generate_throughput_comparison_chart():
     bars1 = ax.bar([i - width/2 for i in x], local_tput, width, label='Local (Hardhat)', color='#2563eb')
     bars2 = ax.bar([i + width/2 for i in x], sepolia_tput, width, label='Sepolia (Public)', color='#dc2626')
     
-    ax.set_xlabel('Concurrency Level', fontsize=12)
-    ax.set_ylabel('Throughput (req/s)', fontsize=12)
-    ax.set_title('Access Throughput: Local vs Public Network', fontsize=14, fontweight='bold')
+    ax.set_xlabel('Concurrency Level', fontsize=18)
+    ax.set_ylabel('Throughput (req/s)', fontsize=18)
     ax.set_xticks(x)
-    ax.set_xticklabels(concurrency_levels)
-    ax.legend()
+    ax.set_xticklabels(concurrency_levels, fontsize=18)
+    ax.tick_params(axis='y', labelsize=18)
+    ax.legend(fontsize=18)
     ax.grid(axis='y', alpha=0.3)
     
     # Add value labels on bars
@@ -202,11 +202,11 @@ def generate_throughput_comparison_chart():
             height = bar.get_height()
             ax.text(bar.get_x() + bar.get_width()/2., height,
                    f'{height:.0f}',
-                   ha='center', va='bottom', fontsize=9)
+                   ha='center', va='bottom', fontsize=20)
     
     plt.tight_layout()
-    output_path = OUTPUT_DIR / "e2_throughput_comparison.pdf"
-    plt.savefig(output_path, format='pdf', bbox_inches='tight')
+    output_path = OUTPUT_DIR / "e2_throughput_comparison.png"
+    plt.savefig(output_path, format='png', dpi=300, bbox_inches='tight')
     plt.close()
     print(f"✓ Generated {output_path}")
 
@@ -228,12 +228,12 @@ def generate_policy_confirmation_chart():
     bars1 = ax.bar([i - width/2 for i in x], local_vals, width, label='Local (Hardhat)', color='#2563eb')
     bars2 = ax.bar([i + width/2 for i in x], sepolia_vals, width, label='Sepolia (Public)', color='#dc2626')
     
-    ax.set_xlabel('Confirmation Time Metric', fontsize=12)
-    ax.set_ylabel('Time (seconds)', fontsize=12)
-    ax.set_title('Policy Confirmation Time: Local vs Public Network', fontsize=14, fontweight='bold')
+    ax.set_xlabel('Confirmation Time Metric', fontsize=18)
+    ax.set_ylabel('Time (seconds)', fontsize=18)
     ax.set_xticks(x)
-    ax.set_xticklabels(labels)
-    ax.legend()
+    ax.set_xticklabels(labels, fontsize=18)
+    ax.tick_params(axis='y', labelsize=18)
+    ax.legend(fontsize=18)
     ax.grid(axis='y', alpha=0.3)
     
     # Add value labels on bars
@@ -242,11 +242,11 @@ def generate_policy_confirmation_chart():
             height = bar.get_height()
             ax.text(bar.get_x() + bar.get_width()/2., height,
                    f'{height:.1f}',
-                   ha='center', va='bottom', fontsize=9)
+                   ha='center', va='bottom', fontsize=20)
     
     plt.tight_layout()
-    output_path = OUTPUT_DIR / "e2_policy_comparison.pdf"
-    plt.savefig(output_path, format='pdf', bbox_inches='tight')
+    output_path = OUTPUT_DIR / "e2_policy_comparison.png"
+    plt.savefig(output_path, format='png', dpi=300, bbox_inches='tight')
     plt.close()
     print(f"✓ Generated {output_path}")
 
