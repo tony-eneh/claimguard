@@ -50,8 +50,8 @@
 
 \begin{document}
 
-\title{Action-Aware ABAC for Heterogeneous Insurance Evidence: Architecture, Evaluation and Results}
-
+%\title{Action-Aware ABAC for Heterogeneous Insurance Evidence: Architecture, Evaluation and Results}
+\title{Evaluating Action-Aware Attribute-Based Access Control for Secure Insurance Evidence Management}
 
 \author{\IEEEauthorblockN{Anthony Uchenna Eneh $^{1}$, Love Allen Chijioke Ahakonye $^{2}$, Jae Min Lee $^{1}$, Dong-Seong Kim $^{1}$ $^{\ast}$} 
 \IEEEauthorblockA{$^{1}$ IT-Convergence Engineering, \textit{Kumoh National Institute of Technology}, Gumi, South Korea \\
@@ -63,29 +63,9 @@ $^{\ast}$ NSLab Co. Ltd., Gumi, South Korea,
 \maketitle
 
 \begin{abstract}
-Auto-insurance platforms rely on cloud infrastructure to store and process diverse
-evidence assets including first notice of loss (FNOL) reports, medical documents,
-telematics logs, photographs, and high-resolution accident videos. Although recent
-blockchain approaches provide tamper resistance and partial access control, they lack
-a unified, enforceable model capable of governing heterogeneous resources, supporting
-action-level permissions, and binding authorization decisions to off-chain storage.
-This paper introduces \textbf{ClaimGuard}, a PureChain-backed, verifiable,
-attribute-based access control (ABAC) architecture designed for multi-stakeholder
-auto-insurance evidence workflows. ClaimGuard evaluates subject, object, action, and
-contextual attributes on-chain and issues short-lived capability tokens to securely
-mediate access to cloud/IPFS evidence while ensuring auditability, revocation, and
-resilience against honest-but-curious cloud providers. A comprehensive evaluation
-compares ClaimGuard with a baseline cloud-only role-based access control (RBAC)
-model across varying load, policy-update frequency, policy churn under scale, and
-adversarial scenarios, both on local networks (Hardhat) and public testnets (Sepolia).
-Results show that ClaimGuard introduces modest latency overhead on local networks 
-(60.9\,ms P50 vs.\ 1.9\,ms for pure RBAC) while significantly improving authorization 
-correctness, policy integrity, and cross-organizational trust. Policy evaluation latency 
-remains stable (2--3\,ms median) from 11 to 1{,}000 active rules, and revocation propagates 
-within 1.1\,ms. Public testnet evaluation validates feasibility on real blockchain 
-infrastructure. The system fills a key gap identified in the literature by providing 
-the first resource-agnostic, action-aware, enforceable access control framework tailored 
-to the operational requirements of modern auto-insurance evidence management.
+Auto-insurance platforms rely on cloud infrastructure to store and process diverse evidence assets, including first notice of loss (FNOL) reports, medical documents, telematics logs, photographs, and high-resolution accident videos. Although recent blockchain approaches provide tamper resistance and partial access control, but they lack a unified, enforceable model capable of governing heterogeneous resources, supporting action-level permissions, and binding authorization decisions to off-chain storage. This paper introduces \textbf{ClaimGuard}, a PureChain-backed, verifiable, attribute-based access control (ABAC) architecture designed for multi-stakeholder auto-insurance evidence workflows. ClaimGuard evaluates subject, object, action, and
+contextual attributes on-chain and issues short-lived capability tokens to securely mediate access to cloud/IPFS evidence while ensuring auditability, revocation, and resilience against honest-but-curious cloud providers. A comprehensive evaluation compares ClaimGuard with a baseline cloud-only role-based access control (RBAC) model across varying load, policy-update frequency, policy churn under scale, and adversarial scenarios, both on local networks (Hardhat) and public testnets (Sepolia). Results show that ClaimGuard introduces modest latency overhead on local networks (60.9\,ms P50 vs.\ 1.9\,ms for pure RBAC) while significantly improving authorization correctness, policy integrity, and cross-organizational trust. Policy evaluation latency remains stable (2--3\,ms median) from 11 to 1{,}000 active rules, and revocation propagates 
+within 1.1\,ms. Public testnet evaluation validates feasibility on real blockchain infrastructure. The system fills a key gap identified in the literature by providing the first resource-agnostic, action-aware, enforceable access control framework tailored to the operational requirements of modern auto-insurance evidence management.
 \end{abstract}
 
 \section{Introduction}
@@ -124,7 +104,7 @@ Across insurance- and healthcare-oriented blockchain systems, the following limi
 
 \subsection{Discussion of Comparative Analysis}
 
-\begin{table*}[t]
+\begin{table*}[!htbp]
 \centering
 \caption{Comparison of Related Blockchain-Based Access Control Systems}
 % Reduce padding to fit within margins while keeping normal font size
@@ -265,7 +245,7 @@ be enforced without external logic or policy-layer augmentation.
 \subsubsection{Revocation Delay}
 In cloud-only RBAC, revocation must propagate across distributed enforcement points (apps/IAM/caches), creating delay windows. On-chain policy state with gateway mediation enables immediate, auditable revocation.
 
-\begin{table}[ht]
+\begin{table}[!htbp]
 \centering
 \caption{RBAC Failure Modes vs. ClaimGuard ABAC Mitigation}
 % Tighten padding and wrap long cells to fit column width
@@ -297,108 +277,58 @@ gateway enforcement mechanism described in Section~IV.
 \section{ClaimGuard Architecture}
 \label{sec:architecture}
 
-ClaimGuard anchors authorization decisions on PureChain smart contracts and enforces access to off-chain evidence via a Policy Enforcement Gateway (PEG). The contracts act as a tamper-resistant policy decision point (PDP), while the PEG mediates retrieval from cloud/IPFS backends (Fig.~\ref{fig:architecture}).
+ClaimGuard anchors authorization decisions on PureChain smart contracts and enforces access to off-chain evidence via a Policy Enforcement Gateway (PEG). The contracts act as a tamper-resistant policy decision point (PDP), while the file server checks for validity of capability token before retrieval of insurance evidence from cloud/IPFS backends (Fig.~\ref{fig:architecture}).
 
 
-\begin{figure}[t]
+\begin{figure}
     \centering
-    \begin{tikzpicture}[
-        font=\footnotesize,
-        box/.style={
-            draw, rounded corners, fill=gray!5,
-            minimum width=2.9cm, minimum height=0.9cm,
-            align=center
-        },
-        group/.style={
-            draw, rounded corners, dashed, inner sep=4pt
-        },
-        arrow/.style={-Latex, thick},
-        dataarrow/.style={-Latex, thick, dashed},
-        node distance=0.55cm
-    ]
-
-    % Vertical stack
-    \node[group] (clients) {
-        \begin{minipage}{2.7cm}
-        \centering \textbf{Client Applications}\\
-        \footnotesize Insurer UI / Backend\\ Police Portal\\ Court Interface
-        \end{minipage}
-    };
-
-    \node[box, below=of clients] (peg) {ClaimGuard\\Policy Gateway};
-
-    \node[group, below=of peg] (chain) {
-        \begin{minipage}{2.9cm}
-        \centering \textbf{PureChain}\\
-        \footnotesize Subject Attribute Registry\\
-        Evidence Registry\\
-        Access Policy Manager
-        \end{minipage}
-    };
-
-    \node[group, below=of chain] (storage) {
-        \begin{minipage}{2.9cm}
-        \centering \textbf{Cloud / IPFS Storage}\\
-        \footnotesize Evidence Buckets (S3 / MinIO / IPFS)
-        \end{minipage}
-    };
-
-    % Control flow
-    \draw[arrow] (clients) -- node[right]{control / API} (peg);
-    \draw[arrow] (peg) -- node[right]{policy queries} (chain);
-
-    % Data flow
-    \draw[dataarrow] (peg.east) -- ++(0.9,0) node[right]{capabilities} |- (storage.east);
-    \draw[dataarrow] (storage.west) -- ++(-0.9,0) node[left]{evidence} |- (clients.west);
-
-    \end{tikzpicture}
-    \caption{ClaimGuard architecture: clients call the PEG, which queries PureChain and issues short-lived capabilities for cloud/IPFS evidence access.}
+    \includegraphics[width=0.45\textwidth]{figures/architecture.png}
+    \caption{System architecture: clients call the PEG, which queries PureChain and issues short-lived capabilities for cloud/IPFS evidence access.}
     \label{fig:architecture}
 \end{figure}
 
+% \begin{figure}[!htbp]
+%     \centering
+%     \begin{tikzpicture}[
+%         font=\small,
+%         box/.style={
+%             draw, rounded corners, fill=gray!5,
+%             minimum width=2.25cm, minimum height=0.9cm,
+%             text width=2.25cm,
+%             align=center,
+%             inner sep=3pt
+%         },
+%         arrow/.style={-Latex, thick},
+%         dataarrow/.style={-Latex, thick, dashed},
+%         node distance=1.0cm
+%     ]
 
-\begin{figure}[t]
-    \centering
-    \begin{tikzpicture}[
-        font=\small,
-        box/.style={
-            draw, rounded corners, fill=gray!5,
-            minimum width=2.25cm, minimum height=0.9cm,
-            text width=2.25cm,
-            align=center,
-            inner sep=3pt
-        },
-        arrow/.style={-Latex, thick},
-        dataarrow/.style={-Latex, thick, dashed},
-        node distance=1.0cm
-    ]
+%     % Vertical layout
+%     \node[box] (client) {Client\\App};
+%     \node[box, below=of client] (peg) {Policy\\Enforcement\\Gateway};
+%     \node[box, below=of peg] (policy) {Access Policy\\Manager};
 
-    % Vertical layout
-    \node[box] (client) {Client\\App};
-    \node[box, below=of client] (peg) {Policy\\Enforcement\\Gateway};
-    \node[box, below=of peg] (policy) {Access Policy\\Manager};
+%     \node[box, below left=0.8cm and 0.6cm of policy] (subject) {Subject\\Registry};
+%     \node[box, below right=0.8cm and 0.6cm of policy] (evidence) {Evidence\\Registry};
 
-    \node[box, below left=0.8cm and 0.6cm of policy] (subject) {Subject\\Registry};
-    \node[box, below right=0.8cm and 0.6cm of policy] (evidence) {Evidence\\Registry};
+%     \node[box, below=1.6cm of policy] (storage) {Cloud / IPFS\\Storage};
 
-    \node[box, below=1.6cm of policy] (storage) {Cloud / IPFS\\Storage};
+%     % Arrows
+%     \draw[arrow] (client) -- node[midway, left] {1. Request} (peg);
+%     \draw[arrow] (peg) -- node[midway, right] {2. \texttt{checkAccess}} (policy);
 
-    % Arrows
-    \draw[arrow] (client) -- node[midway, left] {1. Request} (peg);
-    \draw[arrow] (peg) -- node[midway, right] {2. \texttt{checkAccess}} (policy);
+%     \draw[arrow] (policy) -- node[midway, left] {3. attrs} (subject);
+%     \draw[arrow] (policy) -- node[midway, right] {4. metadata} (evidence);
 
-    \draw[arrow] (policy) -- node[midway, left] {3. attrs} (subject);
-    \draw[arrow] (policy) -- node[midway, right] {4. metadata} (evidence);
+%     \draw[arrow] (policy) to[bend left=15] node[midway, left] {5. decision} (peg);
 
-    \draw[arrow] (policy) to[bend left=15] node[midway, left] {5. decision} (peg);
+%     \draw[dataarrow] (peg) to[bend right=12] node[midway, right] {6. capability} (storage);
+%     \draw[dataarrow] (storage) to[bend left=20] node[midway, left] {7. data} (client);
 
-    \draw[dataarrow] (peg) to[bend right=12] node[midway, right] {6. capability} (storage);
-    \draw[dataarrow] (storage) to[bend left=20] node[midway, left] {7. data} (client);
-
-    \end{tikzpicture}
-    \caption{ABAC evaluation flow: PEG calls \texttt{checkAccess}; contracts evaluate attributes and metadata; PEG returns a capability.}
-    \label{fig:abac-flow-compact}
-\end{figure}
+%     \end{tikzpicture}
+%     \caption{ABAC evaluation flow: PEG calls \texttt{checkAccess}; contracts evaluate attributes and metadata; PEG returns a capability.}
+%     \label{fig:abac-flow-compact}
+% \end{figure}
 
 
 \subsection{Design Goals}
@@ -444,7 +374,7 @@ Cloud administrators cannot fetch evidence via direct API calls because storage 
 
 \subsection{Policy Enforcement Gateway}
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
     \centering
     \begin{tikzpicture}[
         font=\footnotesize,
@@ -473,16 +403,16 @@ Cloud administrators cannot fetch evidence via direct API calls because storage 
                node[above,sloped]{1) access request} ([yshift=-0.6cm]peg.south);
 
     % 2) PEG (internal): auth + map identity
-    \node[anchor=west, align=left] at ($(peg.south)+(0.1,-1.1)$)
-        {2) authN \&\\map to addr};
+    \node[anchor=west, align=left] at ($(peg.south)+(0.1,-0.7)$)
+        {2) authentication \&\\map to address};
 
     % 3) PEG -> Chain: checkAccess
     \draw[msg] ([yshift=-1.8cm]peg.south) --
                node[above,sloped]{3) \texttt{checkAccess}} ([yshift=-1.8cm]chain.south);
 
     % 4) Chain -> PEG: decision
-    \draw[msg] ([yshift=-2.4cm]chain.south) --
-               node[above,sloped]{4) allow or deny} ([yshift=-2.4cm]peg.south);
+    \draw[msg] ([yshift=-2.7cm]chain.south) --
+               node[above,sloped]{4) allow or deny} ([yshift=-2.7cm]peg.south);
 
     % 5) PEG -> Client: capability or error
     \draw[msg] ([yshift=-3.0cm]peg.south) --
@@ -637,7 +567,7 @@ Despite the above mitigations, several residual risks remain:
 
 \subsection{Comparison with Baseline Approaches}
 
-\begin{table}[ht]
+\begin{table}[!htbp]
 \centering
 \caption{Security Properties: ClaimGuard vs. Baseline Approaches}
 \begin{tabularx}{\columnwidth}{X c c c}
@@ -679,7 +609,7 @@ The prototype includes (i) PureChain smart contracts (Subject/Evidence registrie
 \subsection{Baselines and Comparison Systems}
 
 
-    extbf{RBAC-DB} makes authorization decisions locally from a SQL permission table (JWT auth) with no blockchain interaction. \textbf{Hybrid-Audit} uses the same local RBAC decision but logs each allow/deny outcome on-chain after the fact, isolating audit overhead without on-chain decision-making.
+    \textbf{RBAC-DB} makes authorization decisions locally from a SQL permission table (JWT auth) with no blockchain interaction. \textbf{Hybrid-Audit} uses the same local RBAC decision but logs each allow/deny outcome on-chain after the fact, isolating audit overhead without on-chain decision-making.
 
 \subsection{Metrics and Key Performance Indicators}
 
@@ -689,11 +619,17 @@ We report end-to-end access latency (P50/P90/P99), throughput (req/s under concu
 
 W1 models normal access across roles and case scopes; W2 stresses burst concurrency; W3 exercises spoofing, replay, and direct-storage bypass; W4 triggers mass revocation; and W5 applies sustained policy churn. Evidence spans documents, media, and telematics bound to per-object metadata (e.g., caseId/type/sensitivity/jurisdiction).
 
-\subsection{Reproducibility}
 
-Code, configs, and scripts are available at \cite{claimguard-repo}. Each experiment is repeated multiple times with fixed random seeds; we report mean and standard deviation.
+\subsection{Reproducibility and Smart Contracts}
+Code, configs, and scripts are available at \cite{claimguard-repo}. Each experiment is repeated multiple times with fixed random seeds; we report mean and standard deviation. The complete smart-contract implementations (\texttt{EvidenceRegistry}, \texttt{SubjectAttributeRegistry}, and \texttt{AccessPolicyManager}), the gateway, and all evaluation scripts are available in the public artifact repository:
+\url{https://github.com/tony-eneh/blockchain_action_aware_abac_for_auto_insurance}.
+For readability and space, we omit the full Solidity listings from the manuscript and instead describe the contract interfaces and evaluation behavior in Sections~\ref{sec:architecture}--\ref{sec:evaluation}. The repository contains the exact versions used to generate all reported results.
 
-\section{Results and Analysis}
+%\subsection{Reproducibility}
+
+
+
+\subsection{Results and Analysis}
 
 This section presents the experimental outcomes obtained from the evaluation 
 environment described in Section~V. We compare the proposed PureChain-backed
@@ -702,12 +638,10 @@ ABAC system with two baselines: (i) RBAC-DB (cloud-only RBAC) and
 organized around the five research questions (Q1--Q5).
 
 \subsection{Latency Analysis (Q1)}
-
 Table~\ref{tab:latency} summarizes the end-to-end access latencies under normal
 (W1) and burst (W2) loads. Each experiment was conducted 5 times; reported values are 
 means with standard deviations (95\% confidence intervals in parentheses).
-
-\begin{table}[ht]
+\begin{table}[!htbp]
 \centering
 \caption{End-to-End Access Latency (ms, mean $\pm$ std. dev.)}
 \begin{tabularx}{\columnwidth}{X c c c c}
@@ -721,22 +655,18 @@ ClaimGuard (PureChain)  & $60.9 \pm 2.1$  & $69.6 \pm 3.4$  & $78.9 \pm 4.7$  & 
 \end{tabularx}
 \label{tab:latency}
 \end{table}
-
 Table~\ref{tab:latency} shows that ClaimGuard increases median end-to-end latency versus cloud-only RBAC (60.9 vs.
 1.9 ms at P50) due to on-chain policy evaluation, yet remains under 79 ms at P99 and outperforms the Hybrid-Audit baseline (136 ms at P50). This indicates that decentralized policy checks are practical on local networks; Section~VI.E extends the analysis to public testnet conditions.
 
 \subsection{System Throughput (Q2)}
-
-\begin{figure}[ht]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.9\linewidth]{./figures/throughput.png}
     \caption{Throughput vs. Concurrent Users (W1 Normal Load)}
     \label{fig:throughput}
 \end{figure}
-
 Fig.~\ref{fig:throughput} shows the throughput results as the number of
 concurrent users increases from 10 to 200.
-
 % \begin{table}[ht]
 % \centering
 % \caption{Security Properties: ClaimGuard vs. Baseline Approaches}
@@ -758,7 +688,6 @@ concurrent users increases from 10 to 200.
 % \end{tabularx}
 % \label{tab:security-comparison}
 % \end{table}
-
 Overall, ClaimGuard sustains throughput sufficient for typical insurer access rates while providing stronger enforcement guarantees than RBAC.
 
 \subsection{Policy Update and Revocation Overhead (Q3)}
@@ -774,7 +703,7 @@ We benchmarked three policy operations:
 Each operation was repeated 10 times; Table~\ref{tab:policy} reports means 
 and standard deviations.
 
-\begin{table}[ht]
+\begin{table}[!htbp]
 \centering
 \caption{Policy Update Latency Across Baseline Systems (mean $\pm$ std. dev.)}
 \begin{tabularx}{\columnwidth}{>{\raggedright\arraybackslash}X c c c}
@@ -805,7 +734,7 @@ To evaluate governance realism, we stress the \emph{policy plane} by growing the
 number of active rules and measuring ClaimGuard's authorization cost as policy
 count increases. We also test revocation effectiveness under churn.
 
-\begin{table}[ht]
+\begin{table}[!htbp]
 \centering
 \caption{Policy count vs \texttt{checkAccess} latency (ms)}
 \begin{tabular}{lcccc}
@@ -821,9 +750,9 @@ count increases. We also test revocation effectiveness under churn.
 \end{table}
 
 
-\begin{figure}[ht]
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[width=0.95\linewidth]{./figures/e4/policy_count_vs_latency_p50.png}
+    \includegraphics[width=0.95\linewidth]{./figures/e4_policy_count_vs_latency_p50.png}
     \caption{Policy-plane scaling: \texttt{checkAccess} latency vs.\ active policy count (E4).}
     \label{fig:e4-policy-latency}
 \end{figure}
@@ -833,14 +762,12 @@ Across 11 to 1000 active policies, the median \texttt{checkAccess} latency remai
 We attempted to estimate gas for \texttt{checkAccess} via local simulation; the
 Hardhat provider did not report a gas value for a view function, so we report
 latency trends here and leave gas scaling of the emitting variant
-    	exttt{checkAccessAndEmit} to the appendix.
+    	\texttt{checkAccessAndEmit} to the appendix.
 
 \subsection{Authorization Correctness (Q4)}
-
 The simulation tracked false accepts (unauthorized but allowed) and false
 rejects (authorized but denied) across all workloads.
-
-\begin{table}[ht]
+\begin{table}[!htbp]
 \centering
 \caption{Authorization Correctness}
 \begin{tabular}{lccc}
@@ -854,7 +781,6 @@ ClaimGuard (on-chain ABAC)  & 4005 & 845 & 82.58\% \\
 \end{tabular}
 \label{tab:correctness}
 \end{table}
-
 Allow rates are similar across modes (82.6--84.1\%), indicating that ABAC policies and RBAC equivalents produce comparable outcomes on this workload. ClaimGuard's slightly lower allow rate reflects stricter constraints (e.g., time windows, type/jurisdiction filters). No false accepts or false rejects were observed.
 
 \subsection{Security and Attack Resilience (Q5)}
@@ -876,9 +802,9 @@ test suite (E3) evaluating five attack vectors against both the gateway and
 file server. These tests measure whether unauthorized evidence access remains
 impossible even under malicious or compromised conditions.
 
-\begin{figure}[ht]
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[width=\linewidth]{./figures/e3/e3_attack_block_rates.png}
+    \includegraphics[width=.45\textwidth]{./figures/e3_attack_block_rates.png}
     \caption{E3 attack block rates by vector.}
     \label{fig:e3-attacks}
 \end{figure}
@@ -916,7 +842,7 @@ application logic, and workload characteristics constant.
 Table~\ref{tab:e2-latency} compares end-to-end latency for the 
 \texttt{POST /api/access} endpoint under local and public network conditions.
 
-\begin{table}[h]
+\begin{table}[!htbp]
 \centering
 \caption{Access Latency: Local vs Public Network (E2)}
 \label{tab:e2-latency}
@@ -934,9 +860,9 @@ Max & 34.04 & 515.25 & 1413.7\% \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[ht]
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[width=0.9\linewidth]{./figures/e2_latency_comparison.png}
+    \includegraphics[width=.45\textwidth]{./figures/e2_latency_comparison.png}
     \caption{Access latency: local vs public network (E2).}
     \label{fig:e2-latency}
 \end{figure}
@@ -948,7 +874,7 @@ Sepolia increases median latency from 16.0\,ms (local) to 224.7\,ms (P50), with 
 Table~\ref{tab:e2-throughput} and Fig.~\ref{fig:e2-throughput} show throughput 
 performance under concurrency levels 10, 50, and 100.
 
-\begin{table}[h]
+\begin{table}[!htbp]
 \centering
 \caption{Throughput: Local vs Public Network (E2)}
 \label{tab:e2-throughput}
@@ -963,9 +889,9 @@ performance under concurrency levels 10, 50, and 100.
 \end{tabular}
 \end{table}
 
-\begin{figure}[ht]
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[width=0.9\linewidth]{./figures/e2_throughput_comparison.png}
+    \includegraphics[width=.45\textwidth]{./figures/e2_throughput_comparison.png}
     \caption{Access throughput: local vs public network (E2).}
     \label{fig:e2-throughput}
 \end{figure}
@@ -978,7 +904,7 @@ Throughput drops from 569--999\,req/s locally to 142--373\,req/s on Sepolia (Tab
 Table~\ref{tab:e2-policy} and Fig.~\ref{fig:e2-policy} compare policy creation 
 and confirmation times.
 
-\begin{table}[h]
+\begin{table}[!htbp]
 \centering
 \caption{Policy Update Confirmation Time: Local vs Public Network (E2)}
 \label{tab:e2-policy}
@@ -994,14 +920,14 @@ Max & 0.03 & 89.43 & 298000.0\% \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[ht]
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[width=0.9\linewidth]{./figures/e2_policy_comparison.png}
+    \includegraphics[width=.45\textwidth]{./figures/e2_policy_comparison.png}
     \caption{Policy confirmation time: local vs public network (E2).}
     \label{fig:e2-policy}
 \end{figure}
 
-On local Hardhat, policy creation completes in \textbf{\textasciitilde20\,ms}; on Sepolia it averages \textbf{24.8\,s} and can reach \textbf{89.4\,s}, reflecting public-network confirmation and RPC variability.
+On local Hardhat, policy creation completes in \textbf{\textasciitilde20\,ms}; on Sepolia, it averages \textbf{24.8\,s} and can reach \textbf{89.4\,s}, reflecting public-network confirmation and RPC variability.
 
 This confirms that policy updates on public testnets are \emph{asynchronous 
 operations} unsuitable for synchronous API workflows. In production, policy 
@@ -1017,21 +943,19 @@ E2 validates functional correctness under realistic network conditions while sho
 
 \section{Conclusion and Future Work}
 
-This paper introduced ClaimGuard, a PureChain-backed ABAC architecture that makes authorization decisions in smart contracts and enforces them over cloud/IPFS evidence via a policy enforcement gateway issuing short-lived capabilities. The design targets action-level, context-sensitive policies with fast revocation and cloud-insider resistance.
-
-Across our evaluation, ClaimGuard maintains throughput suitable for evidence-access workloads while incurring modest latency overhead vs. cloud-only RBAC; on-chain policy evaluation remains low-latency under policy-plane scale, revocation takes effect promptly, and we observe no false accepts/rejects under the tested workloads. Capability validation and on-chain audit trails provide enforceable, tamper-evident governance over off-chain evidence.
+This paper introduced ClaimGuard, a PureChain-backed ABAC architecture that makes authorization decisions in smart contracts and enforces them over cloud/IPFS evidence via a policy enforcement gateway issuing short-lived capabilities. The design targets action-level, context-sensitive policies with fast revocation and cloud-insider resistance. Across our evaluation, ClaimGuard maintains throughput suitable for evidence-access workloads while incurring modest latency overhead vs. cloud-only RBAC; on-chain policy evaluation remains low-latency under policy-plane scale, revocation takes effect promptly, and we observe no false accepts/rejects under the tested workloads. Capability validation and on-chain audit trails provide enforceable, tamper-evident governance over off-chain evidence.
 
 Future work includes privacy-preserving policy/log mechanisms (e.g., attribute hiding or ZK proofs), cross-jurisdiction/multi-ledger deployments, and a pilot integration with insurer workflows.
 
 
-\appendices
+% \appendices
 
-\section{Reproducibility and Smart Contracts}
+% \section{Reproducibility and Smart Contracts}
 
-The complete smart-contract implementations (\texttt{EvidenceRegistry}, \texttt{SubjectAttributeRegistry}, and \texttt{AccessPolicyManager}), the gateway, and all evaluation scripts are available in the public artifact repository:
-\url{https://github.com/tony-eneh/blockchain_action_aware_abac_for_auto_insurance}.
+% The complete smart-contract implementations (\texttt{EvidenceRegistry}, \texttt{SubjectAttributeRegistry}, and \texttt{AccessPolicyManager}), the gateway, and all evaluation scripts are available in the public artifact repository:
+% \url{https://github.com/tony-eneh/blockchain_action_aware_abac_for_auto_insurance}.
 
-For readability and space, we omit the full Solidity listings from the manuscript and instead describe the contract interfaces and evaluation behavior in Sections~\ref{sec:architecture}--\ref{sec:evaluation}. The repository contains the exact versions used to generate all reported results.
+% For readability and space, we omit the full Solidity listings from the manuscript and instead describe the contract interfaces and evaluation behavior in Sections~\ref{sec:architecture}--\ref{sec:evaluation}. The repository contains the exact versions used to generate all reported results.
 
 
 
