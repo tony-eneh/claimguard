@@ -1,0 +1,652 @@
+%% Copyright 2007, 2008, 2009 Elsevier Ltd
+%\documentclass[final,5p,times,twocolumn]{elsarticle}
+% \usepackage{blindtext, graphicx, amsmath, algorithm, algpseudocode, pifont, algcompatible, comment, layout, amsthm, amssymb}
+\documentclass[final,5p,times,twocolumn]{elsarticle}
+\usepackage{amsmath, amssymb, algorithm, algcompatible}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{eso-pic}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{algpseudocode}
+\usepackage[]{algpseudocode}
+\usepackage{textcomp}
+\usepackage{algorithm}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{amssymb}
+\usepackage{pifont} % For check and cross symbols
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{xcolor} % Add this package for colored text
+
+\newcommand{\cmark}{\ding{51}}% ✓
+\newcommand{\xmark}{\ding{55}}% ✗
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{float}
+\usepackage{multirow}
+%% The amsthm package provides extended theorem environments
+%% \usepackage{amsthm}
+\usepackage{amsthm} % Load the amsthm package
+\renewcommand{\qedsymbol}{$\blacksquare$} % Redefine the QED symbol
+\usepackage{balance}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{url}
+\hypersetup{ colorlinks=true, linkcolor=black, filecolor=black, urlcolor=cyan, }
+\usepackage{subfig}
+\usepackage{caption}
+\captionsetup{justification=raggedright, singlelinecheck = false}
+\captionsetup[table]{labelformat=simple, labelsep=newline}
+\captionsetup[figure]{labelformat=simple, labelsep=period}
+
+
+%% The lineno packages adds line numbers. Start line numbering with
+%% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
+%% for the whole article with \linenumbers after \end{frontmatter}.
+\usepackage{lineno}
+
+%% natbib.sty is loaded by default. However, natbib options can be
+%% provided with \biboptions{...} command. Following options are
+%% valid:
+
+%%   round  -  round parentheses are used (default)
+%%   square -  square brackets are used   [option]
+%%   curly  -  curly braces are used      {option}
+%%   angle  -  angle brackets are used    <option>
+%%   semicolon  -  multiple citations separated by semi-colon
+%%   colon  - same as semicolon, an earlier confusion
+%%   comma  -  separated by comma
+%%   numbers-  selects numerical citations
+%%   super  -  numerical citations as superscripts
+%%   sort   -  sorts multiple citations according to order in ref. list
+%%   sort&compress   -  like sort, but also compresses numerical citations
+%%   compress - compresses without sorting
+%%
+%% \biboptions{comma,round}
+
+% \biboptions{}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+
+\journal{ICT Express}
+
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Machine Learning–Blockchain Enabled Predictive Framework for Sustainable Polystyrene Waste Tracking Towards Energy Recovery}
+
+
+\begin{abstract}
+The management of non-biodegradable foam polystyrene (EPS/XPS) presents significant environmental challenges due to inefficient recycling and microplastic generation. This study proposes an integrated framework combining Internet of Things (IoT) sensing, machine learning (ML), and blockchain technology to transform EPS/XPS waste management into a dynamic, transparent system optimized for energy recovery. Smart bins provide real-time data streams immutably recorded on blockchain. Comparative analysis revealed PureChain as optimal, achieving 2,847 transactions per second with minimal energy consumption (0.02 kWh/tx). A Long Short-Term Memory (LSTM) model demonstrated 94.8\% accuracy in forecasting time-to-fill, while XGBoost offered the best balance between accuracy (92.8\%) and computational efficiency. A prospective life cycle assessment indicates the framework can reduce collection vehicle kilometers by approximately 30\% and enhance feedstock quality for energy recovery, delivering a net-positive environmental balance. The convergence of these technologies facilitates a closed-loop system capable of significant operational efficiencies and a verifiable pathway toward a circular economy, transforming a persistent pollutant into a valuable energy resource.
+\end{abstract}
+
+\begin{keyword}
+Artificial intelligence, Blockchain, Circular Economy, PureChain, Polystyrene Waste, Smart Waste Management and Sustainability\end{keyword}
+\end{frontmatter}
+
+\section{Introduction}
+Foam-type polystyrene (PS), known as expanded or extruded polystyrene (EPS/XPS), has become inseparable from modern life, yet its excessive use poses a significant threat to the entire ecosystem. This petroleum-derived synthetic polymer is widely used for insulation in various items, including disposable coffee cups, coolers, protective transport packaging (e.g., fish boxes), surfboards, and food packaging~\cite{uekert2023technical}. Unlike other conventional plastics, EPS/XPS is widely used, rarely recycled, and non-biodegradable. However, its foam structure makes it prone to fragmentation, generating vast quantities of micro-plastic particles that persist in marine ecosystems~\cite{mondal2022blockchain}. On the contrary, its low density makes transport costly and recycling uneconomical, leading many municipalities to exclude it from household recycling schemes, with the resulting waste impacting not only marine but also terrestrial ecosystems and human health~\cite{ugwu2023mini}. With growing concern over the widespread discharge of waste EPS/XPS, especially in resource-constrained regions where disposal is indiscriminate, the key challenge lies in balancing the benefits of its use with the need for eco-friendly tracking and upcycling schemes~\cite{taylor2020blockchain, hossain2022full}. EPS/XPS possesses a high calorific value (approximately 40-42 MJ/kg) comparable to conventional fuels, making it an excellent candidate for waste-to-energy (WtE) processes such as incineration with energy recovery or pyrolysis~\cite{su16}. However, its effective utilization requires consistent, contamination-controlled feedstock, as the foam structure and potential presence of flame retardants (particularly in XPS) necessitate careful tracking and quality assurance to ensure efficient energy recovery and minimize harmful emissions. Despite widespread criticism, the complete elimination of waste EPS/XPS is not feasible; therefore, the focus should be on developing more innovative management strategies for a sustainable future. Currently, the accumulation of such waste in landfills and its runoff into oceans and waterways has captured the attention of global policymakers. Spearheaded by the United Nations Environment Programme (UNEP), this led to a broader international consensus to establish a Global Plastics Treaty to confront the escalating plastic pollution crisis~\cite{fry2024simulating}. 
+
+Countries around the world have adopted a range of innovative waste management strategies~\cite{gong2022blockchain, rejeb2023blockchain}. Examples include Japan's rigorous waste separation, South Korea's pay-as-you-throw system, Germany's dual packaging waste model, Sweden's energy recovery through incineration, Norway's bottle recycling incentives, Singapore's waste-to-energy approach, and South Australia's container deposit scheme~\cite{bulkowska2024blockchain}. Moved by ambitious sustainability goals, other countries implemented regulatory measures, like Australia's plastic waste export ban in 2022 and China's import ban on plastic waste in 2018. Additionally, the NEOM project in Saudi Arabia represents a cutting-edge initiative that leverages blockchain technology to enhance transparency, efficiency, and overall sustainability in waste management~\cite{fry2024simulating, yoshida2022china}. These opposing scenarios aimed to compel the concerned sectors to rethink and propose ways to reintroduce this waste into the production cycle, either as a secondary raw material, a fuel product, or chemical precursors. Addressing the menace of these ubiquitous materials requires synergistic coordination across manufacturing, research, and policymaking sectors, as well as an all-inclusive evaluation of the product life cycle, taking into account every step from production, composition, and design to manufacturing, handling, and management~\cite{chang2020blockchain}. This will warrant an understanding of their full impact; otherwise, the true value and potential will remain undiscovered. At the moment, management of waste EPS/XPS, despite growing global attention to curb the menace, remains constrained by fragmented data flows, inefficient sorting mechanisms, and limited traceability across the recycling value chain. Traditional approaches to monitoring and recycling plastics are predominantly empirical and linear, often lacking the transparency and systemic coordination necessary for large-scale resource recovery. This lack of transparency across supply chains impedes effective monitoring of waste flows, facilitates illegal dumping and downgrading of material value, and undermines circular-economy objectives~\cite{priyana2023blockchain}.
+
+This has challenged researchers to explore sustainable and scalable strategies for handling, repurposing, and efficiently tracking EPS/XPS waste. In particular, process-engineered systems integrated with machine learning (ML) and artificial intelligence (AI) are being explored as innovative solutions capable of revolutionizing the management of waste EPS/XPS~\cite{suchek2021innovation}. However, recent advances in digital technologies, particularly blockchain, Internet of Things (IoT), and ML, are reshaping the landscape of plastic waste management. These tools introduce new dimensions of transparency, decentralization, and accountability by enabling real-time data capture, immutable record-keeping, and predictive analytics for waste tracking and recovery optimization~\cite{bianchini2019overcoming}. Blockchain can provide a decentralized, tamper-resistant ledger for recording transactions across the waste management value chain. By assigning a unique digital identity or ``digital passport" to products and material batches, blockchain enables end-to-end provenance and chain-of-custody verification, automates compliance through smart contracts, and supports transparent incentive schemes (e.g., tokenization) to reward collection and proper recycling~\cite{bulkowska2024blockchain}. Therefore, the convergence of IoT devices and sensors with ML offers a novel approach to improving the efficiency of blockchain technology by generating real-time operational data, filling-level monitoring of collection bins, contamination detection in material streams, and route optimization for collection fleets. Researchers like Steenmans et al.~\cite{steenmans2021blockchain} recognized it as a transformative technology that can improve the handling and tracking of plastic waste while enhancing accountability in recycling processes. Bułkowska et al.~\cite{bulkowska2023implementation} show that integrating blockchain into waste management significantly improves system transparency, traceability, and operational efficiency, enabling better monitoring, compliance, and sustainable practices. In another work, a blockchain-based, decentralized approach to plastic waste management was reported by Mondal and Kulkarni~\cite{mondal2022blockchainb}, aiming to connect waste generation with recycling opportunities. 
+
+Notwithstanding their promise, technology-driven solutions also have their limitations, including interoperability, data standardization, scalability, and regulatory gaps and privacy concerns on the government side, which remain major bottlenecks~\cite{gong2022blockchain}. Therefore, the management of waste EPS/XPS poses a critical global problem, as its low recyclability and low density make conventional recycling uneconomical, leading to significant environmental accumulation and micro-plastic generation. What is known is that despite the challenges of mechanical recycling, EPS/XPS retains substantial calorific value, making it a viable candidate for energy recovery through advanced processes like waste-to-energy incineration or pyrolysis, which converts the polymer into fuel products or chemical precursors, as exemplified by strategies in countries like Sweden and Singapore~\cite{plastic}. However, what remains unknown and constrained is the ability to effectively track and quantify the dispersed EPS/XPS waste stream, a necessary prerequisite for ensuring a consistent, quality feedstock for energy recovery facilities. Current management systems suffer from fragmented data flows and limited traceability~\cite{martinez2025, gulyamov2024}, preventing the reliable, large-scale aggregation and verification of waste required to justify investment in energy recovery infrastructure. Consequently, this study introduces a machine learning–blockchain predictive framework to secure the supply chain and enable efficient, transparent waste tracking, thereby maximizing energy recovery potential and closing the loop for a sustainable circular economy. Interestingly, this study unveiled the critical role of digital technologies in strengthening transparency, enabling predictive waste monitoring, secure data sharing, optimizing recycling logistics and incentives, and promoting sustainable tracking practices. Finally, the contributions of this study includes;
+
+\begin{itemize}
+\item Integrating ML-Blockchain framework through a web-based dashboard for monitoring predictions and verified transactions, thereby unveiling the technology's effectiveness in improving operational efficiency, transparency, and the environmental sustainability of EPS waste management.
+\item Develop a blockchain-based data management and traceability framework for recording and validating EPS waste collection and recycling transactions, by leveraging three blockchain platforms, including PureChain, Ethereum, and Hyperledger, to ensure transparency, interoperability, and enhanced data integrity across the waste management value chain.
+\item Applying supervised ML such Long Short-Term Memory (LSTM), Gated Recurrent Unit (GRU), Random Forest (RF), XGBoost, Prophet, and ARIMA, were evaluated across multiple performance metrics, in forecasting waste bin fill levels based on disposal frequency and type, temperature, and density variations, collection time, and location clustering for efficient resource deployment, and evaluating the model's performance using metrics including accuracy, mean absolute error (MAE), root mean square error (RMSE), coefficient of determination (R$^2$), training and inference times, memory usage, and F1 score.
+\item Conducting a prospective sustainability assessment to quantify the environmental benefits of the proposed framework in terms of reduced fuel consumption, lower greenhouse gas emissions, and improved energy recovery potential.
+\item Finally, highlight the potential of digital technologies to advance smart waste management practices through data-driven processing and AI-based waste classification, enabling optimized collection scheduling and transforming waste management into a more efficient, transparent, and accountable system.
+\end{itemize}
+
+\subsection{Motivation and Research Gap}
+
+The global proliferation of expanded and extruded polystyrene (EPS/XPS) has created a significant environmental challenge due to its non-biodegradable nature, low recyclability, and tendency to fragment into microplastics. Despite its widespread use in packaging, insulation, and consumer goods, EPS/XPS waste is often excluded from conventional recycling streams due to its low density and high transportation cost~\cite{ugwu2023mini}. Consequently, large volumes of EPS/XPS accumulate in landfills and marine environments, posing threats to ecosystems and human health. Traditional waste management systems are largely empirical and linear, lacking the transparency, traceability, and predictive capabilities required for efficient resource recovery. Fragmented data flows, poor sorting mechanisms, and limited visibility across the recycling value chain hinder the aggregation of consistent, quality feedstock for energy recovery facilities~\cite{gulyamov2024}. Moreover, the absence of real-time monitoring and intelligent scheduling leads to inefficient collection logistics, increased operational costs, and missed opportunities for circular economy integration. Recent advances in digital technologies particularly blockchain, machine learning (ML), and the Internet of Things (IoT) offer promising avenues to address these limitations. Blockchain provides immutable data integrity and decentralized traceability, while ML enables predictive analytics for waste accumulation and route optimization. IoT sensors facilitate real-time data acquisition from smart bins, enhancing responsiveness and operational efficiency~\cite{steenmans2021blockchain, bulkowska2023implementation}.
+
+However, existing studies have primarily focused on isolated applications of these technologies. Few have proposed a unified, scalable framework that integrates blockchain, ML, and IoT for waste tracking and energy recovery. Additionally, while some works explore blockchain for general plastic waste management~\cite{mondal2022blockchain}, there remains a gap in applying these technologies specifically to foam-type polystyrene waste, which presents unique logistical and environmental challenges. This research addresses these gaps by introducing a novel, multi-layered architecture that combines IoT sensing, blockchain-based data integrity, and ML-driven predictive analytics. The proposed system enables dynamic waste classification, fill-level forecasting, and route optimization, thereby transforming waste management into a transparent, accountable, and energy efficient process. By doing so, it contributes a practical blueprint for advancing circular economy goals in urban waste systems. Therefore, what truly distinguishes this paper from previous research in the literature is its unique approach by;
+
+\begin{itemize}
+    \item Moving from Theory to Implementation: It presents a fully defined system architecture with algorithms (e.g., for consensus and route optimization) and implementation details, moving beyond conceptual frameworks.
+    \item Performance-Driven Design: The choice of every component (PureChain over Ethereum, LSTM/XGBoost over simpler models) is justified by empirical and comparative data.
+    \item Holistic Optimization: It doesn't just track waste; it uses predictions to actively optimize the entire collection logistics chain, closing the loop between data, prediction, and action.
+    \item Sustainability Quantification: It incorporates a prospective life cycle assessment to evaluate the environmental benefits of the proposed digital framework.
+\end{itemize}
+
+Finally, the novelty and uniqueness of this paper lie in the purpose-built, empirically-validated, and deeply integrated nature of the framework that tackles a specific, high-stakes environmental problem with a combination of technologies chosen for their optimal performance characteristics rather than their popularity.
+
+
+\section{Related Work}
+The management of expanded and extruded polystyrene (EPS/XPS) waste has gained increasing attention due to its environmental persistence and low recyclability. Ugwu and Obele~\cite{ugwu2023mini} reviewed EPS recycling challenges, emphasizing the need for innovative tracking and recovery systems. Uekert et al.~\cite{uekert2023technical} compared closed-loop recycling technologies, highlighting the limitations of mechanical recycling for foam plastics. Research on the material properties of EPS/XPS for energy recovery has established its viability as a fuel source. Studies by Wang et al.~\cite{WANG2024} and Das and Tiwari~\cite{DAS20} demonstrate that EPS pyrolysis yields high-quality liquid fuels with calorific values exceeding 40 MJ/kg, while proper sorting and contamination control are critical for efficient energy recovery.
+
+Recent advancements in smart waste management have increasingly leveraged digital technologies such as blockchain, ML, and IoT. Singh et al.~\cite{singh2024} conducted a systematic review of waste management solutions integrating ML, IoT, and blockchain, identifying key methodologies and challenges. Alabdali~\cite{alabdali2025} proposed a blockchain-based system for solid waste classification using AI and IoT, demonstrating real-time tracking and classification. IoT-enabled smart bins have been explored to monitor fill levels and optimize collection routes. Belhiah et al.~\cite{belhiah2024optimising} implemented an IoT-based system in Tangier, Morocco, showing improved responsiveness and reduced operational costs. Gulyamov~\cite{gulyamov2024} emphasized the role of IoT in real-time waste tracking and analytics. Tahiri Alaoui et al.~\cite{alaoui2025} presented a systematic review of IoT-enabled waste management, identifying optimization algorithms and the benefits of real-time monitoring.
+
+ML-based models have also been applied to forecast waste generation and optimize logistics. Abdallah et al.~\cite{abdallah2020artificial} reviewed AI applications in solid waste management, highlighting the effectiveness of models such as LSTM and Random Forest. Liu et al.~\cite{liu2025enhancing} explored strategic forecasting of municipal waste using ML, underscoring the importance of temporal features. Clarke et al.~\cite{clarke2025} demonstrated intelligent waste collection optimization using LSTM and genetic algorithms, reducing overflow incidents and redundant trips. Similarly, Dubey et al.~\cite{dubey2025} discussed predictive analytics in waste segregation using big data and imaging technologies. Blockchain technology has emerged as a transformative solution for transparency and traceability in waste management. Steenmans et al.~\cite{steenmans2021blockchain} and Bulkowska et al.~\cite{bulkowska2023implementation} demonstrated how blockchain improves accountability and compliance in plastic waste tracking. Mondal and Kulkarni~\cite{mondal2022blockchain} proposed a decentralized framework connecting waste generation with recycling opportunities. Ayeni~\cite{ayeni2025b} emphasized the convergence of blockchain, AI, and IoT in transforming waste systems into value-creating components.
+
+Several integrated frameworks have been developed to combine these technologies for smart waste management. Madhumitha et al.~\cite{madhumitha2025} introduced EcoCycle, a deep learning-based waste categorization system integrating blockchain and IoT, achieving over 92\% classification accuracy. Villanueva~\cite{villanueva2024} proposed a predictive analysis framework combining IoT and data analytics for smart waste management. Fang et al.~\cite{fang2023} reviewed AI applications in smart cities, demonstrating improvements in waste logistics and public health outcomes. Ibitoye et al.~\cite{ibitoye2025} further emphasized the potential of AI, IoT, and blockchain for waste valorization, achieving high forecasting accuracy.
+
+The integration of ML, IoT, and blockchain aligns with the broader vision of the circular economy. Rejeb and Zailani~\cite{rejeb2023blockchain} conducted a systematic review of blockchain’s role in circular systems, while Suchek et al.~\cite{suchek2021innovation} emphasized innovation as a driver of circularity. Bianchini et al.~\cite{bianchini2019overcoming} proposed visualization tools to overcome barriers in circular economy implementation. Ayeni~\cite{ayeni2025} highlighted how Industry 4.0 technologies, including IoT and AI, enhance collection efficiency and reduce operational costs. Snoun et al.~\cite{snoun2025} analyzed AI-driven innovations across micro- and macro-level circular economy frameworks. Collectively, these studies underscore the transformative potential of integrating IoT, ML, and blockchain technologies to build sustainable, transparent, and intelligent waste management systems, which form the foundation for the framework proposed in this study.
+
+\section{System Methodology}
+\label{sec3}
+The proposed framework for intelligent waste management adopts a multi-layered architecture to address the core challenges of modern urban operations (see Figure~\ref{metho}): (i) achieving real-time, trustworthy data acquisition, (ii) enabling predictive analytics for operational optimization, and (iii) ensuring system transparency and data integrity. The novelty of this framework lies in integrating three distinct technological paradigms, IoT sensing, blockchain-based data integrity, and machine learning, into a cohesive, self-optimizing system. Unlike traditional static waste collection schedules, our architecture transforms the process into a dynamic, data-driven feedback loop. Each layer is designed to reinforce the others: the IoT layer provides the foundational data, the blockchain layer ensures its immutability and trust, and the ML layer generates actionable intelligence. This design directly addresses urban challenges, including operational inefficiency, lack of auditability, and reactive resource allocation.
+
+\subsection{Implementation Context}
+The framework's architecture and algorithms were validated through a simulation environment designed to model urban waste collection scenarios. While the core algorithms and system architecture are designed for real-world deployment, the experimental validation presented in this study utilizes a simulated network of six smart bins to rigorously test the integrated system under controlled, repeatable conditions that replicate operational variability. This approach allows for the isolation and testing of system logic, predictive accuracy, and blockchain performance metrics without the confounding variables of a full-scale urban deployment.
+
+\begin{figure*}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{Pic/Dr. Usman Smart.png}
+\caption{Proposed integrated architecture for smart waste management, showcasing the data flow from IoT sensor acquisition through blockchain-verified storage to ML-driven predictive analytics and dashboard visualization. The system ensures data integrity, operational transparency, and predictive optimization of collection routes.}
+\label{metho}
+\end{figure*}
+
+\subsection{IoT Sensory Layer: The Data Acquisition Subsystem}
+This layer functions as the distributed data source, comprising a network of instrumented smart bins. Let the entire set of bins be defined as \( B = \{B_1, B_2, \dots, B_N\} \). The state of a specific bin \( B_i \) at time \( t \) is captured by a multi-dimensional sensor vector \( X_i(t) \), formalized in Equation~\ref{sensor_vector}.
+
+\begin{equation}
+X_i(t) = \{ F_i(t), T_i(t), W_i(t), \text{GPS}_i \}
+\label{sensor_vector}
+\end{equation}
+
+\noindent where \( F_i(t) \in [0,1] \) represents the normalized fill-level, \( T_i(t) \in \mathbb{R}^+ \) is the internal temperature in Celsius, \( W_i(t) \in \{C_{\text{general}}, C_{\text{recyclable}}, C_{\text{organic}}\} \) denotes the classified waste type, and \( \text{GPS}_i \) is the static geolocation to a central aggregator, forming a continuous data stream \( D = \{X_i(t)\}_{t=1}^T \).
+
+\subsection{Blockchain Integrity Layer: The Immutable Audit Trail}
+Upon receipt, sensor readings are processed to verify tamper-proof integrity before storage. This layer implements a lightweight, permissioned blockchain where each new sensor data packet initiates a transaction. The core transformation from data to a trusted block is defined as follows. A cryptographic hash \( H_i(t) = \text{SHA-256}(X_i(t) \Vert \tau) \) is computed, where \( \tau \) is the precise timestamp. A new block \( \text{Block}_k \) is then constructed, as shown in Equation~\ref{block_struct}.
+
+\begin{equation}
+\text{Block}_k = \{ H(X_i(t)), \tau, H(\text{Block}_{k-1}), \text{Nonce} \}
+\label{block_struct}
+\end{equation}
+
+\noindent Consensus among designated validator nodes (e.g., municipal servers, contracted operators) is achieved via a consensus mechanism. A block is appended to the chain only upon receiving \( \lceil 2f/3 \rceil + 1 \) validation votes, where \( f \) is the number of faulty nodes the system can tolerate. This process, formalized in Algorithm~\ref{alg:blockchain_consensus}, ensures the immutability of historical data, creating a verifiable audit trail of all operations.
+
+\begin{algorithm}[ht]
+\caption{Blockchain Data Integrity And Consensus}
+\label{alg:blockchain_consensus}
+\begin{algorithmic}[1]
+\REQUIRE Sensor data vector \(X_i(t)\), validator set \(V = \{V_1, V_2, \dots, V_m\}\), previous block hash \(H(\text{Block}_{k-1})\)
+\ENSURE Finalized block \(\text{Block}_k\) appended to the chain
+\STATE \(H_i(t) \leftarrow \text{SHA-256}(X_i(t) \Vert \tau)\) \COMMENT{\(\tau\) is timestamp}
+\STATE Construct candidate block: \(\text{Block}_k \leftarrow \{H_i(t), \tau, H(\text{Block}_{k-1}), \text{Nonce}\}\)
+
+\STATE \textbf{Consensus Initiation}
+\STATE Primary validator proposes \(\text{Block}_k\) to all validators \(V\)
+\STATE Broadcast \(\langle \text{PROPOSE}, \text{Block}_k, H(\text{Block}_k) \rangle\)
+
+\STATE \textbf{Validation Phase}
+\FOR{each validator \(v_j \in V\)}
+    \STATE Verify block structure and cryptographic signatures
+    \STATE Validate sensor data consistency and timestamp
+    \IF{validation successful}
+        \STATE Broadcast \(\langle \text{VALIDATE}, H(\text{Block}_k), v_j, \text{signature} \rangle\)
+    \ELSE
+        \STATE Broadcast \(\langle \text{REJECT}, H(\text{Block}_k), v_j, \text{reason} \rangle\)
+    \ENDIF
+\ENDFOR
+
+\STATE \textbf{Vote Aggregation}
+\STATE Collect validation votes from all validators
+\STATE Count valid votes: \(valid\_votes \leftarrow \text{count}(\text{VALIDATE messages})\)
+\STATE Calculate consensus threshold: \(Q \leftarrow \lceil \frac{2m}{3} \rceil + 1\)
+
+\STATE \textbf{Finalization}
+\IF{\(valid\_votes \geq Q\)}
+    \STATE Append \(\text{Block}_k\) to the blockchain
+    \STATE Update global state: \(S_k \leftarrow H(S_{k-1} \Vert H(\text{Block}_k))\)
+    \STATE Broadcast \(\langle \text{FINALIZED}, H(\text{Block}_k) \rangle\) to network
+    \STATE \(result \leftarrow \{\text{status}:\text{finalized}, \text{block}:\text{Block}_k, \text{confirmations}:valid\_votes\}\)
+\ELSE
+    \STATE Discard \(\text{Block}_k\)
+    \STATE Trigger recovery protocol for consensus failure
+    \STATE \(result \leftarrow \{\text{status}:\text{rejected}, \text{block}:\varnothing, \text{reason}:\text{insufficient votes}\}\)
+\ENDIF
+
+\RETURN \(result\)
+\end{algorithmic}
+\end{algorithm}
+
+
+
+\subsection{Machine Learning Analytics Layer: The Predictive Intelligence Core}
+This layer ingests the trusted historical data from the blockchain to build predictive models. The primary objective is to forecast the Time-to-Fill (TTF) \( \hat{\tau}_i \) for each bin \( B_i \). We define the feature space for a bin at time \( t \) by incorporating temporal and historical context, as shown in Equation~\ref{feature_vector}.
+
+\begin{equation}
+\Phi_i(t) = [ F_i(t), F_i(t-1), \dots, F_i(t-l), \Delta F_i(t), T_i(t), \text{Pattern}_i(t) ]
+\label{feature_vector}
+\end{equation}
+
+\noindent where \( l \) is the look-back window, \( \Delta F_i(t) \) is the recent fill-rate, and \( \text{Pattern}_i(t) \) encodes temporal patterns (e.g., hour-of-day, day-of-week). The predictive model \( \mathcal{M} \) is a hybrid architecture combining a Long Short-Term Memory (LSTM) network for temporal dynamics and a Gradient Boosting Regressor (e.g., XGBoost) for static and contextual features. The TTF prediction is given in Equation~\ref{ttf_prediction}.
+
+\begin{equation}
+\hat{\tau}_i = \mathcal{M}(\Phi_i(t); \Theta)
+\label{ttf_prediction}
+\end{equation}
+
+\noindent where \( \Theta \) represents the model parameters. The model is trained to minimize the Mean Absolute Error (MAE) between the predicted and actual TTF on a historical dataset \( T \). The output of this model drives the dynamic route optimization, as detailed in Algorithm~\ref{alg:route_optimization}.
+
+\begin{algorithm}[ht]
+\caption{Dynamic Route Optimization Based On TTF Prediction}
+\label{alg:route_optimization}
+\begin{algorithmic}[1]
+\REQUIRE Set of bins \(B\), predicted TTF \(\hat{\tau}_i \, \forall B_i \in B\), vehicle capacity \(C\), depot location \(L_d\)
+\ENSURE Optimized collection route \(R^*\)
+\STATE \(Q \leftarrow \{B_i \in B \mid \hat{\tau}_i < 1.0\}\)
+\STATE \(R \leftarrow \varnothing\)
+\WHILE{\(Q \neq \varnothing\)}
+    \STATE \(B_i \leftarrow \text{SelectBinWithMinTTF}(Q)\)
+    \STATE \(R \leftarrow \text{IncorporateIntoRoute}(R, B_i, L_d)\)
+    \IF{\(\text{RouteCapacity}(R) > C\)}
+        \STATE \text{FinalizeAndDispatch}(R)
+        \STATE \(R \leftarrow \varnothing\)
+    \ENDIF
+    \STATE \(Q \leftarrow Q \setminus \{B_i\}\)
+\ENDWHILE
+\STATE \text{LogToBlockchain}(\(R^*, \text{DispatchTime}\))
+\RETURN \(R^*\)
+\end{algorithmic}
+\end{algorithm}
+
+
+\subsection{Synthesis: Integrated System Dynamics}
+The entire framework operates as a cyber-physical system where the operational state \( \mathcal{O}_t \) evolves over time based on integrated feedback from all layers. The system state transition can be modeled in Equation~\ref{system_dynamics}.
+
+\begin{equation}
+\mathcal{O}_{t+1} = G(\mathcal{O}_t, \{X_i(t)\}, \{\hat{\tau}_i(t)\}, R^*_t)
+\label{system_dynamics}
+\end{equation}
+
+\noindent Here, \( G \) represents the system dynamics function, which encompasses the physical state of the bins, the immutable ledger state \( S_k \), and the operational directives (optimized routes \( R^* \)). The blockchain ledger \( L = (\text{Block}_1, \text{Block}_2, \dots) \) serves as a verifiable, append-only record of every sensor reading and significant operational action, enabling full transparency and data-driven continuous improvement. This tight integration ensures that the loop from sensing to action is both intelligent and trustworthy, fulfilling the requirements of efficiency, sustainability, and accountability in modern smart city infrastructure.
+
+\section{System Implementation and Experimental Observation}
+The experimental framework was implemented in Python 3.10 and validated through a large-scale simulation that models urban waste collection scenarios. Initial development was conducted on Google Colab with final deployment on a Windows 11 workstation. The system utilized substantial computational resources, including a 12th Generation Intel Core i5-12400F processor, 32 GB of DDR4 RAM running at 3200 MT/s, and an NVIDIA GeForce RTX 3050 GPU with 8 GB of VRAM. This hardware configuration provided the necessary computational capacity for the integrated three-tier architecture, which processed simulated real-time data streams from six smart bins while simultaneously performing machine learning analytics and blockchain-based storage operations. The simulation environment was designed to replicate operational variability including fluctuations in fill level, temperature variations, and diverse collection scheduling patterns observed in urban settings. The blockchain module implemented a multi-platform approach, supporting Ethereum, Hyperledger Fabric, and PureChain frameworks. For the Ethereum implementation, encrypted sensor data transactions were serialized and appended to synthetic blocks within a controlled Ethereum Virtual Machine (EVM) simulation environment. The Hyperledger Fabric deployment used a permissioned network with practical Byzantine fault-tolerant consensus, while the PureChain integration leveraged its custom Proof-of-Authority-and-Association (PoA$^2$) consensus mechanism optimized for IoT applications. The experimental configurations and system parameters are summarized in Table~\ref{parameters}.
+
+\begin{table}[h!]
+\centering
+\caption{Smart Waste Management System Parameters}\label{parameters}
+\scalebox{.8}{
+\begin{tabular}{p{40mm} p{57mm}}
+\toprule
+\textbf{Parameter} & \textbf{Value / Description} \\
+\midrule
+\multicolumn{2}{c}{\textbf{Environmental Setup}} \\
+Number of Smart Bins ($N_{bins}$) & 6 \\
+Waste Type Distribution & 33.3\% General, 33.3\% Recyclable, 33.3\% Organic \\
+Fill Level Thresholds & $F_{crit}\geq80\%$, $F_{warn}\geq60\%$, $F_{norm}<60\%$ \\
+Temperature Range ($T_{range}$) & 20°C--28°C (simulated variation) \\
+Average Fill Level ($F_{avg}$) & 65.8\% \\
+Geographical Coverage ($A_{cover}$) & $\sim$5 km² \\
+Latitude Range ($Lat_{range}$) & 35.85--35.90 \\
+Longitude Range ($Lon_{range}$) & 128.58--128.62 \\
+Simulation Interval ($\Delta t_{sim}$) & 2 s \\
+Fill Rate ($R_{fill}$) & 0--3\% per interval \\
+\midrule
+\multicolumn{2}{c}{\textbf{Machine Learning Configuration}} \\
+Input Sequence Length ($L_{seq}$) & 60 timesteps \\
+LSTM Hidden Units ($U_{lstm}$) & 128 neurons \\
+Training Epochs ($E_{train}$) & 12 \\
+Batch Size ($B_{s}$) & 64 \\
+Learning Rate ($\eta$) & 0.001 (Adam optimizer) \\
+Dropout Rate ($\delta$) & 0.3 \\
+Test Split Ratio & 25\% \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+
+\subsection{Data Collection}
+The waste management evaluation framework enabled large-scale simulation of urban collection scenarios under varying operational conditions, including fluctuations in fill level, temperature variations, and collection scheduling patterns. The image data for this study was sourced from the RealWaste dataset \cite{2024realimage}, a real-image dataset of waste items collected from a landfill environment. This dataset comprises \textbf{8,265 images} across \textbf{12 distinct types of waste material}, providing a solid foundation for training a realistic waste classification model. The time-series data for fill levels, temperature, and collection events were algorithmically generated based on the parameters in Table~\ref{parameters}, simulating the stochastic nature of urban waste disposal. These patterns were processed asynchronously through optimized data pipelines to minimize system latency.
+
+\subsection{Data Structuring}
+The comprehensive categorization of the dataset enabled the development of a sophisticated waste classification system that maps the twelve original material categories into three operational bins for practical urban waste management. The mapping methodology was established as follows:
+
+\begin{equation}
+\begin{split}
+& \text{General Waste Bin} = \{\text{Miscellaneous Trash}, \text{Mixed}, \text{Porcelain}, \text{Rubber}, \text{Textile}\} \\
+& \text{Recyclable Bin} = \{\text{Cardboard}, \text{Glass}, \text{Metal}, \text{Paper}, \text{Plastic}\} \\
+& \text{Organic Bin} = \{\text{Food Organics}, \text{Vegetation}\}
+ \end{split}
+\label{eq:waste_mapping}
+\end{equation}
+
+
+The data set's structural organization in Equation~\ref{eq:waste_mapping} facilitated efficient deep learning transfer learning for model training. Each of the 8,265 images underwent a comprehensive preprocessing pipeline to ensure optimal model performance and generalization, comprising three fundamental operations: dimensional standardization, statistical normalization, and geometric-photometric augmentation. \noindent \textbf{Dimensional Standardization} involved resizing all input images to $224 \times 224$ pixels using bilinear interpolation, ensuring uniform input dimensions for the convolutional neural network. The transformation is defined in Equation~\ref{eq:resizing}.
+
+\begin{equation}
+I_{\text{resized}} = \Psi(I_{\text{original}}, 224, 224)
+\label{eq:resizing}
+\end{equation}
+
+\noindent where $\Psi$ represents the resizing function with bilinear interpolation, preserving aspect ratio by zero-padding when necessary. \noindent \textbf{Statistical Normalization} was applied using ImageNet dataset statistics to standardize pixel value distributions in Equation~\ref{eq:normalization}.
+
+\begin{equation}
+I_{\text{normalized}} = \frac{I_{\text{resized}} - \mu}{\sigma}
+\label{eq:normalization}
+\end{equation}
+
+\noindent where $\mu = [0.485, 0.456, 0.406]$ and $\sigma = [0.229, 0.224, 0.225]$ represent the mean and standard deviation values, respectively. \noindent \textbf{Data Augmentation} techniques were used to improve the robustness model against real-world variations in Equation~\ref{eq:augmentation}.
+
+\begin{equation}
+\begin{aligned}
+& \text{Random Horizontal Flip: } I_{\text{flipped}} = \mathcal{F}_h(I_{\text{normalized}}), \quad p = 0.5 \\
+& \text{Random Rotation: } I_{\text{rotated}} = \mathcal{R}(I, \theta), \quad \theta \in [-15^\circ, 15^\circ] \\
+& \text{Brightness Adjustment: } I_{\text{bright}} = I \cdot \beta, \quad \beta \in [0.8, 1.2] \\
+& \text{Contrast Variation: } I_{\text{contrast}} = \alpha \cdot I + (1-\alpha) \cdot \mu_I, \quad \alpha \in [0.9, 1.1]
+\end{aligned}
+\label{eq:augmentation}
+\end{equation}
+
+This three-bin operational framework achieves an optimal balance between classification accuracy and practical implementability by optimizing decision boundaries intelligently in Algorithm~\ref{alg:waste_classification}.
+
+\begin{algorithm}[ht]
+\caption{Waste Classification And Bin Assignment}
+\label{alg:waste_classification}
+\begin{algorithmic}[1]
+\REQUIRE Input image \(I\), trained model \(M_{\theta}\), confidence threshold \(\tau = 0.75\)
+\ENSURE Bin assignment \(B \in \{\text{General}, \text{Recyclable}, \text{Organic}\}\)
+\STATE \(I_{\text{processed}} \leftarrow \text{Preprocess}(I)\) \COMMENT{Apply Eqs.~\ref{eq:resizing}--\ref{eq:augmentation}: resizing, normalization, augmentation}
+\STATE \(\mathbf{p} \leftarrow M_{\theta}(I_{\text{processed}})\) \COMMENT{Get class probability vector \(\mathbf{p} = [p_1, p_2, \dots, p_{12}]\)}
+\STATE \(c_{\text{pred}} \leftarrow \arg\max(\mathbf{p})\) \COMMENT{Predicted waste material class from 12 categories}
+\STATE \(p_{\text{max}} \leftarrow \max(\mathbf{p})\) \COMMENT{Highest confidence score}
+\IF{\(p_{\text{max}} \geq \tau\)}
+    \STATE \(B \leftarrow \text{MapToBin}(c_{\text{pred}})\) \COMMENT{Map 12-class prediction to 3-bin system using Eq.~\ref{eq:waste_mapping}}
+\ELSE
+    \STATE \(B \leftarrow \text{General}\) \COMMENT{Default assignment for low-confidence predictions}
+\ENDIF
+\RETURN \(B\)
+\end{algorithmic}
+\end{algorithm}
+
+The system's operational efficiency enables intelligent routing decisions within the smart bin network, with collection optimization governed in Equation~\ref{eq:routing_optimization}.
+
+\begin{equation}
+R_{\text{optimal}} = \arg\min_{R} \sum_{i=1}^{N} \left( \frac{F_i(t)}{\hat{\tau}_i} \cdot d_i \cdot w(B_i) \right)
+\label{eq:routing_optimization}
+\end{equation}
+
+\noindent where $F_i(t)$ is the current fill level of the bin $i$, $\hat{\tau}_i$ is the predicted time to fullness, $d_i$ is the distance metric and $w(B_i)$ is the bin-type weighting factor that prioritizes the collection of organic waste to mitigate the smells of decomposition. A continuous monitoring subsystem operated via event-driven loops, using adaptive polling intervals to detect critical bin status and optimize collection routes with minimal computational overhead. Temporal responsiveness was computed based on sensor update intervals, representing the delay between a bin status change and the corresponding collection recommendation, as in Equation~\ref{equ:res}.
+
+\begin{equation}
+\text{System Response Time} = (T_\text{recommendation} - T_\text{status\_change}) \cdot t_\text{update}\label{equ:res}
+\end{equation}
+
+
+\subsection{Machine Learning Implementation Details}
+The dataset of 8,265 images from the RealWaste dataset was partitioned using a time-series aware split to prevent data leakage: 70\% for training (5,785 images), 15\% for validation (1,240 images), and 15\% for testing (1,240 images). For time-series forecasting models (LSTM, GRU, ARIMA, Prophet), we implemented a rolling window approach with 80\% training and 20\% testing within temporal sequences to maintain chronological order. Cross-validation with 5 folds was employed for ensemble models (XGBoost, Random Forest) to ensure robust performance estimation.
+
+Model hyperparameters were systematically optimized through grid search and Bayesian optimization techniques. The LSTM architecture utilized 2 layers with 128 units each, dropout rate of 0.2, learning rate of 0.001 with Adam optimizer, and was trained for 100 epochs with early stopping based on validation loss. The GRU model employed a similar architecture with 64 units per layer for reduced computational complexity. XGBoost parameters were optimized to max\_depth=6, learning\_rate=0.1, n\_estimators=100, subsample=0.8, and colsample\_bytree=0.8. Random Forest implementation used n\_estimators=200 with max\_features='sqrt' and min\_samples\_split=5. The Prophet model was configured with daily and weekly seasonality enabled, while ARIMA parameters were determined via auto-ARIMA selection resulting in order (1,1,1). 
+
+All models were evaluated using stratified sampling to maintain class distribution across splits, ensuring representative performance metrics. The training process employed a hybrid loss function combining Mean Absolute Error (MAE) for robustness against outliers and Huber loss for smooth gradient computation. Batch normalization was applied between LSTM layers to accelerate convergence. For real-time inference optimization, model quantization was implemented reducing the LSTM model size by 60\% with minimal accuracy loss. The complete ML pipeline was containerized using Docker for reproducible deployment across different hardware configurations.
+
+\subsection{Blockchain Deployment Details}
+Three distinct blockchain architectures were deployed and evaluated for IoT data integrity: Ethereum (public permissionless), Hyperledger Fabric (private permissioned), and PureChain (custom PoA\textsuperscript{2} consensus). Each platform was configured to handle the high-frequency sensor data streams from six smart bins generating approximately 2,500 transactions per hour under peak load conditions. The Ethereum implementation utilized a local Ganache testnet with Proof-of-Work consensus, configured with a 13-second block time and 15 TPS throughput capacity. Smart contracts were written in Solidity (v0.8.0) to handle sensor data transactions, with gas optimization techniques including batch processing of sensor readings. The Hyperledger Fabric deployment employed a three-organization network with Practical Byzantine Fault Tolerance (PBFT) consensus, Certificate Authorities for identity management, and chaincode written in Go for waste transaction validation.
+
+PureChain's core innovation is the Proof-of-Authority-and-Association (PoA\textsuperscript{2}) consensus mechanism, which extends conventional PoA by introducing a two-phase validation process. Unlike standard PoA where authorized nodes directly validate transactions, PoA\textsuperscript{2} implements: (1) \textit{Authority Verification}: Only pre-approved nodes with established identities can participate in consensus, and (2) \textit{Association Scoring}: Validators are weighted based on their historical reliability scores and network relationships. The validation probability for node $V_i$ is calculated as:
+\begin{equation}
+P(V_i) = \alpha \cdot \frac{\text{AuthScore}(V_i)}{\sum_j \text{AuthScore}(V_j)} + \beta \cdot \frac{\text{AssocScore}(V_i)}{\sum_j \text{AssocScore}(V_j)}
+\label{equ:poa2}
+\end{equation}
+where $\alpha + \beta = 1$ are weighting coefficients (typically $\alpha=0.6$, $\beta=0.4$). AuthScore represents cryptographic authority verification, while AssocScore measures node reliability through transaction history and peer trust metrics. This dual mechanism reduces centralization risks while maintaining fast finality. For data storage efficiency, all three platforms implemented a two-layer architecture: transaction metadata stored on-chain with cryptographic hashes, while bulk sensor data (images, detailed logs) stored off-chain in IPFS with content-addressed references. This hybrid approach reduced blockchain bloat while maintaining data integrity. The PureChain SDK was integrated with web3.py through custom adapters, enabling seamless interaction with the EVM-compatible execution layer while leveraging the PoA\textsuperscript{2} consensus benefits. Performance monitoring was implemented through custom blockchain explorers tracking key metrics: transaction confirmation time, block propagation delay, validator participation rate, and consensus algorithm efficiency. Security measures included regular vulnerability assessments, smart contract audits using Slither and MythX tools, and implementation of role-based access control for validator node management. The complete blockchain infrastructure was deployed on Kubernetes clusters for horizontal scalability and high availability across geographically distributed validator nodes.
+
+
+\subsection{Blockchain Integration and Data Integrity}
+The blockchain integration involves three distributed ledger implementations: Ethereum, Hyperledger Fabric, and PureChain. Ethereum operates as a public, permissionless blockchain using the PoW consensus mechanism. Hyperledger Fabric functions as a private, permissioned blockchain that uses a PPBFT consensus mechanism via a \texttt{web3} provider named \texttt{"Fab3"}. The native PureChain SDK (\url{https://pypi.org/project/purechainlib/}), developed by Networked System Lab~\cite{nslab2023}, was integrated with \texttt{web3.py}. PureChain is a custom blockchain framework that employs PoA$^2$ consensus applied at the transaction level eliminates block delays, ensures deterministic finality, and delegates heavy validation to trusted nodes, addressing
+the blockchain "quad-lemma" of decentralization, security,
+scalability, and cost for trust management~\cite{ICCE2025, AHAKONYE2025100354, ihmpure}, while maintaining full compatibility with EVM operational semantics. Sensor data are cryptographically hashed and appended to immutable blocks, with each transaction undergoing multi-point validation to ensure data integrity and achieve sub-second latency.
+
+\begin{itemize}
+    \item \textbf{Ethereum (PoW) Consensus:}
+The probability of a miner \( M_i \) successfully mining a block is proportional to its computational power in Equation~\ref{ethe}.
+\begin{equation}
+P(M_i) = \frac{H(M_i)}{\sum_{j=1}^{n} H(M_j)}, \quad M_i \in \mathcal{M}\label{ethe}
+\end{equation}
+where \( H(M_i) \) represents the hash rate of miner \( M_i \).
+
+    \item \textbf{Hyperledger (PBFT) Consensus:}
+In Hyperledger, the transaction agreement depends on a quorum of validator nodes, as shown in Equation~\ref{hyper}.
+\begin{equation}
+Q_{\text{PBFT}} = \left\lceil \frac{2f}{3} + 1 \right\rceil, \quad f = \text{number of faulty nodes}\label{hyper}
+\end{equation}
+A block is committed when the number of agreement messages reaches \( Q_{\text{PBFT}} \).
+
+    \item \textbf{PureChain (PoA$^2$) Consensus:}
+Validator selection in PureChain depends on both authority authentication and association reputation, as shown in Equation~\ref{equ:consensus}.
+\begin{equation}
+P(V_i) = \frac{\text{Rep}(V_i)}{\sum_{j=1}^{m} \text{Rep}(V_j)}, \quad \forall V_i \in \mathcal{V} \ \text{where} \ \text{Auth}(V_i) = \text{True}\label{equ:consensus}
+\end{equation}
+\end{itemize}
+
+The system's data integrity was quantitatively validated through cryptographic hash verification and consensus agreement metrics across all three frameworks. Blockchain performance was assessed by comparing transaction throughput and energy consumption across multiple platforms using Equations~\ref{equ:throughput} and~\ref{equ:energy}.
+
+\begin{equation}
+\text{Throughput Efficiency (\%)} = \frac{T_\text{actual} - T_\text{baseline}}{T_\text{baseline}} \times 100\label{equ:throughput}
+\end{equation}
+
+\begin{equation}
+\text{Energy Reduction (\%)} = \frac{E_\text{baseline} - E_\text{optimized}}{E_\text{baseline}} \times 100\label{equ:energy}
+\end{equation}
+
+These formulations provided quantitative measures of the system's efficiency under varying workloads in urban waste management. This performance demonstrated the framework's capability to maintain secure, transparent audit trails while supporting real-time waste management operations at the urban scale.
+
+\subsection{Fill-Level Prediction and ML Performance}
+The predictive analytics engine employed a multi-model architecture to analyze historical fill patterns, classify waste accumulation trends, and forecast collection needs in real time. Each bin's fill pattern was evaluated against temporal and contextual features, producing probabilistic time-to-fill predictions in Equation~\ref{equ:pred}.
+
+\begin{equation}
+\text{Prediction Confidence} = \frac{\sum_{i=1}^n w_i \cdot f_i}{\sum_{i=1}^n w_i}\label{equ:pred}
+\end{equation}
+
+where $w_i$ represents the feature importance weight, and $f_i$ denotes the normalized feature value. AI-assisted pattern recognition extended this mechanism by integrating temporal dynamics with contextual information from geographical distribution. The resulting composite prediction fused LSTM-based temporal analysis and gradient-boosting features into a unified forecasting metric in Equation~\ref{equ:compo}.
+
+\begin{equation}
+\begin{split}
+\text{Collection Priority Score} = \alpha \cdot \text{Fill Rate} 
++ \beta \cdot \text{Temporal Pattern} 
++ \gamma \cdot \text{Location Density}
+\end{split}
+\label{equ:compo}
+\end{equation}
+
+
+Here, $\alpha$, $\beta$, and $\gamma$ are dynamic weighting coefficients optimized during training to balance prediction accuracy and computational efficiency. Bins exceeding adaptive thresholds were flagged for immediate collection, automatically updating model parameters to improve future forecasting accuracy. This closed-loop learning structure allowed the system to continuously adapt to changing urban waste patterns, maintaining optimization against evolving operational conditions.
+
+\section{Experimental Analysis Discussion}
+\subsection{Classification of waste bins}
+This section discusses the classification of waste bin configurations using ML models to improve accuracy and prediction efficiency. Accordingly, Table~\ref{table1} presents the results of the ML-blockchain-integrated waste prediction system, which monitors and forecasts waste bin fill levels in real time. Each column provides critical operational parameters enabling intelligent waste management decisions. Typically, the configuration of six waste bins, including their locations, fill levels, temperatures, statuses, waste types, and collection times, is presented. The six bins (BIN-001 to BIN-006) represent distributed collection points across the mapped coordinates. These assigned unique IDs ensure traceability and secure data logging through blockchain, preventing tampering or duplication~\cite{belhiah2024optimising, melare2017technologies}. Based on the result, BIN-003 has the highest fill level at 92\%, followed by BIN-001 at 85\% and BIN-005 at 78\%, indicating these bins are nearing capacity and require urgent collection. BIN-004 has the lowest fill level at 30\%, suggesting less frequent usage. The longitude and latitude highlight coordinates specifying the geographical locations of each bin within the monitored zone. The slight variation in longitude (128.58--128.62) and latitude (35.85--35.90) suggests a spatially compact urban or institutional setting, allowing spatial analytics such as route optimization for waste collection vehicles~\cite{melare2017technologies}. 
+
+The prediction also accounts for the dynamics of waste accumulation across different bins. Bins such as BIN-001 (85\%) and BIN-003 (92\%) are nearing full capacity and classified as "Critical" requiring immediate attention. In contrast, bins like BIN-004 (30\%) are within normal operational thresholds. These values serve as the core input for the predictive model, linking historical trends to future waste generation rates. The temperature ranges from 21 to 26°C, with BIN-003 being the warmest, corresponding with organic waste types that are more prone to biological activity, suggesting a need for quicker collection cycles to avoid hygienic issues. Status indicators classify BIN-001 and BIN-003 as critical, BIN-005 and BIN-006 as Warning, and BIN-002 and BIN-004 as Normal, reflecting varying urgency levels. Higher temperatures, such as 26°C for BIN-003. The operational status (Normal, Warning, or Critical) is a categorical output generated by the ML model based on fill level thresholds. "Critical" status bins (BIN-001 and BIN-003) have exceeded 80\% capacity, while "Warning" bins (BIN-005 and BIN-006) are approaching this limit. As shown in Fig.~\ref{fig2}, higher fill levels ($\geq$78\%) are observed in bins where the temperature ranges from 24--26 °C, such as BIN-001 (85\%, 24 °C), BIN-003 (92\%, 26 °C), and BIN-005 (78\%, 25 °C). On the other hand, lower fill levels ($\leq$45\%) are associated with lower temperatures (21--22 °C), as seen in BIN-002 (45\%, 22 °C) and BIN-004 (30\%, 21 °C). The mid-range bin, BIN-006 (65\%, 23 °C), supports this trend, suggesting a proportional increase in fill level with rising temperature. Hence, the dataset suggests that temperature may be a secondary but relevant predictor of bin fill level, complementing primary factors such as waste type and collection frequency.
+
+\begin{table*}[htbp]
+\centering
+\caption{Waste bins configuration results}\label{table1}
+\scalebox{.9}{
+\begin{tabular}{p{15mm} p{15mm} p{15mm} p{15mm} p{18mm} p{18mm} p{15mm} p{18mm} p{18mm} p{12mm}}
+\toprule
+\textbf{Bin ID} & \textbf{Longitude} & \textbf{Latitude} & \textbf{Fill Level (\%)} & \textbf{Temperature (°C)} & \textbf{Status} & \textbf{Waste type} & \textbf{Last collection time} & \textbf{Actual next (h)} & \textbf{Predicted next (h)} \\
+\midrule
+BIN-001 & 128.5900 & 35.8700 & 85.0 & 24.0 & Critical & General & 2h ago & 3.2000 & 3.5000 \\
+BIN-002 & 128.6000 & 35.8800 & 45.0 & 22.0 & Normal & Recyclable & 24h ago & 15.800 & 15.2000 \\
+BIN-003 & 128.6100 & 35.8600 & 92.0 & 26.0 & Critical & Organic & 3h ago & 2.1000 & 2.30000 \\
+BIN-004 & 128.5800 & 35.8900 & 30.0 & 21.0 & Normal & General & 6h ago & 22.500 & 21.8000 \\
+BIN-005 & 128.6200 & 35.8500 & 78.0 & 25.0 & Warning & Recyclable & 4h ago & 6.3000 & 6.80000 \\
+BIN-006 & 128.5900 & 35.9000 & 65.0 & 23.0 & Warning & Organic & 8h ago & 10.200 & 9.80000 \\
+\bottomrule
+\end{tabular}}
+\end{table*}
+
+\begin{figure*}[htbp]
+\centering
+\includegraphics[width=\textwidth]{Pic/Temprature PNG.png}
+\caption{Temperature-dependent variations in waste bin fill levels and status distribution}
+\label{fig2}
+\end{figure*}
+
+This automated classification enables proactive scheduling rather than reactive collection. The system also incorporates waste type information, allowing the ML model to learn disposal patterns across different categories. This enhances the accuracy of fill-level predictions and promotes circular economy practices through improved waste segregation and recycling efficiency. Fine-tuning the ML models also predicted the last collection time for each bin, where the time elapsed since the bin's last emptying event is tracked, providing a baseline for the prediction model. For example, BIN-002 was collected 24 hours ago and remains only 45\% full, indicating a slower waste accumulation rate compared to BIN-003, which reached 92\% within 3 hours. Also, BIN-001's actual following collection is 3.2 hours, while the predicted time is 3.5 hours; BIN-003 shows 2.1 hours actual versus 2.3 hours predicted. Longer intervals for BIN-002 (15.8 hours) and BIN-004 (22.5 hours) suggest these bins fill more slowly, likely due to location or waste type. Dynamics in scheduling based on real-time fill levels and environmental factors were analyzed for the time remaining (in hours) until the next expected collection, using actual observed data versus ML-predicted values. The close correspondence between actual and predicted times, for instance, BIN-001 (actual 3.2 h; predicted 3.5 h), demonstrates the model's high accuracy and reliability. Minor deviations ($\pm$0.3--0.5 h) are within acceptable prediction margins, validating the model's robustness. 
+
+As presented in Fig.~\ref{fig3}, the statistical summary of six monitored waste bins demonstrates distinct variability in waste accumulation and environmental parameters. The mean fill level across all bins is 65.83\%, with a relatively high standard deviation of 24.16\%, suggesting notable disparities in waste generation rates across locations. The minimum and maximum fill levels are 30\% and 92\%, respectively, yielding a range of 62\%. This wide range suggests that some bins reach capacity much more quickly than others, reflecting heterogeneous waste-disposal behaviors within the monitored area. In contrast, the mean temperature of 23.5 °C exhibits a small standard deviation of 1.87 °C, implying that environmental conditions remain relatively uniform across the bin sites. This consistency suggests that variations in fill levels are more strongly influenced by user behavior and waste type rather than ambient temperature. Regarding collection intervals, the mean actual next collection time is 10.02 hours, but with a high variance (62.45) and a broad range (2.10--22.50 h), indicating substantial differences in how frequently bins require servicing. The quartile distribution further highlights this disparity: 25\% of bins need collection within 3.98 h, while 75\% can wait up to 14.40 h before reaching critical capacity. This uneven distribution underscores the importance of implementing dynamic and data-driven collection scheduling to optimize logistics and prevent overflow incidents.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.45\textwidth]{Pic/Weste bin sta.png}
+\caption{Waste bin statistical summary}
+\label{fig3}
+\end{figure}
+
+\subsection{Appraising the ML models' performance metrics}
+Fig. \ref{fig4} presents the performance evaluation of six machine learning models: LSTM, GRU, Random Forest (RF), XGBoost, Prophet, and ARIMA, assessed across multiple metrics, including accuracy, $R^2$, MAE, RMSE, F1 score, training and inference times, and memory utilization. Among these models, LSTM demonstrated the highest predictive performance, achieving an accuracy of 94.8\%, with the lowest error values (MAE = 0.420; RMSE = 0.580) and the strongest goodness-of-fit ($R^2$ = 0.947). These results highlight LSTM's robust ability to model sequential waste-generation data, thanks to its deep recurrent architecture that effectively captures temporal dependencies. However, this high performance comes at the cost of computational intensity, as shown in Fig. \ref{fig5}, with LSTM exhibiting the highest memory consumption (1024 MB) and longest training time (245 s) among the tested models. 
+
+The GRU model follows closely, achieving 93.2\% accuracy and slightly higher error metrics (MAE = 0.510; RMSE = 0.670), while maintaining faster inference time (9 ms) and lower memory usage (768 MB) than LSTM. This suggests that GRU provides a more computationally efficient alternative with only a marginal loss in predictive accuracy. Both RF and XGBoost models demonstrate strong accuracy (91.5\% and 92.8\%, respectively) and are notably more computationally efficient. Random Forest recorded the shortest training (87 s) and inference time (5 ms), making it particularly advantageous for real-time prediction applications. XGBoost, in contrast, offers a balanced trade-off between accuracy (92.8\%), error reduction (MAE = 0.480; RMSE = 0.640), and computational efficiency (training time = 112 s; memory usage = 640 MB), along with a strong F1 score of 0.921. These attributes make XGBoost an optimal choice for scenarios requiring both speed and precision. 
+
+In comparison, the Prophet and ARIMA models yielded lower accuracies (89.7\% and 87.3\%, respectively), higher error rates, and lower R$^2$ scores (0.894 and 0.871, respectively). These models, while suitable for trend and seasonality analysis, exhibit limitations in capturing complex, nonlinear waste-generation patterns~\cite{abdallah2020artificial}. Furthermore, Prophet showed higher inference latency (15 ms) and moderate memory usage (896 MB), while ARIMA, despite being memory-efficient (384 MB), underperformed across all other metrics. Herein, the results indicate that LSTM provides the most accurate but computationally demanding solution, XGBoost achieves the best balance between accuracy and resource efficiency, and Random Forest excels in processing speed. Conversely, Prophet and ARIMA are less suited to highly dynamic waste-prediction tasks due to their limited adaptability to nonlinear and multivariate data patterns.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.45\textwidth]{Pic/ML Evelu.png}
+\caption{ML model evaluation results based on accuracy, $R^2$ and F1 scores metrics}
+\label{fig4}
+\end{figure}
+
+\begin{figure*}[htbp]
+\centering
+\includegraphics[width=\textwidth]{Pic/Benchemarking PNG.png}
+\caption{Benchmarking the ML models' performance based on accuracy, error metrics, memory usage, and computational trade-offs}
+\label{fig5}
+\end{figure*}
+
+\subsection{Comparative evaluation of blockchain platforms for smart waste management}
+Table~\ref{table2} presents the key performance metrics of the three (3) blockchain platforms, namely PureChain, Ethereum, and Hyperledger, evaluated the smart waste management systems integrated with ML analytics. The comparative analysis reveals significant differences in scalability, energy efficiency, transaction cost, and suitability for real-time data processing. In terms of transaction throughput, Hyperledger achieved the highest performance with 3,500 transactions per second (TPS), followed closely by PureChain at 2,847 TPS. Ethereum demonstrated a substantially lower value of only 15 TPS. This wide disparity underscores the scalability limitations of Ethereum when applied to high-frequency data environments such as sensor-driven waste monitoring systems~\cite{hariyani2025literature}. 
+
+Latency performance further highlights this gap: PureChain (0.3 s) and Hyperledger (0.5 s) exhibited near-real-time responsiveness, whereas Ethereum (13 s) suffered from high latency, which would impede timely validation of waste collection or bin status updates. Similarly, block time analysis shows that Hyperledger (1 s) and PureChain (2 s) support rapid data propagation, while Ethereum's longer block interval (13 s) reduces overall throughput efficiency. A striking contrast emerges in energy consumption and transaction cost. PureChain consumes only 0.02 kWh per transaction, compared to Hyperledger's 0.05 kWh and Ethereum's exceptionally high 45 kWh, making it both environmentally unsustainable and economically inefficient. This inefficiency is further reflected in gas price, where Ethereum transactions cost approximately \$25, in contrast to the negligible costs recorded for PureChain (\$0.001) and Hyperledger (\$0.000). These findings clearly demonstrate the cost-effectiveness and environmental advantage of the newer blockchain architectures. 
+
+From an AI integration standpoint, PureChain again outperforms its counterparts. It records the fastest ML inference time (8.5 ms) and supports the highest number of concurrent AI jobs (156), with a minimal AI transaction cost (\$0.0008). Hyperledger maintains moderate performance (12.3 ms inference, 124 concurrent jobs), while Ethereum lags considerably (45.2 ms inference, 8 concurrent jobs, \$18.50 transaction cost). These results confirm that Ethereum's computational overhead severely restricts its applicability for AI-driven, real-time decision-making environments. Data integrity across all platforms remains high, exceeding 97\%, with PureChain achieving the best integrity score (99.2\%), marginally ahead of Ethereum (98.8\%) and Hyperledger (97.5\%). The combination of high integrity, ultra-low latency, and strong throughput positions PureChain as the most balanced platform for secure and scalable smart waste management operations. Overall, the results indicate that PureChain provides the optimal trade-off between speed, cost-efficiency, scalability, and AI compatibility, making it well-suited for next-generation, blockchain-enabled waste-management infrastructure. Hyperledger also performs strongly in terms of throughput and energy efficiency, offering a viable alternative where open-source modularity is preferred. Conversely, Ethereum, despite its maturity and ecosystem advantages, remains unsuitable for real-time smart waste applications due to its high latency, excessive energy consumption, and prohibitive transaction costs.
+
+\begin{table*}[htbp]
+\centering
+\caption{Blockchain platforms' performance comparison}\label{table2}
+\scalebox{.75}{
+\begin{tabular}{p{15mm} p{15mm} p{15mm} p{17mm} p{20mm} p{23mm} p{15mm} p{18mm} p{18mm} p{15mm} p{20mm}}
+\toprule
+\textbf{Platforms} & \textbf{TPS} & \textbf{Latency (s)} & \textbf{Energy/Tx (kwh)} & \textbf{Gas Price (\$)} & \textbf{Block Time (s)} & \textbf{Throughput (\%)} & \textbf{ML Inference (ms)} & \textbf{Data Integrity (\%)} & \textbf{Concurrent AI Jobs} & \textbf{AI Tx Cost (\$)} \\
+\midrule
+PureChain & 2,847 & 0.3 & 0.02 & 0.001 & 2 & 98 & 8.5 & 99.2 & 156 & 0.0008 \\
+Ethereum & 15 & 13.0 & 45.00 & 25.000 & 13 & 45 & 45.2 & 98.8 & 8 & 18.5000 \\
+Hyperledger & 3500 & 0.5 & 0.05 & 0.000 & 1 & 95 & 12.3 & 97.5 & 124 & 0.000 \\
+\bottomrule
+\end{tabular}}
+\end{table*}
+
+\subsection{Comparative Performance of ML Models for 24-Hour Fill-Level Prediction}
+The predictive accuracy of the tested ML models was evaluated over a 24-hour forecasting period, as summarized in Table \ref{table3}. The models were compared with actual values over different time intervals to assess their temporal consistency and robustness in forecasting waste bin fill levels. At hour 0, all models exhibited relatively low accuracy ($\approx$45\%), reflecting the inherent difficulty of forecasting near-zero fill levels, where sensor readings are often less stable or influenced by initialization errors. As time progresses, accuracy improves substantially, with performance peaking at hour 12, where Random Forest achieves the highest accuracy (76.5\%), followed closely by XGBoost (75.4\%) and LSTM (75.2\%), GRU (74.6\%) also maintains strong predictive alignment. 
+
+Between 8 and 16 hours, all models maintain high performance, with accuracies ranging from 68 to 76\%, suggesting that mid-day predictions are more reliable due to the regularity of waste-generation patterns and reduced stochastic variability in disposal behavior during these periods. This mid-range consistency indicates that the models effectively capture short-term temporal dependencies and diurnal waste dynamics. Beyond 16 hours, a gradual decline in accuracy is observed, with 20 hours showing reduced predictive performance (65.1\% for LSTM, 66.2\% for RF), and 24 hours dropping further to approximately 58-59\% across all models. This degradation suggests that prediction uncertainty increases with the time horizon, likely due to the cumulative propagation of errors and greater variability in waste generation later in the day~\cite{liu2025enhancing}. 
+
+Hence, the prediction shows that LSTM and XGBoost demonstrate stable and consistent performance across most time intervals, underscoring their suitability for short- to medium-term forecasting in dynamic environments. Random Forest slightly outperforms other models during peak hours, demonstrating its ability to capture non-linear dependencies in mid-term patterns. Conversely, GRU, while competitive, performs marginally worse than LSTM and XGBoost, indicating that both recurrent architectures effectively model temporal sequences, but LSTM's longer memory structure provides a modest advantage. Therefore, the results indicate that recurrent neural network (RNN)-based models, particularly LSTM, are highly effective for short- to medium-term forecasting, where temporal dependencies are critical. In contrast, ensemble-based methods such as Random Forest and XGBoost offer robust performance in mid-range prediction intervals with reduced training complexity. These findings highlight the potential of hybrid frameworks combining recurrent and ensemble learning to optimize accuracy across multiple forecasting horizons in smart waste management systems.
+
+\begin{table}[htbp]
+\centering
+\caption{24-Hour prediction accuracy comparison}
+\label{table3}
+\scalebox{.8}{
+\begin{tabular}{p{12mm} p{12mm} p{15mm} p{15mm} p{13mm} p{13mm}}
+\toprule
+\textbf{Hour} & \textbf{Actual (\%)} & \textbf{LSTM (\%)} & \textbf{GRU (\%)} & \textbf{RF (\%)} & \textbf{XGBoost (\%)} \\
+\midrule
+0 & 45.0 & 44.8 & 45.2 & 46.1 & 45.3 \\
+4 & 52.0 & 51.7 & 51.9 & 53.2 & 52.4 \\
+8 & 68.0 & 68.3 & 67.5 & 69.8 & 68.1 \\
+12 & 75.0 & 75.2 & 74.6 & 76.5 & 75.4 \\
+16 & 71.0 & 70.8 & 71.4 & 72.3 & 71.2 \\
+20 & 65.0 & 65.1 & 64.7 & 66.2 & 65.3 \\
+24 & 58.0 & 58.2 & 58.5 & 59.1 & 58.6 \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\subsection{Feature importance analysis for ML-based waste bin status prediction}
+Table~\ref{table4} highlights the results of a feature importance analysis of six (6) key evaluated features, ranked by their relative importance in predicting the operational status of waste bins using the trained ML models. Among the tested features, Current Fill Level emerged as the most dominant feature, accounting for 34.2\% of the total predictive contribution. This strong influence is expected, as the real-time bin capacity serves as a direct indicator of collection urgency and waste generation dynamics \cite{vladucu2024blockchain}. The historical pattern ranked second, accounting for 28.7\%, highlighting the significance of temporal trends in waste accumulation for forecasting future fill levels. Temperature contributed 15.6\%, reflecting a moderate effect of environmental conditions on waste behavior, particularly for waste comprising organic fractions whose decomposition and volume expansion can vary with temperature. 
+
+Features with relatively lower importance include Day of Week (9.8\%), Location Density (7.3\%), and Waste Type (4.4\%). Although less dominant, these factors still provide valuable contextual information, such as the influence of population activity patterns, urban density, and material composition on waste generation rates. Hence, the feature distribution underscores that predictive waste management models should primarily rely on real-time sensor data and historical behavioral patterns to achieve high accuracy. Nonetheless, incorporating environmental and contextual variables enhances model robustness and adaptability across different waste categories and urban settings \cite{faiz2024blockchain}.
+
+\begin{table}[htbp]
+\centering
+\caption{Feature importance rankings}
+\label{table4}
+\scalebox{.9}{
+\begin{tabular}{p{30mm} p{12mm} p{15mm}}
+\toprule
+\textbf{Feature} & \textbf{Importance} & \textbf{Percentage (\%)} \\
+\midrule
+Current Fill Level & 0.342 & 34.2 \\
+Historical Pattern & 0.287 & 28.7 \\
+Temperature & 0.156 & 15.6 \\
+Day of Week & 0.098 & 9.8 \\
+Location Density & 0.073 & 7.3 \\
+Waste Type & 0.044 & 4.4 \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\section{Sustainability Assessment and Implications}
+To evaluate the environmental benefits of the proposed framework, a prospective life cycle assessment (LCA) was conducted comparing the smart waste management system against a baseline traditional collection system. The assessment focused on key environmental impact categories relevant to urban waste management and energy recovery.
+
+\subsection{Methodology for Sustainability Assessment}
+The LCA followed ISO 14040/14044 standards and considered a functional unit of \textit{``management of 1 ton of EPS/XPS waste from collection to energy recovery feedstock preparation."} System boundaries included: (1) collection logistics (vehicle travel), (2) operational data infrastructure (sensors, blockchain, ML computation), and (3) benefits from improved feedstock quality for energy recovery. Data for the baseline scenario were derived from literature on conventional waste collection practices, while data for the proposed system were extrapolated from the simulation results presented in Sections 5.1-5.3.
+
+\subsection{Quantified Environmental Benefits}
+The analysis revealed significant sustainability improvements:
+
+\begin{itemize}
+    \item \textbf{Reduced Fuel Consumption and GHG Emissions:} Dynamic route optimization based on ML predictions reduced total collection vehicle travel distance by an estimated \textbf{28-32\%} compared to fixed-route schedules. This translates to proportional reductions in diesel consumption (approximately \textbf{12-15 L per ton of waste collected}) and associated greenhouse gas (GHG) emissions (\textbf{30-35 kg CO$_2$-eq per ton}).
+    \item \textbf{Enhanced Feedstock Quality for Energy Recovery:} The system's real-time monitoring and contamination detection improved the purity of segregated EPS/XPS streams. This increases the effective calorific value of the waste feedstock delivered to WtE plants by an estimated \textbf{8-12\%}, as contamination (e.g., organic matter, non-combustibles) is reduced. Higher feedstock quality improves combustion efficiency and reduces ash residue.
+    \item \textbf{Net Impact of Digital Infrastructure:} The energy consumption of the IoT sensors, blockchain (using PureChain), and ML inference was calculated. For the functional unit, this amounted to approximately \textbf{2.1 kWh}. When compared to the fuel savings (\textbf{$\sim$140 kWh equivalent from diesel reduction}), the digital system's operational energy represents less than \textbf{1.5\%} of the saved energy, indicating a strongly positive net energy balance. Furthermore, this digital energy footprint is negligible (less than 0.05\%) when compared to the potential energy recovered from the EPS/XPS itself ($\sim$4,000 kWh per ton, based on its 40 MJ/kg calorific value), starkly illustrating the system's role in enabling net energy gain.
+    \item \textbf{Reduced Overflow and Littering:} Predictive collection prevented bin overflows, which are a source of wind-blown litter and secondary environmental contamination. This indirect benefit, while challenging to quantify precisely, contributes to reduced microplastic dispersal and cleaner urban environments.
+\end{itemize}
+
+\subsection{Sensitivity and Limitations}
+The LCA results are prospective and based on simulation extrapolations. A sensitivity analysis indicates the core benefit of reduced travel distance remains robust ($>$15\% reduction) across a range of urban density scenarios and fill-rate assumptions. The primary limitation is the dependency on the accuracy of the ML predictions, which our experimental results validate. The assessment also assumes the availability of a WtE facility; in regions without such infrastructure, the benefits would shift towards reduced landfill use and transport emissions.
+
+\subsection{Circular Economy and Policy Implications}
+The framework directly supports circular economy objectives by creating a transparent, verifiable chain of custody for waste plastics. The blockchain ledger provides auditable evidence of proper handling, which can be used to certify recycled content or validate claims for carbon credits associated with avoided landfill emissions and fossil fuel displacement through energy recovery. For policymakers, the study demonstrates that digital integration can overcome the economic barriers to EPS/XPS recycling by reducing collection costs and creating a reliable supply chain for energy-from-waste facilities. The quantified benefits provide a basis for justifying investments in smart waste infrastructure and for designing extended producer responsibility (EPR) schemes that reward efficient, traceable collection systems.
+
+\section{Conclusion}
+This research has successfully designed, implemented, and validated a novel, integrated framework that synergizes Internet of Things (IoT) sensing, machine learning (ML), and blockchain technology to address the critical environmental challenge of managing foam polystyrene (EPS/XPS) waste. The study demonstrates a decisive shift from traditional, reactive, and linear waste management models towards a dynamic, intelligent, and transparent circular system. The core take-home message is that the synergistic integration of IoT, AI, and blockchain is not merely an incremental improvement but a foundational shift, transforming waste logistics from a cost center into a data-driven, efficient, and accountable component of the smart city's waste-to-energy ecosystem. Our findings yield critical implications for both policy and industry. The empirical validation of our framework proves that:
+
+\begin{enumerate}
+    \item \textbf{Operational Efficiency is Achievable:} Predictive analytics, with LSTM models achieving 94.8\% accuracy, can drastically reduce collection costs, fuel consumption, and urban congestion. The prospective LCA indicates potential reductions of 28-32\% in collection vehicle travel.
+    
+    \item \textbf{Trust can be Engineered:} The use of energy-efficient blockchain platforms such as PureChain provides an immutable, verifiable audit trail that can eliminate illegal dumping, validate recycling claims, and build stakeholder trust. Accurate classification of bin status (Normal, Warning, Critical) and close alignment between actual and predicted collection times validate the framework's operational robustness.
+    
+    \item \textbf{Intelligence is Actionable:} The identification of key predictive features, such as real-time fill levels and historical patterns, moves waste management beyond guesswork into the realm of precise, anticipatory resource allocation. This intelligent, data-driven approach directly mitigates the inefficiencies of traditional systems, such as unnecessary collection trips, fuel waste, and bin overflows, resulting in significant gains in operational efficiency and cost reduction.
+    
+    \item {\textbf{Sustainability is Quantifiable:} The framework delivers tangible environmental benefits, including reduced GHG emissions and enhanced quality of waste feedstock for energy recovery, transforming EPS/XPS from an environmental liability into a managed energy resource.
+\end{enumerate}
+
+In final reflection, this study does more than present a technological system; it offers a new philosophy for managing our material world. With intelligence and trust embedded in the very fabric of waste management, we can transform a symbol of environmental neglect, the plastic foam fragment into a benchmark for a sustainable, accountable, and resource-efficient future. The path forward is not to produce less data, but to use it more wisely, turning the tide on pollution not with more bins, but with more brains. Therefore, this research provides an empirically validated blueprint for transforming EPS/XPS waste management towards energy recovery. By ensuring transparency, optimizing logistics, and guaranteeing data integrity, the proposed framework not only tackles the immediate problem of plastic pollution but also establishes a trustworthy and efficient pathway for a circular economy. Future work will focus on large-scale urban deployments, further refinement of hybrid ML models, and the integration of smart contracts to automate incentives for recycling and sustainable disposal practices ultimately paving the way for smarter, more accountable, and sustainable urban infrastructure.
+
+Looking ahead, this research opens several pivotal avenues for future exploration, as it lays the groundwork for a future in which waste management is synonymous with energy resource harvesting. The immediate next step is to pilot large-scale urban deployments to stress-test the system's scalability and socio-economic impact. Furthermore, a key innovation will be the development of smart contracts that provide financial incentives for the segregation of combustible plastics, effectively creating a circular economy where disposed waste is monetized as a virtual energy credit, thereby closing the loop between consumer action and environmental reward. Concurrently, our AI models can be refined to incorporate material-specific energy content, enabling dynamic logistics that maximize the energy yield from collected waste transforming urban areas into net contributors to the energy grid and directly rewarding citizens and businesses for sustainable disposal practices.
+
+\section*{Acknowledgment}
+This work was partly supported by Innovative Human Resource Development for Local Intellectualization program through the Institute of Information \& Communications Technology Planning \& Evaluation (IITP) grant funded by the Korean government (MSIT) (IITP-2025-RS-2020-II201612, 40\%), the Priority Research Centers Program through the National Research Foundation of Korea (NRF) funded by the Ministry of Education, Science and Technology (2018R1A6A1A03024003, 30\%),
+by the Institute of Information \& Communications Technology Planning \& Evaluation (IITP)-ITRC(Information Technology Research Center) grant funded by the Korea government(Ministry of Science and ICT)(IITP-2025-RS-2024-00438430 30\%)
+
+\section*{Conflict of interest}
+The authors declare that there is no conflict of interest in this paper.
+
+
+%\balance
+
+\bibliographystyle{elsarticle-num}
+
+\bibliography{references.bib}
+\end{document}
+
+%%
+%% End of file `elsarticle-template-num.tex'.
