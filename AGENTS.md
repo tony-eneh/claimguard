@@ -296,11 +296,34 @@ python convert_e2_pdfs_to_png.py
 - Anomaly detection models
 - Cross-chain or Fabric integration
 
+### Journal Paper Section Structure (Target Template)
+
+Based on `claimguard_target_journal_template.tex`, the target journal structure is:
+
+1. **Introduction** - Problem context, motivation, contributions, paper organization
+2. **Related Work** - Survey of prior approaches, identify gaps, position novelty
+3. **System Methodology** - Architecture, threat model, design goals, protocols
+4. **System Implementation and Experimental Observation** - Implementation details, experimental setup, metrics, results
+5. **Experimental Analysis Discussion** - Interpretation of results, comparison with baselines, limitations
+6. **Conclusion** - Summary of contributions and future work
+
+**Current journal paper structure** (needs refactoring):
+1. Introduction (with Problem Statement subsection)
+2. Related Work and Novelty
+3. System Methodology (includes Architecture + Security Analysis subsections)
+4. Evaluation and Results
+5. Conclusion and Future Work
+
+**Key changes needed**:
+- Split "Evaluation and Results" into "System Implementation and Experimental Observation" + "Experimental Analysis Discussion"
+- Move Security Analysis to appropriate location (can remain in Methodology or be separate subsection)
+
 ### LaTeX Style Guidelines
-- Use IEEEtran document class for both papers
+- **Conference paper**: IEEEtran document class (completed)
+- **Journal paper**: Elsevier `elsarticle` class (see `claimguard_target_journal_template.tex`)
 - Figures go in `conference/figures/` or `journal/figures/`
 - References in `refs.bib` using BibTeX
-- Follow IEEE citation style
+- Follow target journal citation style (IEEE for conference, Elsevier for journal)
 - Keep figures as PNG or PDF format
 
 ## File Locations
