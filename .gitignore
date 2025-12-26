@@ -56,6 +56,7 @@
 *.ilg
 texput.log
 *.pdf
+*.spl
 
 # BibLaTeX / Biber
 *.run.xml
@@ -88,7 +89,8 @@ out/
 dist/
 
 # Temp/backup files
-*.bak
+*.bak[0-9]*
+*.backup
 *.tmp
 *~
 
