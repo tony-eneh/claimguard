@@ -1,7 +1,4 @@
-\documentclass[conference]{IEEEtran}
-\IEEEoverridecommandlockouts
-
-\usepackage{cite}
+\documentclass[final,5p,times,twocolumn]{elsarticle}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -48,23 +45,33 @@
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
+\journal{Journal of Information Security and Applications}
+
 \begin{document}
 
-%\title{Action-Aware ABAC for Heterogeneous Insurance Evidence: Architecture, Evaluation and Results}
-\title{Evaluating Action-Aware Attribute-Based Access Control for Secure Insurance Evidence Management}
+\begin{frontmatter}
 
-\author{\IEEEauthorblockN{Anthony Uchenna Eneh $^{1}$, Love Allen Chijioke Ahakonye $^{2}$, Jae Min Lee $^{1}$, Dong-Seong Kim $^{1}$ $^{\ast}$} 
-\IEEEauthorblockA{$^{1}$ IT-Convergence Engineering, \textit{Kumoh National Institute of Technology}, Gumi, South Korea \\
-$^{\ast}$ NSLab Co. Ltd., Gumi, South Korea,
-\textit{Kumoh National Institute of Technology}, Gumi, South Korea}
-\IEEEauthorblockA{$^{2}$ ICT Convergence Research Center, 
-\textit{Kumoh National of Technology}, Gumi, South Korea}
-{(anthony, loveahakonye, dskim, ljmpaul)}@kumoh.ac.kr}
-\maketitle
+	%\title{Action-Aware ABAC for Heterogeneous Insurance Evidence: Architecture, Evaluation and Results}
+	\title{Evaluating Action-Aware Attribute-Based Access Control for Secure Insurance Evidence Management}
 
-\begin{abstract}
-Auto-insurance platforms rely on cloud infrastructure to store and process diverse evidence assets, including first notice of loss (FNOL) reports, medical documents, telematics logs, photographs, and high-resolution accident videos. Although recent blockchain approaches provide tamper resistance and partial access control, they lack a unified, enforceable model capable of governing heterogeneous resources, supporting action-level permissions, and binding authorization decisions to off-chain storage. This paper extends \textbf{ClaimGuard}~\cite{eneh2025claimguard}, a PureChain-backed, verifiable, attribute-based access control (ABAC) architecture previously introduced for multi-stakeholder auto-insurance evidence workflows. While the initial conference publication presented the core architecture and demonstrated feasibility through local network experiments, this journal extension provides a comprehensive evaluation comparing ClaimGuard against baseline cloud-only role-based access control (RBAC) across four new experimental dimensions: quantitative RBAC baseline comparison under varying load (E1), real-world network conditions on public Sepolia testnet (E2), security stress testing against adversarial attack vectors (E3), and policy churn at scale with up to 1000 policies and subjects (E4). Results demonstrate that ClaimGuard introduces modest latency overhead on local networks (60.9\,ms P50 vs.\ 1.9\,ms for pure RBAC) while significantly improving authorization correctness, policy integrity, and cross-organizational trust. Policy evaluation latency remains stable (2--3\,ms median) across 11 to 1000 active rules, revocation propagates within 1.1\,ms, and security experiments confirm successful blocking of unauthorized access attempts including cloud bypass, gateway abuse, and role spoofing. Public testnet evaluation validates operational feasibility on real blockchain infrastructure, positioning ClaimGuard as the first resource-agnostic, action-aware, enforceable access control framework tailored to operational requirements of modern auto-insurance evidence management.
-\end{abstract}
+	\author[kumoh1]{Anthony Uchenna Eneh}
+	\author[kumoh2]{Love Allen Chijioke Ahakonye}
+	\author[kumoh1]{Jae Min Lee}
+	\author[kumoh1,nslab]{Dong-Seong Kim}
+
+	\address[kumoh1]{IT-Convergence Engineering, Kumoh National Institute of Technology, Gumi, South Korea}
+	\address[kumoh2]{ICT Convergence Research Center, Kumoh National Institute of Technology, Gumi, South Korea}
+	\address[nslab]{NSLab Co. Ltd., Gumi, South Korea}
+
+	\begin{abstract}
+		Auto-insurance platforms rely on cloud infrastructure to store and process diverse evidence assets, including first notice of loss (FNOL) reports, medical documents, telematics logs, photographs, and high-resolution accident videos. Although recent blockchain approaches provide tamper resistance and partial access control, they lack a unified, enforceable model capable of governing heterogeneous resources, supporting action-level permissions, and binding authorization decisions to off-chain storage. This paper extends \textbf{ClaimGuard}~\cite{eneh2025claimguard}, a PureChain-backed, verifiable, attribute-based access control (ABAC) architecture previously introduced for multi-stakeholder auto-insurance evidence workflows. While the initial conference publication presented the core architecture and demonstrated feasibility through local network experiments, this journal extension provides a comprehensive evaluation comparing ClaimGuard against baseline cloud-only role-based access control (RBAC) across four new experimental dimensions: quantitative RBAC baseline comparison under varying load (E1), real-world network conditions on public Sepolia testnet (E2), security stress testing against adversarial attack vectors (E3), and policy churn at scale with up to 1000 policies and subjects (E4). Results demonstrate that ClaimGuard introduces modest latency overhead on local networks (60.9\,ms P50 vs.\ 1.9\,ms for pure RBAC) while significantly improving authorization correctness, policy integrity, and cross-organizational trust. Policy evaluation latency remains stable (2--3\,ms median) across 11 to 1000 active rules, revocation propagates within 1.1\,ms, and security experiments confirm successful blocking of unauthorized access attempts including cloud bypass, gateway abuse, and role spoofing. Public testnet evaluation validates operational feasibility on real blockchain infrastructure, positioning ClaimGuard as the first resource-agnostic, action-aware, enforceable access control framework tailored to operational requirements of modern auto-insurance evidence management.
+	\end{abstract}
+
+	\begin{keyword}
+		Blockchain \sep Access Control \sep ABAC \sep Auto-Insurance \sep Evidence Management \sep Smart Contracts \sep Capability Tokens \sep PureChain \sep Policy Enforcement Gateway
+	\end{keyword}
+
+\end{frontmatter}
 
 \section{Introduction}
 
@@ -82,15 +89,15 @@ This paper extends the ClaimGuard architecture with a comprehensive evaluation a
 
 Building upon the foundational ClaimGuard architecture presented in our conference paper~\cite{eneh2025claimguard}, this journal extension makes the following novel contributions:
 \begin{enumerate}
-    \item \textbf{Quantitative RBAC baseline comparison:} We implement and evaluate two cloud-only RBAC baselines (database-backed RBAC and hybrid audit-logging RBAC) and provide the first systematic performance and security comparison between blockchain-backed ABAC and traditional cloud access control for insurance evidence workflows.
-    
-    \item \textbf{Real-world network validation:} We deploy ClaimGuard on public Sepolia testnet and characterize the performance impact of real blockchain network conditions including variable block times, RPC provider latency, and public infrastructure constraints that were absent from the initial local-only evaluation.
-    
-    \item \textbf{Security stress testing:} We design and execute a dedicated adversarial experiment suite (E3) evaluating ClaimGuard's resilience against five attack vectors: cloud provider bypass, gateway abuse, role spoofing, token replay, and revocation evasion, providing empirical validation of security claims.
-    
-    \item \textbf{Scale and policy churn analysis:} We evaluate ClaimGuard under large-scale conditions with up to 1000 policies and 1000 subjects (E4), demonstrating that policy evaluation latency remains stable and that the architecture scales to enterprise policy counts not validated in prior work.
-    
-    \item \textbf{Production deployment roadmap:} We provide comprehensive analysis of experimental findings, operational recommendations, and production deployment implications derived from cross-network evaluation that position ClaimGuard as a production-ready rather than proof-of-concept system.
+	\item \textbf{Quantitative RBAC baseline comparison:} We implement and evaluate two cloud-only RBAC baselines (database-backed RBAC and hybrid audit-logging RBAC) and provide the first systematic performance and security comparison between blockchain-backed ABAC and traditional cloud access control for insurance evidence workflows.
+
+	\item \textbf{Real-world network validation:} We deploy ClaimGuard on public Sepolia testnet and characterize the performance impact of real blockchain network conditions including variable block times, RPC provider latency, and public infrastructure constraints that were absent from the initial local-only evaluation.
+
+	\item \textbf{Security stress testing:} We design and execute a dedicated adversarial experiment suite (E3) evaluating ClaimGuard's resilience against five attack vectors: cloud provider bypass, gateway abuse, role spoofing, token replay, and revocation evasion, providing empirical validation of security claims.
+
+	\item \textbf{Scale and policy churn analysis:} We evaluate ClaimGuard under large-scale conditions with up to 1000 policies and 1000 subjects (E4), demonstrating that policy evaluation latency remains stable and that the architecture scales to enterprise policy counts not validated in prior work.
+
+	\item \textbf{Production deployment roadmap:} We provide comprehensive analysis of experimental findings, operational recommendations, and production deployment implications derived from cross-network evaluation that position ClaimGuard as a production-ready rather than proof-of-concept system.
 \end{enumerate}
 
 Together, these contributions transform ClaimGuard from an initial architectural proposal with feasibility demonstration into a thoroughly evaluated, empirically validated access control framework ready for production deployment in multi-stakeholder insurance environments.
@@ -116,37 +123,37 @@ A substantial body of work explores blockchain-enabled access control for electr
 \subsection{Gaps in Existing Literature}
 Across insurance- and healthcare-oriented blockchain systems, the following limitations persist:
 \begin{itemize}
-    \item Access control mechanisms are either cryptographic (CP-ABE, proxy re-encryption) or role-based, with no general-purpose attribute-based model governing evidence objects and actions.
-    \item Evidence assets are typically treated as a single type (e.g., images, EMR records), whereas real auto-insurance workflows involve heterogeneous documents, media, sensor data, and derived reports.
-    \item Prior architectures lack a policy enforcement gateway that binds on-chain access decisions to off-chain cloud/IPFS objects using short-lived capabilities.
-    \item Revocation, time-bounded access, purpose-of-use restrictions, cross-insurer collaboration, and legal-access workflows are inconsistently addressed or entirely absent.
-    \item No work offers a system-level, simulation-based comparison between blockchain-backed access control and traditional cloud-only RBAC in terms of latency, throughput, scalability, and access correctness.
+	\item Access control mechanisms are either cryptographic (CP-ABE, proxy re-encryption) or role-based, with no general-purpose attribute-based model governing evidence objects and actions.
+	\item Evidence assets are typically treated as a single type (e.g., images, EMR records), whereas real auto-insurance workflows involve heterogeneous documents, media, sensor data, and derived reports.
+	\item Prior architectures lack a policy enforcement gateway that binds on-chain access decisions to off-chain cloud/IPFS objects using short-lived capabilities.
+	\item Revocation, time-bounded access, purpose-of-use restrictions, cross-insurer collaboration, and legal-access workflows are inconsistently addressed or entirely absent.
+	\item No work offers a system-level, simulation-based comparison between blockchain-backed access control and traditional cloud-only RBAC in terms of latency, throughput, scalability, and access correctness.
 \end{itemize}
 
 \subsection{Discussion of Comparative Analysis}
 
 \begin{table*}[!htbp]
-\centering
-\caption{Comparison of Related Blockchain-Based Access Control Systems}
-% Reduce padding to fit within margins while keeping normal font size
-\setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\textwidth}{l l X X X c X X}
-	\toprule
-	\textbf{Work} & \textbf{Domain} & \textbf{Evidence Types} & \textbf{Access Model} & \textbf{Action-Aware} & \textbf{On-Chain Policies} & \textbf{Off-Chain Enforcement} & \textbf{Evaluation Style} \\
-\midrule
-Sun et al. (2020) \cite{sun2020insurance} & Insurance data & Images / records & CP-ABE & No & Partial (ABE policies) & No & Crypto\-graphic analysis \\
-Liu et al. (2021) \cite{liu2021auto} & Auto insurance & Claim documents & Proxy Re-Enc. & No & Limited & No & Security + cost analysis \\
-Raikwar et al. (2018) \cite{raikwar2018insurance} & Generic insurance & Process states & RBAC (workflow) & Limited & Yes & No & Qualitative \\
-Tekale \& Rahul (2023) \cite{tekale2023claims} & Claim settlement & Claim states & RBAC (roles) & Yes (states only) & Yes & No & Conceptual \\
-Sun et al. (2020) EMR \cite{sun2020emr} & Healthcare & EMR bundles & ABE & No & No (ABE only) & No & Scenario-driven \\
-Rana et al. (2022) \cite{rana2022healthcare} & Healthcare & EMR, identity & Smart-contract ABAC & Partial & Yes & No & Conceptual \\
-Liang et al. (2017) \cite{liang2017mhealth} & Mobile healthcare & Patient data & Permission protocol & No & Yes & No & Conceptual \\
-Theodouli et al. (2018) \cite{theodouli2018healthcare} & Healthcare sharing & Records & Smart contracts & No & Yes & No & Architec\-tural \\
-\midrule
-	\textbf{This Work} & \textbf{Auto-insurance evidence} & \textbf{FNOL, PDFs, images, telematics, videos} & \textbf{PureChain ABAC} & \textbf{Yes (CRUD, append, adjudicate)} & \textbf{Yes (Verifiable contract rules)} & \textbf{Yes (Gateway + capabilities)} & \textbf{Simulation vs RBAC baseline} \\
-\bottomrule
-\end{tabularx}
-\label{tab:comparison}
+	\centering
+	\caption{Comparison of Related Blockchain-Based Access Control Systems}
+	% Reduce padding to fit within margins while keeping normal font size
+	\setlength{\tabcolsep}{3pt}
+	\begin{tabularx}{\textwidth}{l l X X X c X X}
+		\toprule
+		\textbf{Work}                                          & \textbf{Domain}                  & \textbf{Evidence Types}                         & \textbf{Access Model}   & \textbf{Action-Aware}                   & \textbf{On-Chain Policies}               & \textbf{Off-Chain Enforcement}        & \textbf{Evaluation Style}            \\
+		\midrule
+		Sun et al. (2020) \cite{sun2020insurance}              & Insurance data                   & Images / records                                & CP-ABE                  & No                                      & Partial (ABE policies)                   & No                                    & Crypto\-graphic analysis             \\
+		Liu et al. (2021) \cite{liu2021auto}                   & Auto insurance                   & Claim documents                                 & Proxy Re-Enc.           & No                                      & Limited                                  & No                                    & Security + cost analysis             \\
+		Raikwar et al. (2018) \cite{raikwar2018insurance}      & Generic insurance                & Process states                                  & RBAC (workflow)         & Limited                                 & Yes                                      & No                                    & Qualitative                          \\
+		Tekale \& Rahul (2023) \cite{tekale2023claims}         & Claim settlement                 & Claim states                                    & RBAC (roles)            & Yes (states only)                       & Yes                                      & No                                    & Conceptual                           \\
+		Sun et al. (2020) EMR \cite{sun2020emr}                & Healthcare                       & EMR bundles                                     & ABE                     & No                                      & No (ABE only)                            & No                                    & Scenario-driven                      \\
+		Rana et al. (2022) \cite{rana2022healthcare}           & Healthcare                       & EMR, identity                                   & Smart-contract ABAC     & Partial                                 & Yes                                      & No                                    & Conceptual                           \\
+		Liang et al. (2017) \cite{liang2017mhealth}            & Mobile healthcare                & Patient data                                    & Permission protocol     & No                                      & Yes                                      & No                                    & Conceptual                           \\
+		Theodouli et al. (2018) \cite{theodouli2018healthcare} & Healthcare sharing               & Records                                         & Smart contracts         & No                                      & Yes                                      & No                                    & Architec\-tural                      \\
+		\midrule
+		\textbf{This Work}                                     & \textbf{Auto-insurance evidence} & \textbf{FNOL, PDFs, images, telematics, videos} & \textbf{PureChain ABAC} & \textbf{Yes (CRUD, append, adjudicate)} & \textbf{Yes (Verifiable contract rules)} & \textbf{Yes (Gateway + capabilities)} & \textbf{Simulation vs RBAC baseline} \\
+		\bottomrule
+	\end{tabularx}
+	\label{tab:comparison}
 \end{table*}
 
 Table~\ref{tab:comparison} highlights that prior systems either (i) bind authorization to cryptographic policies (e.g., CP-ABE~\cite{sun2020insurance} or proxy re-encryption~\cite{liu2021auto}) or (ii) encode coarse RBAC/workflow rules in smart contracts~\cite{raikwar2018insurance, tekale2023claims}. Healthcare-oriented designs~\cite{sun2020emr, rana2022healthcare, liang2017mhealth, theodouli2018healthcare} are often patient-centric and do not address heterogeneous auto-insurance evidence and multi-organization workflows.
@@ -176,10 +183,10 @@ These constraints translate into specific system requirements. The architecture 
 ClaimGuard anchors authorization decisions on PureChain smart contracts while enforcing access to off-chain evidence through a Policy Enforcement Gateway. The smart contracts function as a tamper-resistant policy decision point, while file servers validate capability tokens before retrieving insurance evidence from cloud or IPFS backends, as illustrated in Figure~\ref{fig:architecture}. This architecture implements three core components that together provide fine-grained, action-aware, context-sensitive authorization over heterogeneous evidence while maintaining tamper-resistant evaluation independent of cloud infrastructure.
 
 \begin{figure}
-    \centering
-    \includegraphics[width=0.45\textwidth]{figures/architecture.png}
-    \caption{System architecture: clients call the PEG, which queries PureChain and issues short-lived capabilities for cloud/IPFS evidence access.}
-    \label{fig:architecture}
+	\centering
+	\includegraphics[width=0.45\textwidth]{figures/architecture.png}
+	\caption{System architecture: clients call the PEG, which queries PureChain and issues short-lived capabilities for cloud/IPFS evidence access.}
+	\label{fig:architecture}
 \end{figure}
 
 The Subject Attribute Registry binds blockchain addresses to vetted attributes including role, organization, jurisdiction, and active status. Consortium governance controls attribute updates, preventing individual organizations or cloud operators from silently rewriting identities. The Evidence Registry anchors off-chain evidence with on-chain metadata comprising content hash, storage URI, case association, evidence type, sensitivity classification, and creator identity. This anchoring enables integrity and provenance verification without storing large objects on-chain. The Access Policy Manager evaluates authorization rules by combining subject attributes and evidence metadata retrieved from both registries. When a client requests access, the manager evaluates the subject-object-action-context tuple against stored policies, returns a decision to the gateway, and logs the outcome as an immutable event that prevents cloud or application layers from overriding enforcement.
@@ -195,52 +202,52 @@ This capability-based approach addresses a fundamental limitation of encryption-
 This architecture effectively mitigates insider attacks from multiple vectors. Cloud administrators cannot fetch evidence through direct API calls because storage systems accept only gateway-signed capabilities; forged capabilities fail cryptographic signature verification, while stolen capabilities remain time-limited and bound to specific subjects, resources, and actions. Organizational insiders requesting evidence outside their scope receive denials from on-chain ABAC evaluation and never obtain capability tokens. The Policy Enforcement Gateway implements this binding in practice through a stateless design that authenticates clients using standard mechanisms such as OAuth or JWT, maps authenticated identities to blockchain addresses, queries the on-chain \texttt{checkAccess} function with subject-resource-action parameters, and issues short-lived capabilities only when authorization succeeds, as illustrated in Figure~\ref{fig:gateway-sequence}.
 
 \begin{figure}[!htbp]
-    \centering
-    \begin{tikzpicture}[
-        font=\footnotesize,
-        participant/.style={
-            draw, rounded corners, fill=gray!5,
-            minimum width=1.55cm, minimum height=0.6cm,
-            align=center
-        },
-        lifeline/.style={densely dashed},
-        msg/.style={-Latex, thick},
-        node distance=1.7cm
-    ]
+	\centering
+	\begin{tikzpicture}[
+			font=\footnotesize,
+			participant/.style={
+					draw, rounded corners, fill=gray!5,
+					minimum width=1.55cm, minimum height=0.6cm,
+					align=center
+				},
+			lifeline/.style={densely dashed},
+			msg/.style={-Latex, thick},
+			node distance=1.7cm
+		]
 
-    % Participants
-    \node[participant] (client) {Client};
-    \node[participant, right=of client] (peg) {Policy\\Gateway};
-    \node[participant, right=of peg] (chain) {PureChain\\(ClaimGuard)};
+		% Participants
+		\node[participant] (client) {Client};
+		\node[participant, right=of client] (peg) {Policy\\Gateway};
+		\node[participant, right=of peg] (chain) {PureChain\\(ClaimGuard)};
 
-    % Lifelines
-    \draw[lifeline] (client.south) -- ++(0,-3.4);
-    \draw[lifeline] (peg.south)    -- ++(0,-3.4);
-    \draw[lifeline] (chain.south)  -- ++(0,-3.4);
+		% Lifelines
+		\draw[lifeline] (client.south) -- ++(0,-3.4);
+		\draw[lifeline] (peg.south)    -- ++(0,-3.4);
+		\draw[lifeline] (chain.south)  -- ++(0,-3.4);
 
-    % 1) Client -> PEG: access request
-    \draw[msg] ([yshift=-0.6cm]client.south) --
-               node[above,sloped]{1) access request} ([yshift=-0.6cm]peg.south);
+		% 1) Client -> PEG: access request
+		\draw[msg] ([yshift=-0.6cm]client.south) --
+		node[above,sloped]{1) access request} ([yshift=-0.6cm]peg.south);
 
-    % 2) PEG (internal): auth + map identity
-    \node[anchor=west, align=left] at ($(peg.south)+(0.1,-0.7)$)
-        {2) authentication \&\\map to address};
+		% 2) PEG (internal): auth + map identity
+		\node[anchor=west, align=left] at ($(peg.south)+(0.1,-0.7)$)
+		{2) authentication \&\\map to address};
 
-    % 3) PEG -> Chain: checkAccess
-    \draw[msg] ([yshift=-1.8cm]peg.south) --
-               node[above,sloped]{3) \texttt{checkAccess}} ([yshift=-1.8cm]chain.south);
+		% 3) PEG -> Chain: checkAccess
+		\draw[msg] ([yshift=-1.8cm]peg.south) --
+		node[above,sloped]{3) \texttt{checkAccess}} ([yshift=-1.8cm]chain.south);
 
-    % 4) Chain -> PEG: decision
-    \draw[msg] ([yshift=-2.7cm]chain.south) --
-               node[above,sloped]{4) allow or deny} ([yshift=-2.7cm]peg.south);
+		% 4) Chain -> PEG: decision
+		\draw[msg] ([yshift=-2.7cm]chain.south) --
+		node[above,sloped]{4) allow or deny} ([yshift=-2.7cm]peg.south);
 
-    % 5) PEG -> Client: capability or error
-    \draw[msg] ([yshift=-3.0cm]peg.south) --
-               node[above,sloped]{5) capability or error} ([yshift=-3.0cm]client.south);
+		% 5) PEG -> Client: capability or error
+		\draw[msg] ([yshift=-3.0cm]peg.south) --
+		node[above,sloped]{5) capability or error} ([yshift=-3.0cm]client.south);
 
-    \end{tikzpicture}
-    \caption{Gateway sequence: authenticate; call \texttt{checkAccess}; return allow or deny.}
-    \label{fig:gateway-sequence}
+	\end{tikzpicture}
+	\caption{Gateway sequence: authenticate; call \texttt{checkAccess}; return allow or deny.}
+	\label{fig:gateway-sequence}
 \end{figure}
 
 We implemented the ClaimGuard contracts and Policy Enforcement Gateway as a working prototype on the PureChain network, validating the architecture's feasibility while enabling the experimental evaluation presented in Section~IV. The following subsection analyzes the security properties and limitations of this design.
@@ -269,13 +276,13 @@ The Policy Enforcement Gateway is the critical enforcement point between on-chai
 The gateway implements the following DoS mitigations:
 
 \begin{itemize}
-    \item \textbf{Rate Limiting:} Requests from a single IP or credential are rate-limited (default: 100 req/s per subject). Excess requests are rejected with HTTP 429 (Too Many Requests).
+	\item \textbf{Rate Limiting:} Requests from a single IP or credential are rate-limited (default: 100 req/s per subject). Excess requests are rejected with HTTP 429 (Too Many Requests).
 
-    \item \textbf{Request Timeouts:} Each on-chain \texttt{checkAccess} call is bounded by a timeout (default: 10s). If the blockchain is unresponsive, the gateway returns HTTP 503 (Service Unavailable) rather than queueing indefinitely.
+	\item \textbf{Request Timeouts:} Each on-chain \texttt{checkAccess} call is bounded by a timeout (default: 10s). If the blockchain is unresponsive, the gateway returns HTTP 503 (Service Unavailable) rather than queueing indefinitely.
 
-    \item \textbf{Stateless Design:} The gateway maintains no session state, allowing horizontal scaling and preventing memory exhaustion attacks.
+	\item \textbf{Stateless Design:} The gateway maintains no session state, allowing horizontal scaling and preventing memory exhaustion attacks.
 
-    \item \textbf{Capability Token Expiration:} All issued tokens expire within 15 minutes, preventing indefinite resource locks.
+	\item \textbf{Capability Token Expiration:} All issued tokens expire within 15 minutes, preventing indefinite resource locks.
 \end{itemize}
 
 In evaluation Section~VI.C, experimental results demonstrate that ClaimGuard rejects 100\% of unauthorized requests and remains responsive under adversarial W3 loads (repeated spoofing, replay, and direct-access attempts).
@@ -284,16 +291,16 @@ In evaluation Section~VI.C, experimental results demonstrate that ClaimGuard rej
 
 The gateway is provisioned with a private key (\texttt{GATEWAY\_PRIVATE\_KEY}) used to:
 \begin{itemize}
-    \item Sign capability tokens for non-repudiation.
-    \item Call smart contract write operations (policy updates via administrator endpoints).
-    \item Sign audit log entries.
+	\item Sign capability tokens for non-repudiation.
+	\item Call smart contract write operations (policy updates via administrator endpoints).
+	\item Sign audit log entries.
 \end{itemize}
 
 Key exposure would allow an attacker to forge capabilities, manipulate policies, or spoof audit trails. Mitigations include:
 \begin{itemize}
-    \item Keys are stored in environment variables or secure vaults (HashiCorp Vault, AWS KMS).
-    \item Gateway containers run with minimal privileges and isolated filesystems.
-    \item Key rotation is performed out-of-band; new keys are deployed via blue-green deployment strategies.
+	\item Keys are stored in environment variables or secure vaults (HashiCorp Vault, AWS KMS).
+	\item Gateway containers run with minimal privileges and isolated filesystems.
+	\item Key rotation is performed out-of-band; new keys are deployed via blue-green deployment strategies.
 \end{itemize}
 
 \subsubsection{Smart Contract Upgrade Risk}
@@ -301,16 +308,16 @@ Key exposure would allow an attacker to forge capabilities, manipulate policies,
 ClaimGuard smart contracts (AccessPolicyManager, EvidenceRegistry, SubjectAttributeRegistry, AccessAuditLog) are immutable once deployed. If a logical flaw is discovered, remediation requires:
 
 \begin{enumerate}
-    \item Deployment of a corrected contract at a new address.
-    \item Migration of policies and state from the old to the new contract.
-    \item Coordination with all stakeholders to update contract addresses in their gateways.
+	\item Deployment of a corrected contract at a new address.
+	\item Migration of policies and state from the old to the new contract.
+	\item Coordination with all stakeholders to update contract addresses in their gateways.
 \end{enumerate}
 
 To reduce upgrade risk:
 \begin{itemize}
-    \item All contracts are thoroughly tested (unit, integration, fuzzing) before production deployment.
-    \item A formal verification or code-audit process is strongly recommended before large-scale deployment.
-    \item Contracts implement pausable logic: administrators can call \texttt{pause()} to halt policy evaluation in the event of detected vulnerabilities, although revocation continues to be enforced.
+	\item All contracts are thoroughly tested (unit, integration, fuzzing) before production deployment.
+	\item A formal verification or code-audit process is strongly recommended before large-scale deployment.
+	\item Contracts implement pausable logic: administrators can call \texttt{pause()} to halt policy evaluation in the event of detected vulnerabilities, although revocation continues to be enforced.
 \end{itemize}
 
 \subsubsection{Key Compromise and Revocation}
@@ -318,13 +325,13 @@ To reduce upgrade risk:
 If the private key of an authorized stakeholder (e.g., police officer) is compromised, the attacker can forge capability tokens and impersonate the compromised party. ClaimGuard mitigates this via:
 
 \begin{itemize}
-    \item \textbf{Subject-level revocation:} Administrators invoke \texttt{revokeSubjectAccess(subjectAddr)} on-chain, immediately invalidating all tokens issued to that subject.
+	\item \textbf{Subject-level revocation:} Administrators invoke \texttt{revokeSubjectAccess(subjectAddr)} on-chain, immediately invalidating all tokens issued to that subject.
 
-    \item \textbf{Capability token binding:} Each token encodes the subject's blockchain address, making tokens non-transferable and non-delegable.
+	\item \textbf{Capability token binding:} Each token encodes the subject's blockchain address, making tokens non-transferable and non-delegable.
 
-    \item \textbf{Audit trail:} The AccessAuditLog contract records all access attempts and token issuances, enabling forensic analysis of suspected compromises.
+	\item \textbf{Audit trail:} The AccessAuditLog contract records all access attempts and token issuances, enabling forensic analysis of suspected compromises.
 
-    \item \textbf{Time windows:} Policies can enforce narrow legal access windows (e.g., "police access only between 2024-01-15 and 2024-02-15"). Expiration is enforced on-chain and cannot be circumvented.
+	\item \textbf{Time windows:} Policies can enforce narrow legal access windows (e.g., "police access only between 2024-01-15 and 2024-02-15"). Expiration is enforced on-chain and cannot be circumvented.
 \end{itemize}
 
 Revocation propagates to the cloud storage layer within the lifetime of existing capability tokens (typically 1-15 minutes); once a token expires, the compromised party loses access regardless of key possession.
@@ -353,38 +360,38 @@ These scenarios are quantitatively evaluated in Section~VI.C (Adversarial Resili
 Despite the above mitigations, several residual risks remain:
 
 \begin{enumerate}
-    \item \textbf{Consensus Failure:} If $> 1/3$ of blockchain nodes are compromised in a 3-node consortium, Byzantine consensus can fail. Large deployments should use larger consortiums (5, 7, 9 nodes) or transition to proof-of-authority (PoA) with economic penalties.
+	\item \textbf{Consensus Failure:} If $> 1/3$ of blockchain nodes are compromised in a 3-node consortium, Byzantine consensus can fail. Large deployments should use larger consortiums (5, 7, 9 nodes) or transition to proof-of-authority (PoA) with economic penalties.
 
-    \item \textbf{Gateway Availability:} If the gateway is unavailable, no access decisions can be made, regardless of on-chain policy validity. Deployments should implement gateway redundancy and failover.
+	\item \textbf{Gateway Availability:} If the gateway is unavailable, no access decisions can be made, regardless of on-chain policy validity. Deployments should implement gateway redundancy and failover.
 
-    \item \textbf{Covert Data Leakage via Side Channels:} A cloud provider with hardware access may exploit microarchitectural side channels (e.g., cache timing, speculative execution) to infer evidence contents without breaking encryption. ClaimGuard does not defend against this threat; additional defenses require application-level constant-time implementations or trusted hardware (e.g., Intel SGX, ARM TrustZone).
+	\item \textbf{Covert Data Leakage via Side Channels:} A cloud provider with hardware access may exploit microarchitectural side channels (e.g., cache timing, speculative execution) to infer evidence contents without breaking encryption. ClaimGuard does not defend against this threat; additional defenses require application-level constant-time implementations or trusted hardware (e.g., Intel SGX, ARM TrustZone).
 
-    \item \textbf{Policy Complexity:} Complex policies with many attributes or nested conditions may be expensive to evaluate on-chain, leading to longer latencies. Simplicity and pre-compilation of policies are recommended.
+	\item \textbf{Policy Complexity:} Complex policies with many attributes or nested conditions may be expensive to evaluate on-chain, leading to longer latencies. Simplicity and pre-compilation of policies are recommended.
 
-    \item \textbf{Timestamping Attacks:} A coalition of blockchain nodes could collude to backdate block timestamps, allowing expired tokens to be re-validated. This risk is mitigated by assuming honest consensus majorities and periodic audit of timestamp progression.
+	\item \textbf{Timestamping Attacks:} A coalition of blockchain nodes could collude to backdate block timestamps, allowing expired tokens to be re-validated. This risk is mitigated by assuming honest consensus majorities and periodic audit of timestamp progression.
 \end{enumerate}
 
 \subsubsection{Comparison with Baseline Approaches}
 
 \begin{table}[!htbp]
-\centering
-\caption{Security Properties: ClaimGuard vs. Baseline Approaches}
-\begin{tabularx}{\columnwidth}{X c c c}
-\toprule
-\textbf{Property} & \textbf{RBAC-DB} & \textbf{Hybrid-Audit} & \textbf{ClaimGuard} \\
-\midrule
-Honest-but-curious cloud resistance & \xmark & \xmark & \cmark \\
-Insider privilege escalation prevention & \xmark & \xmark & \cmark \\
-Immutable audit logs & \xmark & \cmark & \cmark \\
-Revocation enforcement & \cmark & \cmark & \cmark \\
-Time-bounded access & \xmark & \xmark & \cmark \\
-On-chain policy integrity & \xmark & \xmark & \cmark \\
-DoS resistance & \cmark & \cmark & \cmark$^{\dagger}$ \\
-\bottomrule
-\end{tabularx}
+	\centering
+	\caption{Security Properties: ClaimGuard vs. Baseline Approaches}
+	\begin{tabularx}{\columnwidth}{X c c c}
+		\toprule
+		\textbf{Property}                       & \textbf{RBAC-DB} & \textbf{Hybrid-Audit} & \textbf{ClaimGuard} \\
+		\midrule
+		Honest-but-curious cloud resistance     & \xmark           & \xmark                & \cmark              \\
+		Insider privilege escalation prevention & \xmark           & \xmark                & \cmark              \\
+		Immutable audit logs                    & \xmark           & \cmark                & \cmark              \\
+		Revocation enforcement                  & \cmark           & \cmark                & \cmark              \\
+		Time-bounded access                     & \xmark           & \xmark                & \cmark              \\
+		On-chain policy integrity               & \xmark           & \xmark                & \cmark              \\
+		DoS resistance                          & \cmark           & \cmark                & \cmark$^{\dagger}$  \\
+		\bottomrule
+	\end{tabularx}
 
-\small $^{\dagger}$Dependent on gateway availability and consensus liveness.
-\label{tab:security-comparison}
+	\small $^{\dagger}$Dependent on gateway availability and consensus liveness.
+	\label{tab:security-comparison}
 \end{table}
 
 Table~\ref{tab:security-comparison} summarizes the security trade-offs. While ClaimGuard introduces additional complexity and consensus dependency, it eliminates the single point of trust (cloud provider) present in traditional RBAC systems and provides immutable, verifiable policy evaluation.
@@ -408,7 +415,7 @@ The prototype includes (i) PureChain smart contracts (Subject/Evidence registrie
 \subsection{Baselines and Comparison Systems}
 
 
-    \textbf{RBAC-DB} makes authorization decisions locally from a SQL permission table (JWT auth) with no blockchain interaction. \textbf{Hybrid-Audit} uses the same local RBAC decision but logs each allow/deny outcome on-chain after the fact, isolating audit overhead without on-chain decision-making.
+\textbf{RBAC-DB} makes authorization decisions locally from a SQL permission table (JWT auth) with no blockchain interaction. \textbf{Hybrid-Audit} uses the same local RBAC decision but logs each allow/deny outcome on-chain after the fact, isolating audit overhead without on-chain decision-making.
 
 \subsection{Metrics and Key Performance Indicators}
 
@@ -430,7 +437,7 @@ For readability and space, we omit the full Solidity listings from the manuscrip
 
 \subsection{Results and Analysis}
 
-This section presents the experimental outcomes obtained from the evaluation 
+This section presents the experimental outcomes obtained from the evaluation
 environment described in Section~V. We compare the proposed PureChain-backed
 ABAC system with two baselines: (i) RBAC-DB (cloud-only RBAC) and
 (ii) Hybrid-Audit (cloud RBAC with blockchain audit logging). The results are
@@ -438,31 +445,31 @@ organized around the five research questions (Q1--Q5).
 
 \subsection{Latency Analysis (Q1)}
 Table~\ref{tab:latency} summarizes the end-to-end access latencies under normal
-(W1) and burst (W2) loads. Each experiment was conducted 5 times; reported values are 
+(W1) and burst (W2) loads. Each experiment was conducted 5 times; reported values are
 means with standard deviations (95\% confidence intervals in parentheses).
 \begin{table}[!htbp]
-\centering
-\caption{End-to-End Access Latency (ms, mean $\pm$ std. dev.)}
-\begin{tabularx}{\columnwidth}{X c c c c}
-\toprule
-\textbf{System} & \textbf{P50} & \textbf{P90} & \textbf{P99} & \textbf{N} \\
-\midrule
-RBAC                    & $1.9 \pm 0.2$   & $2.6 \pm 0.3$   & $8.7 \pm 1.1$   & 1000 \\
-Hybrid-Audit            & $135.7 \pm 4.2$ & $151.2 \pm 5.8$ & $165.5 \pm 7.3$ & 1000 \\
-ClaimGuard (PureChain)  & $60.9 \pm 2.1$  & $69.6 \pm 3.4$  & $78.9 \pm 4.7$  & 1000 \\
-\bottomrule
-\end{tabularx}
-\label{tab:latency}
+	\centering
+	\caption{End-to-End Access Latency (ms, mean $\pm$ std. dev.)}
+	\begin{tabularx}{\columnwidth}{X c c c c}
+		\toprule
+		\textbf{System}        & \textbf{P50}    & \textbf{P90}    & \textbf{P99}    & \textbf{N} \\
+		\midrule
+		RBAC                   & $1.9 \pm 0.2$   & $2.6 \pm 0.3$   & $8.7 \pm 1.1$   & 1000       \\
+		Hybrid-Audit           & $135.7 \pm 4.2$ & $151.2 \pm 5.8$ & $165.5 \pm 7.3$ & 1000       \\
+		ClaimGuard (PureChain) & $60.9 \pm 2.1$  & $69.6 \pm 3.4$  & $78.9 \pm 4.7$  & 1000       \\
+		\bottomrule
+	\end{tabularx}
+	\label{tab:latency}
 \end{table}
 Table~\ref{tab:latency} shows that ClaimGuard increases median end-to-end latency versus cloud-only RBAC (60.9 vs.
 1.9 ms at P50) due to on-chain policy evaluation, yet remains under 79 ms at P99 and outperforms the Hybrid-Audit baseline (136 ms at P50). This indicates that decentralized policy checks are practical on local networks; Section~VI.E extends the analysis to public testnet conditions.
 
 \subsection{System Throughput (Q2)}
 \begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=0.9\linewidth]{./figures/throughput.png}
-    \caption{Throughput vs. Concurrent Users (W1 Normal Load)}
-    \label{fig:throughput}
+	\centering
+	\includegraphics[width=0.9\linewidth]{./figures/throughput.png}
+	\caption{Throughput vs. Concurrent Users (W1 Normal Load)}
+	\label{fig:throughput}
 \end{figure}
 Fig.~\ref{fig:throughput} shows the throughput results as the number of
 concurrent users increases from 10 to 200.
@@ -494,35 +501,35 @@ Overall, ClaimGuard sustains throughput sufficient for typical insurer access ra
 We benchmarked three policy operations:
 
 \begin{enumerate}
-    \item adding a new policy rule,
-    \item updating workflow-stage constraints,
-    \item revoking a subject's access to all case assets.
+	\item adding a new policy rule,
+	\item updating workflow-stage constraints,
+	\item revoking a subject's access to all case assets.
 \end{enumerate}
 
-Each operation was repeated 10 times; Table~\ref{tab:policy} reports means 
+Each operation was repeated 10 times; Table~\ref{tab:policy} reports means
 and standard deviations.
 
 \begin{table}[!htbp]
-\centering
-\caption{Policy Update Latency Across Baseline Systems (mean $\pm$ std. dev.)}
-\begin{tabularx}{\columnwidth}{>{\raggedright\arraybackslash}X c c c}
-\toprule
-\textbf{System} & \textbf{Avg Latency (ms)} & \textbf{Gas (if on-chain)} & \textbf{N} \\
-\midrule
-RBAC (in-memory)             & $0.3 \pm 0.05$ & -- & 10 \\
-Hybrid-Audit (RBAC + log)    & $1.1 \pm 0.2$ & -- & 10 \\
-ClaimGuard (verified) & $21.9 \pm 2.3$ & $128k \pm 5k$ & 10 \\
-\bottomrule
-\end{tabularx}
-\label{tab:policy}
+	\centering
+	\caption{Policy Update Latency Across Baseline Systems (mean $\pm$ std. dev.)}
+	\begin{tabularx}{\columnwidth}{>{\raggedright\arraybackslash}X c c c}
+		\toprule
+		\textbf{System}           & \textbf{Avg Latency (ms)} & \textbf{Gas (if on-chain)} & \textbf{N} \\
+		\midrule
+		RBAC (in-memory)          & $0.3 \pm 0.05$            & --                         & 10         \\
+		Hybrid-Audit (RBAC + log) & $1.1 \pm 0.2$             & --                         & 10         \\
+		ClaimGuard (verified)     & $21.9 \pm 2.3$            & $128k \pm 5k$              & 10         \\
+		\bottomrule
+	\end{tabularx}
+	\label{tab:policy}
 \end{table}
 
-ClaimGuard's policy evaluation path is slower than Hybrid-Audit by 20$\times$ 
-due to full on-chain smart contract invocation, yet remains in the tens of 
-milliseconds---acceptable for policy changes that are infrequent in practice 
-(minutes to hours apart). The 128k gas cost reflects comprehensive policy rule 
-evaluation and state updates on the blockchain. Standard deviation (2.3 ms) 
-indicates some variance in block inclusion times, consistent with local network 
+ClaimGuard's policy evaluation path is slower than Hybrid-Audit by 20$\times$
+due to full on-chain smart contract invocation, yet remains in the tens of
+milliseconds---acceptable for policy changes that are infrequent in practice
+(minutes to hours apart). The 128k gas cost reflects comprehensive policy rule
+evaluation and state updates on the blockchain. Standard deviation (2.3 ms)
+indicates some variance in block inclusion times, consistent with local network
 consensus variance.
 
 Hybrid-Audit is faster because it logs on-chain without enforcing on-chain, whereas ClaimGuard pays on-chain execution cost to obtain verifiable enforcement.
@@ -534,26 +541,26 @@ number of active rules and measuring ClaimGuard's authorization cost as policy
 count increases. We also test revocation effectiveness under churn.
 
 \begin{table}[!htbp]
-\centering
-\caption{Policy count vs \texttt{checkAccess} latency (ms)}
-\begin{tabular}{lcccc}
-\toprule
-\textbf{Policies} & \textbf{Samples} & \textbf{P50} & \textbf{P90} & \textbf{P99} \\
-\midrule
-\,\,11 (baseline) & 300 & 3.0 & 4.0 & 6.0 \\
-100                & 300 & 2.0 & 3.0 & 4.0 \\
-1000               & 400 & 2.0 & 4.0 & 7.0 \\
-\bottomrule
-\end{tabular}
-\label{tab:e4-latency-scale}
+	\centering
+	\caption{Policy count vs \texttt{checkAccess} latency (ms)}
+	\begin{tabular}{lcccc}
+		\toprule
+		\textbf{Policies} & \textbf{Samples} & \textbf{P50} & \textbf{P90} & \textbf{P99} \\
+		\midrule
+		\,\,11 (baseline) & 300              & 3.0          & 4.0          & 6.0          \\
+		100               & 300              & 2.0          & 3.0          & 4.0          \\
+		1000              & 400              & 2.0          & 4.0          & 7.0          \\
+		\bottomrule
+	\end{tabular}
+	\label{tab:e4-latency-scale}
 \end{table}
 
 
 \begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=0.95\linewidth]{./figures/e4_policy_count_vs_latency_p50.png}
-    \caption{Policy-plane scaling: \texttt{checkAccess} latency vs.\ active policy count (E4).}
-    \label{fig:e4-policy-latency}
+	\centering
+	\includegraphics[width=0.95\linewidth]{./figures/e4_policy_count_vs_latency_p50.png}
+	\caption{Policy-plane scaling: \texttt{checkAccess} latency vs.\ active policy count (E4).}
+	\label{fig:e4-policy-latency}
 \end{figure}
 
 Across 11 to 1000 active policies, the median \texttt{checkAccess} latency remains in the low single-digit milliseconds (Table~\ref{tab:e4-latency-scale}, Fig.~\ref{fig:e4-policy-latency}), indicating that policy-plane scale does not dominate the decision path for this workload. Policy churn to 1000 rules completed in \textasciitilde93~s (\textasciitilde10.5 updates/s) without errors. Targeted revocation tests confirm that permissions can be withdrawn promptly under churn: allows took effect within the polling interval (\textless0.5\,s) and revokes propagated in \textasciitilde1.1\,ms (measured denial delay; CSV: revocation\_summary).
@@ -561,24 +568,24 @@ Across 11 to 1000 active policies, the median \texttt{checkAccess} latency remai
 We attempted to estimate gas for \texttt{checkAccess} via local simulation; the
 Hardhat provider did not report a gas value for a view function, so we report
 latency trends here and leave gas scaling of the emitting variant
-    	\texttt{checkAccessAndEmit} to the appendix.
+\texttt{checkAccessAndEmit} to the appendix.
 
 \subsection{Authorization Correctness (Q4)}
 The simulation tracked false accepts (unauthorized but allowed) and false
 rejects (authorized but denied) across all workloads.
 \begin{table}[!htbp]
-\centering
-\caption{Authorization Correctness}
-\begin{tabular}{lccc}
-\toprule
-\textbf{System} & \textbf{Allow} & \textbf{Deny} & \textbf{Allow \%} \\
-\midrule
-RBAC (no on-chain)          & 4077 & 773 & 84.06\% \\
-Hybrid-Audit (RBAC + event) & 4057 & 793 & 83.65\% \\
-ClaimGuard (on-chain ABAC)  & 4005 & 845 & 82.58\% \\
-\bottomrule
-\end{tabular}
-\label{tab:correctness}
+	\centering
+	\caption{Authorization Correctness}
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{System}             & \textbf{Allow} & \textbf{Deny} & \textbf{Allow \%} \\
+		\midrule
+		RBAC (no on-chain)          & 4077           & 773           & 84.06\%           \\
+		Hybrid-Audit (RBAC + event) & 4057           & 793           & 83.65\%           \\
+		ClaimGuard (on-chain ABAC)  & 4005           & 845           & 82.58\%           \\
+		\bottomrule
+	\end{tabular}
+	\label{tab:correctness}
 \end{table}
 Allow rates are similar across modes (82.6--84.1\%), indicating that ABAC policies and RBAC equivalents produce comparable outcomes on this workload. ClaimGuard's slightly lower allow rate reflects stricter constraints (e.g., time windows, type/jurisdiction filters). No false accepts or false rejects were observed.
 
@@ -598,26 +605,26 @@ file server. These tests measure whether unauthorized evidence access remains
 impossible even under malicious or compromised conditions.
 
 \begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=.45\textwidth]{./figures/e3_attack_block_rates.png}
-    \caption{E3 attack block rates by vector.}
-    \label{fig:e3-attacks}
+	\centering
+	\includegraphics[width=.45\textwidth]{./figures/e3_attack_block_rates.png}
+	\caption{E3 attack block rates by vector.}
+	\label{fig:e3-attacks}
 \end{figure}
 
 \begin{table}[ht]
-\centering
-\caption{E3 Attack Resistance}
-\small
-\begin{tabular}{lccc}
-\toprule
-\textbf{Attack Vector} & \textbf{N} & \textbf{Rate (\%)} & \textbf{Result} \\
-\midrule
-Role Spoofing & 12 & 50.0 & PARTIAL \\
-Cloud Bypass & 5 & 80.0 & PASS \\
-Gateway Abuse & 9 & 100.0 & PASS \\
-\bottomrule
-\end{tabular}
-\label{tab:e3-attacks}
+	\centering
+	\caption{E3 Attack Resistance}
+	\small
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{Attack Vector} & \textbf{N} & \textbf{Rate (\%)} & \textbf{Result} \\
+		\midrule
+		Role Spoofing          & 12         & 50.0               & PARTIAL         \\
+		Cloud Bypass           & 5          & 80.0               & PASS            \\
+		Gateway Abuse          & 9          & 100.0              & PASS            \\
+		\bottomrule
+	\end{tabular}
+	\label{tab:e3-attacks}
 \end{table}
 
 
@@ -625,70 +632,70 @@ E3 confirms the core invariant: unauthorized evidence access is blocked at the f
 
 \subsection{Realistic Network Conditions: Local vs Public Testnet (E2)}
 
-To assess ClaimGuard's real-world viability, we deployed the full system on both 
-a local Hardhat development node (representing optimal conditions) and the public 
-Sepolia testnet (representing realistic blockchain network latency, RPC provider 
-variability, and block confirmation times). This comparison isolates the overhead 
-introduced by \emph{public blockchain infrastructure} while holding the gateway, 
+To assess ClaimGuard's real-world viability, we deployed the full system on both
+a local Hardhat development node (representing optimal conditions) and the public
+Sepolia testnet (representing realistic blockchain network latency, RPC provider
+variability, and block confirmation times). This comparison isolates the overhead
+introduced by \emph{public blockchain infrastructure} while holding the gateway,
 application logic, and workload characteristics constant.
 
 \subsubsection{Access Latency}
 
-Table~\ref{tab:e2-latency} compares end-to-end latency for the 
+Table~\ref{tab:e2-latency} compares end-to-end latency for the
 \texttt{POST /api/access} endpoint under local and public network conditions.
 
 \begin{table}[!htbp]
-\centering
-\caption{Access Latency: Local vs Public Network (E2)}
-\label{tab:e2-latency}
-\begin{tabular}{lrrr}
-	\toprule
-	\textbf{Metric} & \textbf{Local (ms)} & \textbf{Sepolia (ms)} & \textbf{Overhead} \\
-\midrule
-P50 & 15.99 & 224.67 & 1305.1\% \\
-P90 & 28.53 & 246.81 & 765.1\% \\
-P99 & 34.04 & 515.25 & 1413.7\% \\
-Average & 18.31 & 233.65 & 1176.1\% \\
-Min & 13.84 & 214.22 & 1447.8\% \\
-Max & 34.04 & 515.25 & 1413.7\% \\
-\bottomrule
-\end{tabular}
+	\centering
+	\caption{Access Latency: Local vs Public Network (E2)}
+	\label{tab:e2-latency}
+	\begin{tabular}{lrrr}
+		\toprule
+		\textbf{Metric} & \textbf{Local (ms)} & \textbf{Sepolia (ms)} & \textbf{Overhead} \\
+		\midrule
+		P50             & 15.99               & 224.67                & 1305.1\%          \\
+		P90             & 28.53               & 246.81                & 765.1\%           \\
+		P99             & 34.04               & 515.25                & 1413.7\%          \\
+		Average         & 18.31               & 233.65                & 1176.1\%          \\
+		Min             & 13.84               & 214.22                & 1447.8\%          \\
+		Max             & 34.04               & 515.25                & 1413.7\%          \\
+		\bottomrule
+	\end{tabular}
 \end{table}
 
 \begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=.45\textwidth]{./figures/e2_latency_comparison.png}
-    \caption{Access latency: local vs public network (E2).}
-    \label{fig:e2-latency}
+	\centering
+	\includegraphics[width=.45\textwidth]{./figures/e2_latency_comparison.png}
+	\caption{Access latency: local vs public network (E2).}
+	\label{fig:e2-latency}
 \end{figure}
 
 Sepolia increases median latency from 16.0\,ms (local) to 224.7\,ms (P50), with P90 remaining below 250\,ms and P99 near 515\,ms (Table~\ref{tab:e2-latency}, Fig.~\ref{fig:e2-latency}). The overhead is dominated by public RPC/network effects rather than gateway/contract compute.
 
 \subsubsection{Throughput}
 
-Table~\ref{tab:e2-throughput} and Fig.~\ref{fig:e2-throughput} show throughput 
+Table~\ref{tab:e2-throughput} and Fig.~\ref{fig:e2-throughput} show throughput
 performance under concurrency levels 10, 50, and 100.
 
 \begin{table}[!htbp]
-\centering
-\caption{Throughput: Local vs Public Network (E2)}
-\label{tab:e2-throughput}
-\begin{tabular}{lrrr}
-	\toprule
-	\textbf{Concurrency} & \textbf{Local (req/s)} & \textbf{Sepolia (req/s)} & \textbf{Reduction} \\
-\midrule
-10 & 569.81 & 142.16 & 75.1\% \\
-50 & 998.76 & 315.07 & 68.5\% \\
-100 & 782.64 & 373.45 & 52.3\% \\
-\bottomrule
-\end{tabular}
+	\centering
+	\caption{Throughput: Local vs Public Network (E2)}
+	\label{tab:e2-throughput}
+	\begin{tabular}{lrrr}
+		\toprule
+		\textbf{Concurrency} & \textbf{Local (req/s)} & \textbf{Sepolia (req/s)} & \textbf{Reduction} \\
+		\midrule
+		10                   & 569.81                 & 142.16                   & 75.1\%             \\
+		50                   & 998.76                 & 315.07                   & 68.5\%             \\
+		100                  & 782.64                 & 373.45                   & 52.3\%             \\
+		\bottomrule
+	\end{tabular}
 \end{table}
 
 \begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=.45\textwidth]{./figures/e2_throughput_comparison.png}
-    \caption{Access throughput: local vs public network (E2).}
-    \label{fig:e2-throughput}
+	\centering
+	\includegraphics[width=.45\textwidth]{./figures/e2_throughput_comparison.png}
+	\caption{Access throughput: local vs public network (E2).}
+	\label{fig:e2-throughput}
 \end{figure}
 
 Throughput drops from 569--999\,req/s locally to 142--373\,req/s on Sepolia (Table~\ref{tab:e2-throughput}, Fig.~\ref{fig:e2-throughput}) due to RPC/network constraints. Even so, observed Sepolia throughput supports moderate concurrency typical of evidence-access workflows.
@@ -696,39 +703,39 @@ Throughput drops from 569--999\,req/s locally to 142--373\,req/s on Sepolia (Tab
 
 \subsubsection{Policy Update Confirmation Time}
 
-Table~\ref{tab:e2-policy} and Fig.~\ref{fig:e2-policy} compare policy creation 
+Table~\ref{tab:e2-policy} and Fig.~\ref{fig:e2-policy} compare policy creation
 and confirmation times.
 
 \begin{table}[!htbp]
-\centering
-\caption{Policy Update Confirmation Time: Local vs Public Network (E2)}
-\label{tab:e2-policy}
-\begin{tabular}{lrrr}
-	\toprule
-	\textbf{Metric} & \textbf{Local (s)} & \textbf{Sepolia (s)} & \textbf{Overhead} \\
-\midrule
-Average & 0.02 & 24.77 & 123750.0\% \\
-Median & 0.02 & 14.61 & 72950.0\% \\
-Min & 0.01 & 9.98 & 99700.0\% \\
-Max & 0.03 & 89.43 & 298000.0\% \\
-\bottomrule
-\end{tabular}
+	\centering
+	\caption{Policy Update Confirmation Time: Local vs Public Network (E2)}
+	\label{tab:e2-policy}
+	\begin{tabular}{lrrr}
+		\toprule
+		\textbf{Metric} & \textbf{Local (s)} & \textbf{Sepolia (s)} & \textbf{Overhead} \\
+		\midrule
+		Average         & 0.02               & 24.77                & 123750.0\%        \\
+		Median          & 0.02               & 14.61                & 72950.0\%         \\
+		Min             & 0.01               & 9.98                 & 99700.0\%         \\
+		Max             & 0.03               & 89.43                & 298000.0\%        \\
+		\bottomrule
+	\end{tabular}
 \end{table}
 
 \begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=.45\textwidth]{./figures/e2_policy_comparison.png}
-    \caption{Policy confirmation time: local vs public network (E2).}
-    \label{fig:e2-policy}
+	\centering
+	\includegraphics[width=.45\textwidth]{./figures/e2_policy_comparison.png}
+	\caption{Policy confirmation time: local vs public network (E2).}
+	\label{fig:e2-policy}
 \end{figure}
 
 On local Hardhat, policy creation completes in \textbf{\textasciitilde20\,ms}; on Sepolia, it averages \textbf{24.8\,s} and can reach \textbf{89.4\,s}, reflecting public-network confirmation and RPC variability.
 
-This confirms that policy updates on public testnets are \emph{asynchronous 
-operations} unsuitable for synchronous API workflows. In production, policy 
-creation should be treated as a background administrative task with status 
-polling or webhook-based notifications. The \textasciitilde15--25\,s confirmation 
-time aligns with Sepolia's block time and is acceptable for infrequent policy 
+This confirms that policy updates on public testnets are \emph{asynchronous
+	operations} unsuitable for synchronous API workflows. In production, policy
+creation should be treated as a background administrative task with status
+polling or webhook-based notifications. The \textasciitilde15--25\,s confirmation
+time aligns with Sepolia's block time and is acceptable for infrequent policy
 governance operations (minutes to hours apart).
 
 \subsubsection{Discussion}
@@ -811,7 +818,7 @@ Future work will prioritize a pilot deployment with an insurance partner to vali
 
 
 
-\bibliographystyle{IEEEtran}
+\bibliographystyle{elsarticle-num}
 \bibliography{refs}
 
 \end{document}
