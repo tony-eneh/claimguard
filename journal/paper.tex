@@ -152,58 +152,22 @@ In contrast, ClaimGuard combines verifiable on-chain ABAC with off-chain enforce
 
 \section{System Methodology}
 
-This section defines the auto-insurance evidence setting, presents the threat model, outlines functional and security requirements, and describes the ClaimGuard architecture and enforcement mechanisms.
+Auto-insurance claim handling operates within a complex ecosystem involving policyholders who own the evidence, primary insurers responsible for case management and adjustment, reinsurers conducting financial audits, repair workshops assessing damage, law enforcement and courts investigating legal matters, regulators ensuring compliance, and cloud storage providers maintaining infrastructure. Evidence flows through a multi-stage pipeline beginning with first notice of loss, progressing through evidence collection and assessment, continuing into investigation and dispute resolution, and concluding with settlement and long-term auditing. The evidence itself spans structured documents such as FNOL reports and repair estimates, unstructured media including accident photographs and video recordings, sensor-generated telematics and GPS traces, and derived analytical artifacts like fraud signals and expert assessments.
 
-\subsection{Problem Statement and System Context}
+Organizations store this evidence in cloud object stores or IPFS for scalability and cost efficiency, while relying on consortium blockchains to maintain shared policy state and immutable audit trails. The central design challenge is enforcing blockchain-backed authorization decisions over off-chain storage backends that do not natively inherit on-chain access semantics. Stakeholders require fine-grained action-level permissions spanning read, append, update, delete, adjudicate, and disclose operations, with each action often constrained by case scope, time windows, jurisdictional mandates, and legal purpose such as distinguishing fraud analysis from litigation discovery.
 
-\subsubsection{Stakeholders and Evidence Pipeline}
-
-The auto-insurance evidence workflow involves a diverse set of stakeholders with varying access rights and contextual constraints: policyholders (evidence owners), primary insurers (case managers and adjusters), reinsurers (financial auditors), repair workshops and assessors (damage evaluators), police and courts (legal investigators), regulators and auditors (compliance reviewers), and untrusted cloud storage providers (infrastructure operators). Evidence flows through multiple stages: first notice of loss (FNOL), evidence collection (documents, media, telematics), assessment, investigation and dispute resolution, settlement, and long-term auditing. Evidence assets include structured documents (FNOL reports, invoices, repair estimates), unstructured media (photographs, high-resolution accident videos), sensor logs (telematics, GPS traces), and derived artifacts (fraud signals, expert assessments, claim summaries).
-
-Evidence is stored in cloud object stores (e.g., S3, Azure Blob) or IPFS for scalability and cost efficiency, while a consortium blockchain maintains shared policy state and immutable audit trails. The core challenge is enforcing blockchain-backed authorization decisions over off-chain storage backends that do not natively inherit on-chain access semantics. Stakeholders require action-level permissions---\emph{read, append, update, delete, adjudicate, disclose}---often constrained by case scope, time windows, jurisdictional mandates, and legal purpose (e.g., fraud analysis vs. litigation discovery).
-
-\subsubsection{Representative Access Scenarios}
-
-Representative scenarios motivating verifiable attribute-based access control include:
-\begin{itemize}
-    \item \textbf{Claim assessment:} Insurers and adjusters read and append case evidence; repair shops receive scoped read-only access to damage photos and estimates but cannot view medical records or modify adjuster notes.
-    \item \textbf{Legal investigation:} Police and courts receive time-bounded, purpose-limited access with immediate revocation upon case closure, preventing continued access to sensitive evidence after legal mandates expire.
-    \item \textbf{Multi-insurer coordination:} Reinsurers access specific claim subsets for financial audits while excluding unrelated or overly sensitive evidence such as personally identifiable health information.
-    \item \textbf{Fraud detection:} Fraud investigators access assigned cases with strong auditability, ensuring that cross-case access attempts are logged and denied.
-\end{itemize}
+Consider four representative scenarios that motivate verifiable attribute-based access control. During routine claim assessment, insurers and adjusters must read and append case evidence while repair shops receive scoped read-only access to damage photos and estimates without viewing medical records or modifying adjuster notes. Legal investigations introduce temporal constraints: police and courts receive time-bounded, purpose-limited access with immediate revocation upon case closure, preventing continued access to sensitive evidence after legal mandates expire. Multi-insurer coordination requires reinsurers to access specific claim subsets for financial audits while systematically excluding unrelated or overly sensitive evidence such as personally identifiable health information. Finally, fraud detection workflows demand that investigators access only their assigned cases with strong auditability, ensuring that cross-case access attempts are both logged and denied.
 
 \subsection{Design Goals and Requirements}
 
-Any practical access control architecture for auto-insurance evidence must
-address several constraints:
-\begin{itemize}
-    \item \textbf{C1: Off-chain dominance.} Evidence remains in cloud/IPFS; enforcement must bind on-chain decisions to off-chain retrieval.
-    \item \textbf{C2: Multi-organization governance.} No single party should unilaterally modify policies.
-    \item \textbf{C3: Verifiable audit.} Policy changes and access decisions must be immutable and attributable.
-    \item \textbf{C4: Context dependence.} Decisions depend on time, jurisdiction, workflow stage, and legal mandates.
-    \item \textbf{C5: Fast revocation.} Temporary access must be revoked immediately.
-    \item \textbf{C6: Minimal cloud trust.} Storage operators must not gain plaintext access or unmediated retrieval.
-\end{itemize}
+Any practical access control architecture for auto-insurance evidence must reconcile several fundamental constraints inherent to multi-stakeholder environments. Evidence remains predominantly in cloud or IPFS storage due to size and cost considerations, necessitating mechanisms that bind on-chain authorization decisions to off-chain retrieval. Multi-organization governance demands that no single party can unilaterally modify policies, while verifiable audit requires that policy changes and access decisions remain immutable and attributable. Authorization decisions must account for context including time, jurisdiction, workflow stage, and legal mandates. Fast revocation becomes critical when temporary access grants expire or credentials are compromised, and the architecture must minimize trust in cloud storage operators who should not gain plaintext access or the ability to mediate retrieval independently.
 
-Based on the above analysis, the system must satisfy the following requirements:
-
-\begin{itemize}
-    \item \textbf{R1: Resource-agnostic ABAC} across documents/media/sensors/derived artifacts.
-    \item \textbf{R2: Action-aware authorization} for read/append/update/delete/adjudicate/disclose.
-    \item \textbf{R3: Multi-attribute evaluation} over subject/object/context (case scope, sensitivity, time, purpose, stage).
-    \item \textbf{R4: Verifiable governance} via tamper-resistant, shared policy state.
-    \item \textbf{R5: Enforceable off-chain binding} (e.g., short-lived capabilities).
-    \item \textbf{R6: Revocation + temporal control} with immediate effect.
-    \item \textbf{R7: Auditability and non-repudiation} of access events.
-    \item \textbf{R8: Least privilege and delegation} with traceability.
-    \item \textbf{R9: Resilience} to cloud and insider threat models.
-\end{itemize}
+These constraints translate into specific system requirements. The architecture must provide resource-agnostic ABAC spanning documents, media, sensor data, and derived artifacts. Authorization must be action-aware, distinguishing between read, append, update, delete, adjudicate, and disclose operations rather than treating all access uniformly. Policy evaluation must consider multiple attributes drawn from subject characteristics, object metadata, and contextual factors such as case scope, sensitivity classification, temporal constraints, purpose of use, and workflow stage. Verifiable governance requires tamper-resistant shared policy state maintained on-chain, while enforceable off-chain binding demands mechanisms such as short-lived capability tokens. The system must support immediate revocation and temporal access control, provide comprehensive auditability and non-repudiation of access events, enforce least privilege with traceable delegation, and demonstrate resilience against both cloud provider threats and organizational insider attacks.
 
 \subsection{ClaimGuard Architecture}
 \label{sec:architecture}
 
-ClaimGuard anchors authorization decisions on PureChain smart contracts and enforces access to off-chain evidence via a Policy Enforcement Gateway (PEG). The contracts act as a tamper-resistant policy decision point (PDP), while the file server checks for validity of capability token before retrieval of insurance evidence from cloud/IPFS backends (Fig.~\ref{fig:architecture}).
-
+ClaimGuard anchors authorization decisions on PureChain smart contracts while enforcing access to off-chain evidence through a Policy Enforcement Gateway. The smart contracts function as a tamper-resistant policy decision point, while file servers validate capability tokens before retrieving insurance evidence from cloud or IPFS backends, as illustrated in Figure~\ref{fig:architecture}. This architecture implements three core components that together provide fine-grained, action-aware, context-sensitive authorization over heterogeneous evidence while maintaining tamper-resistant evaluation independent of cloud infrastructure.
 
 \begin{figure}
     \centering
@@ -212,92 +176,17 @@ ClaimGuard anchors authorization decisions on PureChain smart contracts and enfo
     \label{fig:architecture}
 \end{figure}
 
-% \begin{figure}[!htbp]
-%     \centering
-%     \begin{tikzpicture}[
-%         font=\small,
-%         box/.style={
-%             draw, rounded corners, fill=gray!5,
-%             minimum width=2.25cm, minimum height=0.9cm,
-%             text width=2.25cm,
-%             align=center,
-%             inner sep=3pt
-%         },
-%         arrow/.style={-Latex, thick},
-%         dataarrow/.style={-Latex, thick, dashed},
-%         node distance=1.0cm
-%     ]
+The Subject Attribute Registry binds blockchain addresses to vetted attributes including role, organization, jurisdiction, and active status. Consortium governance controls attribute updates, preventing individual organizations or cloud operators from silently rewriting identities. The Evidence Registry anchors off-chain evidence with on-chain metadata comprising content hash, storage URI, case association, evidence type, sensitivity classification, and creator identity. This anchoring enables integrity and provenance verification without storing large objects on-chain. The Access Policy Manager evaluates authorization rules by combining subject attributes and evidence metadata retrieved from both registries. When a client requests access, the manager evaluates the subject-object-action-context tuple against stored policies, returns a decision to the gateway, and logs the outcome as an immutable event that prevents cloud or application layers from overriding enforcement.
 
-%     % Vertical layout
-%     \node[box] (client) {Client\\App};
-%     \node[box, below=of client] (peg) {Policy\\Enforcement\\Gateway};
-%     \node[box, below=of peg] (policy) {Access Policy\\Manager};
+The operational workflow follows a clear sequence. Evidence is first stored off-chain and registered on-chain with its cryptographic hash and metadata. Administrators subsequently create or update policies on-chain that define which subjects can perform which actions on which resources under what conditions. When clients request access to evidence, they direct requests to the Policy Enforcement Gateway. The gateway authenticates the client, maps their identity to a blockchain address, and queries the Access Policy Manager's \texttt{checkAccess} function with the subject address, resource identifier, and requested action. If the on-chain evaluation returns approval, the gateway issues a short-lived capability token or presigned URL that the client presents directly to cloud storage. If denied, the gateway returns an error without contacting storage. This workflow preserves on-chain auditability and tamper-resistance while keeping bulky evidence objects off-chain for cost efficiency and scalability.
 
-%     \node[box, below left=0.8cm and 0.6cm of policy] (subject) {Subject\\Registry};
-%     \node[box, below right=0.8cm and 0.6cm of policy] (evidence) {Evidence\\Registry};
+\subsection{Capability-Based Access and Cloud Insider Resistance}
 
-%     \node[box, below=1.6cm of policy] (storage) {Cloud / IPFS\\Storage};
+To prevent cloud-side bypass attacks such as object enumeration by privileged operators, ClaimGuard mediates all evidence access through short-lived, gateway-signed capability tokens rather than relying solely on cloud IAM or encryption at rest. Each capability token encodes the authorized subject's blockchain address, the specific resource identifier, the permitted action, and an expiration timestamp, cryptographically signed using the gateway's ECDSA private key. Storage backends validate these tokens by verifying the signature, confirming the token has not expired, and ensuring the requested resource and action match the token's encoded values. This validation prevents unmediated access and limits token replay attacks through aggressive expiration policies, typically setting lifetimes between seconds and minutes.
 
-%     % Arrows
-%     \draw[arrow] (client) -- node[midway, left] {1. Request} (peg);
-%     \draw[arrow] (peg) -- node[midway, right] {2. \texttt{checkAccess}} (policy);
+This capability-based approach addresses a fundamental limitation of encryption-based access control schemes. Ciphertext-policy attribute-based encryption provides strong confidentiality guarantees but tightly couples policy changes to re-encryption and key distribution operations, while expressing access primarily as decryptability rather than action-level permissions. This coupling maps poorly to workflows requiring rapid policy updates or fine-grained action control. ClaimGuard instead decouples policy evaluation performed on-chain from storage operations performed off-chain, enabling rapid policy updates without re-encryption while naturally supporting heterogeneous evidence types and action-level permissions. For deployments requiring additional confidentiality beyond access control, ClaimGuard can layer envelope encryption over the capability model: evidence is encrypted client-side with a data encryption key, and the gateway wraps or unwraps this key only upon successful authorization, providing defense in depth if ciphertext is exposed at the storage layer.
 
-%     \draw[arrow] (policy) -- node[midway, left] {3. attrs} (subject);
-%     \draw[arrow] (policy) -- node[midway, right] {4. metadata} (evidence);
-
-%     \draw[arrow] (policy) to[bend left=15] node[midway, left] {5. decision} (peg);
-
-%     \draw[dataarrow] (peg) to[bend right=12] node[midway, right] {6. capability} (storage);
-%     \draw[dataarrow] (storage) to[bend left=20] node[midway, left] {7. data} (client);
-
-%     \end{tikzpicture}
-%     \caption{ABAC evaluation flow: PEG calls \texttt{checkAccess}; contracts evaluate attributes and metadata; PEG returns a capability.}
-%     \label{fig:abac-flow-compact}
-% \end{figure}
-
-
-\subsubsection{Design Goals}
-
-ClaimGuard targets fine-grained, action-aware, context-sensitive authorization over heterogeneous evidence while keeping evaluation tamper-resistant and cloud-independent. We implement this with three contracts: a Subject Attribute Registry, an Evidence Registry, and an Access Policy Manager that evaluates ABAC rules over both registries.
-
-\subsubsection{Subject Attribute Registry}
-
-The Subject Attribute Registry binds a blockchain address to vetted attributes (e.g., role, organization, jurisdiction, active flag). Consortium governance controls updates so individual organizations or cloud operators cannot silently rewrite identities.
-
-\subsubsection{Evidence Registry}
-
-The Evidence Registry anchors off-chain evidence with on-chain metadata: content hash, URI (S3/MinIO/IPFS), case association, type, sensitivity, and creator. This enables integrity/provenance checks without storing large objects on-chain.
-
-\subsubsection{Access Policy Manager}
-
-The Access Policy Manager evaluates (subject, object, action, context) rules using subject attributes and evidence metadata retrieved from the registries. Decisions are returned to the PEG and logged as events for auditability, preventing cloud or application layers from overriding enforcement.
-
-\subsubsection{System Workflow}
-
-Workflow: (1) evidence is stored off-chain and registered on-chain (hash + metadata); (2) administrators update policies on-chain; (3) clients request actions via the PEG; (4) if allowed, the PEG issues a short-lived capability (or presigned URL) for retrieval; otherwise it denies. This preserves on-chain auditability while keeping bulky objects off-chain.
-
-\subsubsection{Capability-Based Access and Cloud Insider Resistance (R3)}
-
-To prevent cloud-side bypass (e.g., object enumeration by privileged operators), ClaimGuard mediates evidence access through short-lived, gateway-signed capabilities rather than relying solely on cloud IAM or encryption at rest.
-
-\paragraph{Capability Token Model}
-
-A capability encodes the subject, resource, action, and an expiration timestamp, plus a gateway ECDSA signature. Storage backends accept requests only if the signature verifies and the capability is unexpired and matches the requested resource and action, preventing unmediated access and limiting token replay via short expirations.
-
-\paragraph{Comparison with Encryption-Based Approaches}
-
-CP-ABE provides strong confidentiality but tightly couples policy changes to re-encryption/key distribution and expresses access primarily as “decryptability,” which maps poorly to action-level workflows. ClaimGuard instead decouples policy evaluation (on-chain) from storage (cloud/IPFS) via capabilities, enabling rapid policy updates without re-encryption and supporting heterogeneous evidence.
-
-\paragraph{Optional Envelope Encryption}
-
-For high-sensitivity evidence, ClaimGuard can add envelope encryption: evidence is encrypted client-side with a DEK and the DEK is wrapped/unwrapped by the gateway upon authorization. This provides defense in depth in case ciphertext is exposed at the storage layer.
-
-\paragraph{Insider Attack Mitigation}
-
-Cloud administrators cannot fetch evidence via direct API calls because storage accepts only gateway-signed capabilities; forged capabilities fail signature checks, and stolen capabilities are time-limited and bound to a subject. Similarly, insiders requesting out-of-scope evidence are denied by on-chain ABAC evaluation and receive no capability. The PEG implements this binding in practice, as described next.
-
-
-\subsubsection{Policy Enforcement Gateway}
+This architecture effectively mitigates insider attacks from multiple vectors. Cloud administrators cannot fetch evidence through direct API calls because storage systems accept only gateway-signed capabilities; forged capabilities fail cryptographic signature verification, while stolen capabilities remain time-limited and bound to specific subjects, resources, and actions. Organizational insiders requesting evidence outside their scope receive denials from on-chain ABAC evaluation and never obtain capability tokens. The Policy Enforcement Gateway implements this binding in practice through a stateless design that authenticates clients using standard mechanisms such as OAuth or JWT, maps authenticated identities to blockchain addresses, queries the on-chain \texttt{checkAccess} function with subject-resource-action parameters, and issues short-lived capabilities only when authorization succeeds, as illustrated in Figure~\ref{fig:gateway-sequence}.
 
 \begin{figure}[!htbp]
     \centering
@@ -348,43 +237,22 @@ Cloud administrators cannot fetch evidence via direct API calls because storage 
     \label{fig:gateway-sequence}
 \end{figure}
 
-
-
-The PEG is a stateless policy enforcement point that authenticates clients (e.g., OAuth or JWT), maps identities to blockchain addresses, queries \texttt{checkAccess} on-chain (with subject, resource, and action parameters), and issues short-lived capabilities (e.g., presigned URLs) only when allowed. It does not re-implement authorization logic locally; it simply enforces the contract decision and limits access duration.
-
-We implemented the ClaimGuard contracts and Policy Enforcement Gateway as a
-working prototype on a local PureChain network. The following section discusses
-the security posture of the ClaimGuard architecture.
+We implemented the ClaimGuard contracts and Policy Enforcement Gateway as a working prototype on the PureChain network, validating the architecture's feasibility while enabling the experimental evaluation presented in Section~IV. The following subsection analyzes the security properties and limitations of this design.
 
 
 \subsection{Security Analysis}
 
-While the ClaimGuard architecture is designed to provide verifiable access control and protection against honest-but-curious cloud providers, a comprehensive security analysis must address the residual risks, potential attack vectors, and design trade-offs inherent in any distributed system. This section discusses threat mitigation strategies, identifies known limitations, and contextualizes ClaimGuard's security guarantees.
+While ClaimGuard provides verifiable access control and protection against honest-but-curious cloud providers, a comprehensive security analysis must address residual risks, potential attack vectors, and design trade-offs inherent in distributed systems. This subsection discusses threat mitigation strategies, identifies known limitations, and contextualizes ClaimGuard's security guarantees within realistic operational constraints.
 
 \subsubsection{Threat Model and Assumptions}
 
-ClaimGuard operates under the following threat assumptions:
+ClaimGuard addresses five primary threat categories common to multi-stakeholder insurance evidence workflows. First, honest-but-curious cloud storage providers operating S3, MinIO, or IPFS backends may attempt to read, enumerate, or analyze evidence assets without authorization, motivated by competitive intelligence gathering or regulatory evasion. ClaimGuard mitigates this threat through capability-based access: cloud backends cannot retrieve plaintext without presenting valid, unexpired capability tokens issued by the gateway following successful on-chain authorization.
 
-\begin{enumerate}
-    \item \textbf{Honest-but-Curious Cloud Provider:} Cloud storage backends (S3, MinIO, IPFS) may attempt to read, enumerate, or analyze evidence assets without authorization. ClaimGuard mitigates this via capability-based access: the cloud backend cannot retrieve plaintext without a valid, unexpired capability token issued by the gateway.
+Second, compromised organizational insiders such as claims adjusters, police officers, or workshop employees may attempt unauthorized access to evidence belonging to unrelated claims, driven by curiosity, identity theft, or competitive advantage. ClaimGuard enforces per-claim, per-action permissions through on-chain policy evaluation, constraining insider privilege escalation through attribute-based rules that the smart contracts verify before granting access. Third, external attackers may intercept or steal capability tokens, user credentials, or API keys through network sniffing or endpoint compromise. The architecture mitigates token theft through aggressive expiration policies measured in seconds to minutes, mandatory token validation at the cloud layer, and cryptographic binding of tokens to specific subject-action-resource tuples that prevent token reuse across different contexts.
 
-    \item \textbf{Compromised Organizational Insider:} An authorized stakeholder (e.g., claims adjuster, police officer, workshop employee) may attempt unauthorized access to evidence belonging to unrelated claims. ClaimGuard enforces per-claim, per-action permissions via on-chain policies; insider privilege escalation is constrained by the attribute-based rules evaluated by the smart contracts.
+Fourth, network adversaries employing man-in-the-middle attacks may eavesdrop on communication between gateways, blockchain nodes, or cloud storage endpoints. ClaimGuard assumes transport-layer security through TLS and HTTPS for all network communication, relying on standard PKI infrastructure for endpoint authentication. Fifth, malicious blockchain nodes within the PureChain consortium may attempt to fork the chain, censor transactions, or deliberately delay consensus. The architecture assumes standard Byzantine fault tolerance properties with honest consensus majorities, typically requiring two-of-three or higher thresholds in multi-node configurations.
 
-    \item \textbf{External Attacker / Token Theft:} An attacker may intercept or steal capability tokens, compromised credentials, or API keys. ClaimGuard mitigates this via short-lived token expiration (seconds to minutes), mandatory token validation at the cloud layer, and token binding to specific (subject, action, resource) tuples.
-
-    \item \textbf{Network Adversary:} A man-in-the-middle (MITM) attacker may eavesdrop on communication between the gateway, blockchain nodes, or cloud storage. ClaimGuard assumes TLS/HTTPS for all network communications.
-
-    \item \textbf{Malicious Blockchain Node:} A Byzantine node in the PureChain consortium may attempt to fork, censor, or delay transactions. ClaimGuard assumes consensus rules and honest majorities (e.g., 2-of-3 Byzantine-fault tolerance in a three-node configuration).
-\end{enumerate}
-
-ClaimGuard does \textbf{not} protect against:
-\begin{itemize}
-    \item Compromise of the gateway private key or gateway host.
-    \item Breach of the smart contract code itself (logical flaws, unintended behavior).
-    \item Consensus-layer attacks if the majority of blockchain nodes are compromised.
-    \item Cryptographic breaks (e.g., ECDSA preimage attacks, SHA-3 collisions).
-    \item Side-channel attacks on gateway or blockchain nodes.
-\end{itemize}
+ClaimGuard does not protect against several out-of-scope threats that require different mitigation strategies. Compromise of the gateway's private signing key or the gateway host itself would allow attackers to forge valid capability tokens, requiring operational security measures such as hardware security modules and intrusion detection systems. Smart contract code vulnerabilities including logical flaws or unintended behaviors require thorough testing, formal verification, and security auditing before production deployment. Consensus-layer attacks succeeding when adversaries control blockchain node majorities fall outside the threat model, as does the potential for cryptographic breaks in ECDSA signatures or SHA-3 hashing. Finally, side-channel attacks exploiting microarchitectural features of gateway or blockchain node hardware require defenses beyond the access control architecture itself.
 
 \subsubsection{Gateway Security and DoS Mitigation}
 
