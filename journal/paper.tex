@@ -72,12 +72,61 @@ within 1.1\,ms. Public testnet evaluation validates feasibility on real blockcha
 
 Auto-insurance claim handling depends on heterogeneous digital evidence (FNOL reports, documents, telematics, photos, and high-resolution videos) shared across multiple stakeholders (insurers, reinsurers, adjusters, police, courts, repair vendors, and regulators). Cloud storage scales to these workloads but forces trust in the operator and makes access control vulnerable to insider abuse, misconfiguration, and inconsistent enforcement. Prior surveys repeatedly highlight access control as a persistent and operationally critical gap in blockchain-enabled insurance/transport systems~\cite{pournader2020blockchaininsurance, xu2021survey, yli2020blockchain}.
 
-Existing solutions are either (i) cryptography-centric (e.g., CP-ABE or proxy re-encryption) that couples authorization to encryption policies and does not generalize cleanly to multi-actor, multi-format evidence workflows~\cite{sun2020insurance, wang2020secure, liu2021auto, brousmiche2018hybrid}, or (ii) blockchain systems that enforce coarse RBAC or workflow modifiers for claim functions~\cite{raikwar2018insurance, tekale2023claims, thukral2023vehicle, hombalimath2024vehicleclaim, raghav2024optimizing, alwis2022decentralized}. Related vehicular and healthcare sharing systems focus on provenance and constrained stakeholder sets~\cite{syed2020vehicle, brousmiche2018digitizing, singh2020vcare, singh2019ubi, sun2020emr, rana2022healthcare, liang2017mhealth, theodouli2018healthcare} and do not provide a resource-agnostic, action-aware, context-sensitive model that is enforceable over off-chain object stores.
-
 % TODO: are we introducing claimguard (maybe reference conference paper)?
 This paper introduces \textbf{ClaimGuard}, a PureChain-backed ABAC architecture that evaluates \emph{(subject, object, action, context)} tuples on-chain and enforces decisions off-chain via a policy enforcement gateway issuing short-lived capability tokens. We evaluate ClaimGuard against a cloud-only RBAC baseline across latency/throughput, policy updates and churn, authorization correctness, and adversarial behaviors, including deployment under realistic public testnet conditions.
 
 The remainder of the paper positions ClaimGuard against prior work, formalizes requirements, presents the architecture and threat model, and reports experimental methodology and results.
+
+\subsection{Limitations of Traditional RBAC and Research Motivation}
+
+To motivate the need for attribute-based, action-aware access control, we 
+formalize the limitations of traditional role-based access control (RBAC) in 
+auto-insurance evidence workflows:
+
+\paragraph{Over-Privilege Problem}
+RBAC assigns permissions to roles (e.g., adjuster, police) and often over-grants access across claims. An adjuster role with broad read permissions can access unrelated cases, creating privacy/compliance risk and enabling insider leakage.
+
+\paragraph{Action Blindness}
+RBAC typically collapses distinct actions into coarse permissions (e.g., read/write). Real workflows need asymmetric rights: repair shops may append estimates but not modify adjuster notes; police may read incident media but not adjudicate.
+
+\paragraph{Context Insensitivity}
+RBAC cannot natively express context-dependent policies such as:
+\begin{itemize}
+    \item \textbf{Time windows} (temporary legal access).
+    \item \textbf{Purpose limits} (fraud analysis vs. litigation).
+    \item \textbf{Scope limits} (region/case assignment).
+    \item \textbf{Jurisdiction mandates} (court order identifiers).
+\end{itemize}
+These constraints are critical in multi-jurisdictional auto-insurance but cannot 
+be enforced without external logic or policy-layer augmentation.
+
+\paragraph{Revocation Delay}
+In cloud-only RBAC, revocation must propagate across distributed enforcement points (apps/IAM/caches), creating delay windows. On-chain policy state with gateway mediation enables immediate, auditable revocation.
+
+\begin{table}[!htbp]
+\centering
+\caption{RBAC Failure Modes vs. ClaimGuard ABAC Mitigation}
+% Tighten padding and wrap long cells to fit column width
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\columnwidth}{X c X}
+	\toprule
+	\textbf{Failure Mode} & \textbf{RBAC Vulnerable?} & \textbf{ClaimGuard Mitigation} \\
+\midrule
+Over-privilege (unrelated claims) & \cmark & Per-claim attributes in policies \\
+Action blindness (no fine action control) & \cmark & Action-level ABAC rules \\
+Context insensitivity (no time windows) & \cmark & notBefore/notAfter on-chain \\
+Revocation delay & \cmark & Immutable blockchain enforcement \\
+Insider privilege escalation & \cmark & On-chain audit + attribute binding \\
+Cloud insider enumeration & \cmark & Capability-token mediation \\
+\bottomrule
+\end{tabularx}
+\label{tab:rbac-failures}
+\end{table}
+
+Table~\ref{tab:rbac-failures} summarizes how RBAC's inherent limitations create 
+security and compliance gaps in auto-insurance evidence management, and how 
+ClaimGuard's attribute-based, action-aware, time-bounded, and on-chain-enforced 
+policies address each failure mode.
 
 \subsection{Problem Statement}
 
@@ -146,57 +195,6 @@ Across insurance- and healthcare-oriented blockchain systems, the following limi
     \item Revocation, time-bounded access, purpose-of-use restrictions, cross-insurer collaboration, and legal-access workflows are inconsistently addressed or entirely absent.
     \item No work offers a system-level, simulation-based comparison between blockchain-backed access control and traditional cloud-only RBAC in terms of latency, throughput, scalability, and access correctness.
 \end{itemize}
-
-\subsection{Limitations of Traditional RBAC}
-
-To motivate the need for attribute-based, action-aware access control, we 
-formalize the limitations of traditional role-based access control (RBAC) in 
-auto-insurance evidence workflows:
-
-\paragraph{Over-Privilege Problem}
-RBAC assigns permissions to roles (e.g., adjuster, police) and often over-grants access across claims. An adjuster role with broad read permissions can access unrelated cases, creating privacy/compliance risk and enabling insider leakage.
-
-\paragraph{Action Blindness}
-RBAC typically collapses distinct actions into coarse permissions (e.g., read/write). Real workflows need asymmetric rights: repair shops may append estimates but not modify adjuster notes; police may read incident media but not adjudicate.
-
-\paragraph{Context Insensitivity}
-RBAC cannot natively express context-dependent policies such as:
-\begin{itemize}
-    \item \textbf{Time windows} (temporary legal access).
-    \item \textbf{Purpose limits} (fraud analysis vs. litigation).
-    \item \textbf{Scope limits} (region/case assignment).
-    \item \textbf{Jurisdiction mandates} (court order identifiers).
-\end{itemize}
-These constraints are critical in multi-jurisdictional auto-insurance but cannot 
-be enforced without external logic or policy-layer augmentation.
-
-\paragraph{Revocation Delay}
-In cloud-only RBAC, revocation must propagate across distributed enforcement points (apps/IAM/caches), creating delay windows. On-chain policy state with gateway mediation enables immediate, auditable revocation.
-
-\begin{table}[!htbp]
-\centering
-\caption{RBAC Failure Modes vs. ClaimGuard ABAC Mitigation}
-% Tighten padding and wrap long cells to fit column width
-\setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\columnwidth}{X c X}
-	\toprule
-	\textbf{Failure Mode} & \textbf{RBAC Vulnerable?} & \textbf{ClaimGuard Mitigation} \\
-\midrule
-Over-privilege (unrelated claims) & \cmark & Per-claim attributes in policies \\
-Action blindness (no fine action control) & \cmark & Action-level ABAC rules \\
-Context insensitivity (no time windows) & \cmark & notBefore/notAfter on-chain \\
-Revocation delay & \cmark & Immutable blockchain enforcement \\
-Insider privilege escalation & \cmark & On-chain audit + attribute binding \\
-Cloud insider enumeration & \cmark & Capability-token mediation \\
-\bottomrule
-\end{tabularx}
-\label{tab:rbac-failures}
-\end{table}
-
-Table~\ref{tab:rbac-failures} summarizes how RBAC's inherent limitations create 
-security and compliance gaps in auto-insurance evidence management, and how 
-ClaimGuard's attribute-based, action-aware, time-bounded, and on-chain-enforced 
-policies address each failure mode.
 
 \subsection{Discussion of Comparative Analysis}
 
