@@ -74,81 +74,12 @@ Auto-insurance claim handling depends on heterogeneous digital evidence (FNOL re
 
 Existing solutions are either (i) cryptography-centric (e.g., CP-ABE or proxy re-encryption) that couples authorization to encryption policies and does not generalize cleanly to multi-actor, multi-format evidence workflows~\cite{sun2020insurance, wang2020secure, liu2021auto, brousmiche2018hybrid}, or (ii) blockchain systems that enforce coarse RBAC or workflow modifiers for claim functions~\cite{raikwar2018insurance, tekale2023claims, thukral2023vehicle, hombalimath2024vehicleclaim, raghav2024optimizing, alwis2022decentralized}. Related vehicular and healthcare sharing systems focus on provenance and constrained stakeholder sets~\cite{syed2020vehicle, brousmiche2018digitizing, singh2020vcare, singh2019ubi, sun2020emr, rana2022healthcare, liang2017mhealth, theodouli2018healthcare} and do not provide a resource-agnostic, action-aware, context-sensitive model that is enforceable over off-chain object stores.
 
+% TODO: are we introducing claimguard (maybe reference conference paper)?
 This paper introduces \textbf{ClaimGuard}, a PureChain-backed ABAC architecture that evaluates \emph{(subject, object, action, context)} tuples on-chain and enforces decisions off-chain via a policy enforcement gateway issuing short-lived capability tokens. We evaluate ClaimGuard against a cloud-only RBAC baseline across latency/throughput, policy updates and churn, authorization correctness, and adversarial behaviors, including deployment under realistic public testnet conditions.
 
 The remainder of the paper positions ClaimGuard against prior work, formalizes requirements, presents the architecture and threat model, and reports experimental methodology and results.
 
-\section{Related Work and Novelty}
-
-\subsection{Blockchain-Based Access Control in Insurance}
-Sun \emph{et al.}~\cite{sun2020insurance} propose a blockchain--IPFS insurance data storage scheme that integrates ciphertext-policy attribute-based encryption (CP-ABE) to provide fine-grained access control. Their system focuses primarily on cryptographic enforcement and outsourced encryption via fog nodes. However, the approach is tightly coupled to CP-ABE encryption policies and offers no architectural mechanism for binding on-chain policies to off-chain object stores or for modeling multi-stakeholder auto-insurance workflows involving police, courts, repair vendors, and reinsurers.
-
-Liu \emph{et al.}~\cite{liu2021auto} design a blockchain-based auto-insurance data sharing scheme using proxy re-encryption to allow authorized users to decrypt shared claim data. The work addresses secure data sharing but does not define a generalized access control model across heterogeneous evidence types such as FNOL forms, medical records, telematics logs, videos, and PDF documents. Moreover, it does not specify an action-aware permission model or enforcement gateway that mediates access to cloud or IPFS resources.
-
-Raikwar \emph{et al.}~\cite{raikwar2018insurance} introduce a blockchain-centered framework for generic insurance processes, with smart contracts managing state transitions between clients and agents. Although confidentiality and restricted access to client data are discussed, access control remains role-oriented and process-specific; evidence-level authorization, revocation, purpose restriction, and multi-actor collaboration are not modeled.
-
-Tekale and Rahul~\cite{tekale2023claims} apply blockchain and smart contracts to claims settlement workflows, introducing role-based access control (RBAC) to regulate claim state transitions. While this contributes to process integrity, RBAC over state transitions does not generalize to fine-grained ABAC over diverse auto-insurance evidence assets, nor does it provide an enforceable architecture for cloud storage access.
-
-\subsection{Access Control in Healthcare and DLT}
-A substantial body of work explores blockchain-enabled access control for electronic medical records (EMR) and healthcare data sharing~\cite{liang2017mhealth,theodouli2018healthcare,sun2020emr,rana2022healthcare}. These systems often employ ABE or smart-contract-based authorization to govern data access among patients, doctors, health insurers, and pharmacies. Although conceptually related, these works address healthcare contexts and rely on domain-specific assumptions such as patient-centric ownership, decryptable EMR bundles, and limited stakeholder sets. They do not extend to auto-insurance evidence pipelines involving dynamic evidence creation, partial disclosure, legal time windows, or multi-party investigative processes.
-
-\subsection{Gaps in Existing Literature}
-Across insurance- and healthcare-oriented blockchain systems, the following limitations persist:
-\begin{itemize}
-    \item Access control mechanisms are either cryptographic (CP-ABE, proxy re-encryption) or role-based, with no general-purpose attribute-based model governing evidence objects and actions.
-    \item Evidence assets are typically treated as a single type (e.g., images, EMR records), whereas real auto-insurance workflows involve heterogeneous documents, media, sensor data, and derived reports.
-    \item Prior architectures lack a policy enforcement gateway that binds on-chain access decisions to off-chain cloud/IPFS objects using short-lived capabilities.
-    \item Revocation, time-bounded access, purpose-of-use restrictions, cross-insurer collaboration, and legal-access workflows are inconsistently addressed or entirely absent.
-    \item No work offers a system-level, simulation-based comparison between blockchain-backed access control and traditional cloud-only RBAC in terms of latency, throughput, scalability, and access correctness.
-\end{itemize}
-
-\subsection{Discussion of Comparative Analysis}
-
-\begin{table*}[!htbp]
-\centering
-\caption{Comparison of Related Blockchain-Based Access Control Systems}
-% Reduce padding to fit within margins while keeping normal font size
-\setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\textwidth}{l l X X X c X X}
-	\toprule
-	\textbf{Work} & \textbf{Domain} & \textbf{Evidence Types} & \textbf{Access Model} & \textbf{Action-Aware} & \textbf{On-Chain Policies} & \textbf{Off-Chain Enforcement} & \textbf{Evaluation Style} \\
-\midrule
-Sun et al. (2020) \cite{sun2020insurance} & Insurance data & Images / records & CP-ABE & No & Partial (ABE policies) & No & Crypto\-graphic analysis \\
-Liu et al. (2021) \cite{liu2021auto} & Auto insurance & Claim documents & Proxy Re-Enc. & No & Limited & No & Security + cost analysis \\
-Raikwar et al. (2018) \cite{raikwar2018insurance} & Generic insurance & Process states & RBAC (workflow) & Limited & Yes & No & Qualitative \\
-Tekale \& Rahul (2023) \cite{tekale2023claims} & Claim settlement & Claim states & RBAC (roles) & Yes (states only) & Yes & No & Conceptual \\
-Sun et al. (2020) EMR \cite{sun2020emr} & Healthcare & EMR bundles & ABE & No & No (ABE only) & No & Scenario-driven \\
-Rana et al. (2022) \cite{rana2022healthcare} & Healthcare & EMR, identity & Smart-contract ABAC & Partial & Yes & No & Conceptual \\
-Liang et al. (2017) \cite{liang2017mhealth} & Mobile healthcare & Patient data & Permission protocol & No & Yes & No & Conceptual \\
-Theodouli et al. (2018) \cite{theodouli2018healthcare} & Healthcare sharing & Records & Smart contracts & No & Yes & No & Architec\-tural \\
-\midrule
-	\textbf{This Work} & \textbf{Auto-insurance evidence} & \textbf{FNOL, PDFs, images, telematics, videos} & \textbf{PureChain ABAC} & \textbf{Yes (CRUD, append, adjudicate)} & \textbf{Yes (Verifiable contract rules)} & \textbf{Yes (Gateway + capabilities)} & \textbf{Simulation vs RBAC baseline} \\
-\bottomrule
-\end{tabularx}
-\label{tab:comparison}
-\end{table*}
-
-Table~\ref{tab:comparison} highlights that prior systems either (i) bind authorization to cryptographic policies (e.g., CP-ABE~\cite{sun2020insurance} or proxy re-encryption~\cite{liu2021auto}) or (ii) encode coarse RBAC/workflow rules in smart contracts~\cite{raikwar2018insurance, tekale2023claims}. Healthcare-oriented designs~\cite{sun2020emr, rana2022healthcare, liang2017mhealth, theodouli2018healthcare} are often patient-centric and do not address heterogeneous auto-insurance evidence and multi-organization workflows.
-
-In contrast, ClaimGuard combines verifiable on-chain ABAC with off-chain enforcement via short-lived capabilities and provides a system-level evaluation against a cloud-only RBAC baseline.
-
-
-\subsection{Novelty of This Work}
-This paper contributes a unified, resource-agnostic, action-aware access control architecture for auto-insurance evidence workflows. To the best of our knowledge, it is the first to:
-\begin{enumerate}
-    \item Model multi-stakeholder auto-insurance evidence with ABAC over \emph{subjects, objects, actions, and context} (e.g., legal windows, purpose).
-    \item Implement verifiable authorization in \textbf{PureChain smart contracts}, decoupled from encryption.
-    \item Bind on-chain decisions to cloud/IPFS retrieval using a \textbf{policy enforcement gateway} and short-lived capability tokens.
-    \item Support revocation, partial disclosure, and action-level permissions with auditability.
-    \item Provide a simulation-based evaluation versus cloud-only RBAC under load, churn, and adversarial scenarios.
-\end{enumerate}
-
-Together, these contributions position the proposed architecture as the first end-to-end, verifiable, and enforceable access control system tailored for the operational realities of auto-insurance evidence management.
-
-
-\section{System Methodology}
-
-\subsection{Problem Definition and Requirements}
+\subsection{Problem Statement}
 
 This section defines the auto-insurance evidence setting, threat assumptions, and the functional/security requirements for enforcing blockchain-backed policies over off-chain storage.
 
@@ -192,36 +123,31 @@ Representative scenarios motivating verifiable ABAC include:
     \item \textbf{Fraud detection:} Investigators access assigned cases with strong auditability.
 \end{itemize}
 
-\subsubsection{Design Constraints}
+\section{Related Work and Novelty}
 
-Any practical access control architecture for auto-insurance evidence must
-address several constraints:
+\subsection{Blockchain-Based Access Control in Insurance}
+Sun \emph{et al.}~\cite{sun2020insurance} propose a blockchain--IPFS insurance data storage scheme that integrates ciphertext-policy attribute-based encryption (CP-ABE) to provide fine-grained access control. Their system focuses primarily on cryptographic enforcement and outsourced encryption via fog nodes. However, the approach is tightly coupled to CP-ABE encryption policies and offers no architectural mechanism for binding on-chain policies to off-chain object stores or for modeling multi-stakeholder auto-insurance workflows involving police, courts, repair vendors, and reinsurers.
+
+Liu \emph{et al.}~\cite{liu2021auto} design a blockchain-based auto-insurance data sharing scheme using proxy re-encryption to allow authorized users to decrypt shared claim data. The work addresses secure data sharing but does not define a generalized access control model across heterogeneous evidence types such as FNOL forms, medical records, telematics logs, videos, and PDF documents. Moreover, it does not specify an action-aware permission model or enforcement gateway that mediates access to cloud or IPFS resources.
+
+Raikwar \emph{et al.}~\cite{raikwar2018insurance} introduce a blockchain-centered framework for generic insurance processes, with smart contracts managing state transitions between clients and agents. Although confidentiality and restricted access to client data are discussed, access control remains role-oriented and process-specific; evidence-level authorization, revocation, purpose restriction, and multi-actor collaboration are not modeled.
+
+Tekale and Rahul~\cite{tekale2023claims} apply blockchain and smart contracts to claims settlement workflows, introducing role-based access control (RBAC) to regulate claim state transitions. While this contributes to process integrity, RBAC over state transitions does not generalize to fine-grained ABAC over diverse auto-insurance evidence assets, nor does it provide an enforceable architecture for cloud storage access.
+
+\subsection{Access Control in Healthcare and DLT}
+A substantial body of work explores blockchain-enabled access control for electronic medical records (EMR) and healthcare data sharing~\cite{liang2017mhealth,theodouli2018healthcare,sun2020emr,rana2022healthcare}. These systems often employ ABE or smart-contract-based authorization to govern data access among patients, doctors, health insurers, and pharmacies. Although conceptually related, these works address healthcare contexts and rely on domain-specific assumptions such as patient-centric ownership, decryptable EMR bundles, and limited stakeholder sets. They do not extend to auto-insurance evidence pipelines involving dynamic evidence creation, partial disclosure, legal time windows, or multi-party investigative processes.
+
+\subsection{Gaps in Existing Literature}
+Across insurance- and healthcare-oriented blockchain systems, the following limitations persist:
 \begin{itemize}
-    \item \textbf{C1: Off-chain dominance.} Evidence remains in cloud/IPFS; enforcement must bind on-chain decisions to off-chain retrieval.
-    \item \textbf{C2: Multi-organization governance.} No single party should unilaterally modify policies.
-    \item \textbf{C3: Verifiable audit.} Policy changes and access decisions must be immutable and attributable.
-    \item \textbf{C4: Context dependence.} Decisions depend on time, jurisdiction, workflow stage, and legal mandates.
-    \item \textbf{C5: Fast revocation.} Temporary access must be revoked immediately.
-    \item \textbf{C6: Minimal cloud trust.} Storage operators must not gain plaintext access or unmediated retrieval.
+    \item Access control mechanisms are either cryptographic (CP-ABE, proxy re-encryption) or role-based, with no general-purpose attribute-based model governing evidence objects and actions.
+    \item Evidence assets are typically treated as a single type (e.g., images, EMR records), whereas real auto-insurance workflows involve heterogeneous documents, media, sensor data, and derived reports.
+    \item Prior architectures lack a policy enforcement gateway that binds on-chain access decisions to off-chain cloud/IPFS objects using short-lived capabilities.
+    \item Revocation, time-bounded access, purpose-of-use restrictions, cross-insurer collaboration, and legal-access workflows are inconsistently addressed or entirely absent.
+    \item No work offers a system-level, simulation-based comparison between blockchain-backed access control and traditional cloud-only RBAC in terms of latency, throughput, scalability, and access correctness.
 \end{itemize}
 
-\subsubsection{Access Control Requirements}
-
-Based on the above analysis, the system must satisfy the following requirements:
-
-\begin{itemize}
-    \item \textbf{R1: Resource-agnostic ABAC} across documents/media/sensors/derived artifacts.
-    \item \textbf{R2: Action-aware authorization} for read/append/update/delete/adjudicate/disclose.
-    \item \textbf{R3: Multi-attribute evaluation} over subject/object/context (case scope, sensitivity, time, purpose, stage).
-    \item \textbf{R4: Verifiable governance} via tamper-resistant, shared policy state.
-    \item \textbf{R5: Enforceable off-chain binding} (e.g., short-lived capabilities).
-    \item \textbf{R6: Revocation + temporal control} with immediate effect.
-    \item \textbf{R7: Auditability and non-repudiation} of access events.
-    \item \textbf{R8: Least privilege and delegation} with traceability.
-    \item \textbf{R9: Resilience} to cloud and insider threat models.
-\end{itemize}
-
-\subsubsection{RBAC Limitations in Auto-Insurance Contexts}
+\subsection{Limitations of Traditional RBAC}
 
 To motivate the need for attribute-based, action-aware access control, we 
 formalize the limitations of traditional role-based access control (RBAC) in 
@@ -272,9 +198,78 @@ security and compliance gaps in auto-insurance evidence management, and how
 ClaimGuard's attribute-based, action-aware, time-bounded, and on-chain-enforced 
 policies address each failure mode.
 
-These requirements form the basis for the PureChain-backed ABAC architecture and 
-gateway enforcement mechanism described in Section~IV.
+\subsection{Discussion of Comparative Analysis}
 
+\begin{table*}[!htbp]
+\centering
+\caption{Comparison of Related Blockchain-Based Access Control Systems}
+% Reduce padding to fit within margins while keeping normal font size
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\textwidth}{l l X X X c X X}
+	\toprule
+	\textbf{Work} & \textbf{Domain} & \textbf{Evidence Types} & \textbf{Access Model} & \textbf{Action-Aware} & \textbf{On-Chain Policies} & \textbf{Off-Chain Enforcement} & \textbf{Evaluation Style} \\
+\midrule
+Sun et al. (2020) \cite{sun2020insurance} & Insurance data & Images / records & CP-ABE & No & Partial (ABE policies) & No & Crypto\-graphic analysis \\
+Liu et al. (2021) \cite{liu2021auto} & Auto insurance & Claim documents & Proxy Re-Enc. & No & Limited & No & Security + cost analysis \\
+Raikwar et al. (2018) \cite{raikwar2018insurance} & Generic insurance & Process states & RBAC (workflow) & Limited & Yes & No & Qualitative \\
+Tekale \& Rahul (2023) \cite{tekale2023claims} & Claim settlement & Claim states & RBAC (roles) & Yes (states only) & Yes & No & Conceptual \\
+Sun et al. (2020) EMR \cite{sun2020emr} & Healthcare & EMR bundles & ABE & No & No (ABE only) & No & Scenario-driven \\
+Rana et al. (2022) \cite{rana2022healthcare} & Healthcare & EMR, identity & Smart-contract ABAC & Partial & Yes & No & Conceptual \\
+Liang et al. (2017) \cite{liang2017mhealth} & Mobile healthcare & Patient data & Permission protocol & No & Yes & No & Conceptual \\
+Theodouli et al. (2018) \cite{theodouli2018healthcare} & Healthcare sharing & Records & Smart contracts & No & Yes & No & Architec\-tural \\
+\midrule
+	\textbf{This Work} & \textbf{Auto-insurance evidence} & \textbf{FNOL, PDFs, images, telematics, videos} & \textbf{PureChain ABAC} & \textbf{Yes (CRUD, append, adjudicate)} & \textbf{Yes (Verifiable contract rules)} & \textbf{Yes (Gateway + capabilities)} & \textbf{Simulation vs RBAC baseline} \\
+\bottomrule
+\end{tabularx}
+\label{tab:comparison}
+\end{table*}
+
+Table~\ref{tab:comparison} highlights that prior systems either (i) bind authorization to cryptographic policies (e.g., CP-ABE~\cite{sun2020insurance} or proxy re-encryption~\cite{liu2021auto}) or (ii) encode coarse RBAC/workflow rules in smart contracts~\cite{raikwar2018insurance, tekale2023claims}. Healthcare-oriented designs~\cite{sun2020emr, rana2022healthcare, liang2017mhealth, theodouli2018healthcare} are often patient-centric and do not address heterogeneous auto-insurance evidence and multi-organization workflows.
+
+In contrast, ClaimGuard combines verifiable on-chain ABAC with off-chain enforcement via short-lived capabilities and provides a system-level evaluation against a cloud-only RBAC baseline.
+
+
+\subsection{Novelty of This Work}
+This paper contributes a unified, resource-agnostic, action-aware access control architecture for auto-insurance evidence workflows. To the best of our knowledge, it is the first to:
+\begin{enumerate}
+    \item Model multi-stakeholder auto-insurance evidence with ABAC over \emph{subjects, objects, actions, and context} (e.g., legal windows, purpose).
+    \item Implement verifiable authorization in \textbf{PureChain smart contracts}, decoupled from encryption.
+    \item Bind on-chain decisions to cloud/IPFS retrieval using a \textbf{policy enforcement gateway} and short-lived capability tokens.
+    \item Support revocation, partial disclosure, and action-level permissions with auditability.
+    \item Provide a simulation-based evaluation versus cloud-only RBAC under load, churn, and adversarial scenarios.
+\end{enumerate}
+
+Together, these contributions position the proposed architecture as the first end-to-end, verifiable, and enforceable access control system tailored for the operational realities of auto-insurance evidence management.
+
+
+\section{System Methodology}
+
+\subsection{Design Goals and Requirements}
+
+Any practical access control architecture for auto-insurance evidence must
+address several constraints:
+\begin{itemize}
+    \item \textbf{C1: Off-chain dominance.} Evidence remains in cloud/IPFS; enforcement must bind on-chain decisions to off-chain retrieval.
+    \item \textbf{C2: Multi-organization governance.} No single party should unilaterally modify policies.
+    \item \textbf{C3: Verifiable audit.} Policy changes and access decisions must be immutable and attributable.
+    \item \textbf{C4: Context dependence.} Decisions depend on time, jurisdiction, workflow stage, and legal mandates.
+    \item \textbf{C5: Fast revocation.} Temporary access must be revoked immediately.
+    \item \textbf{C6: Minimal cloud trust.} Storage operators must not gain plaintext access or unmediated retrieval.
+\end{itemize}
+
+Based on the above analysis, the system must satisfy the following requirements:
+
+\begin{itemize}
+    \item \textbf{R1: Resource-agnostic ABAC} across documents/media/sensors/derived artifacts.
+    \item \textbf{R2: Action-aware authorization} for read/append/update/delete/adjudicate/disclose.
+    \item \textbf{R3: Multi-attribute evaluation} over subject/object/context (case scope, sensitivity, time, purpose, stage).
+    \item \textbf{R4: Verifiable governance} via tamper-resistant, shared policy state.
+    \item \textbf{R5: Enforceable off-chain binding} (e.g., short-lived capabilities).
+    \item \textbf{R6: Revocation + temporal control} with immediate effect.
+    \item \textbf{R7: Auditability and non-repudiation} of access events.
+    \item \textbf{R8: Least privilege and delegation} with traceability.
+    \item \textbf{R9: Resilience} to cloud and insider threat models.
+\end{itemize}
 
 \subsection{ClaimGuard Architecture}
 \label{sec:architecture}
