@@ -134,25 +134,32 @@ Across insurance- and healthcare-oriented blockchain systems, the following limi
 
 \begin{table*}[!htbp]
 	\centering
+	\small
 	\caption{Comparison of Related Blockchain-Based Access Control Systems}
-	% Reduce padding to fit within margins while keeping normal font size
-	\setlength{\tabcolsep}{3pt}
-	\begin{tabularx}{\textwidth}{l l X X X c X X}
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabular}{@{}p{2.8cm}p{2cm}p{2.2cm}p{2cm}p{1.8cm}p{1.5cm}p{1.5cm}p{2cm}@{}}
 		\toprule
-		\textbf{Work}                                          & \textbf{Domain}                  & \textbf{Evidence Types}                         & \textbf{Access Model}   & \textbf{Action-Aware}                   & \textbf{On-Chain Policies}               & \textbf{Off-Chain Enforcement}        & \textbf{Evaluation Style}            \\
+		\textbf{Work}                                   & \textbf{Domain}         & \textbf{Evidence Types}                     & \textbf{Access Model}    & \textbf{Action-Aware} & \textbf{On-Chain Policies} & \textbf{Off-Chain Enforce.} & \textbf{Evaluation}   \\
 		\midrule
-		Sun et al. (2020) \cite{sun2020insurance}              & Insurance data                   & Images / records                                & CP-ABE                  & No                                      & Partial (ABE policies)                   & No                                    & Crypto\-graphic analysis             \\
-		Liu et al. (2021) \cite{liu2021auto}                   & Auto insurance                   & Claim documents                                 & Proxy Re-Enc.           & No                                      & Limited                                  & No                                    & Security + cost analysis             \\
-		Raikwar et al. (2018) \cite{raikwar2018insurance}      & Generic insurance                & Process states                                  & RBAC (workflow)         & Limited                                 & Yes                                      & No                                    & Qualitative                          \\
-		Tekale \& Rahul (2023) \cite{tekale2023claims}         & Claim settlement                 & Claim states                                    & RBAC (roles)            & Yes (states only)                       & Yes                                      & No                                    & Conceptual                           \\
-		Sun et al. (2020) EMR \cite{sun2020emr}                & Healthcare                       & EMR bundles                                     & ABE                     & No                                      & No (ABE only)                            & No                                    & Scenario-driven                      \\
-		Rana et al. (2022) \cite{rana2022healthcare}           & Healthcare                       & EMR, identity                                   & Smart-contract ABAC     & Partial                                 & Yes                                      & No                                    & Conceptual                           \\
-		Liang et al. (2017) \cite{liang2017mhealth}            & Mobile healthcare                & Patient data                                    & Permission protocol     & No                                      & Yes                                      & No                                    & Conceptual                           \\
-		Theodouli et al. (2018) \cite{theodouli2018healthcare} & Healthcare sharing               & Records                                         & Smart contracts         & No                                      & Yes                                      & No                                    & Architec\-tural                      \\
+		Sun et al.~\cite{sun2020insurance}              & Insurance data          & Images, records                             & CP-ABE                   & No                    & Partial                    & No                          & Crypto analysis       \\
+		\addlinespace[0.5ex]
+		Liu et al.~\cite{liu2021auto}                   & Auto insurance          & Claim docs                                  & Proxy re-enc.            & No                    & Limited                    & No                          & Security, cost        \\
+		\addlinespace[0.5ex]
+		Raikwar et al.~\cite{raikwar2018insurance}      & Insurance               & Process states                              & RBAC                     & Limited               & Yes                        & No                          & Qualitative           \\
+		\addlinespace[0.5ex]
+		Tekale \& Rahul~\cite{tekale2023claims}         & Claim settle.           & Claim states                                & RBAC                     & Partial               & Yes                        & No                          & Conceptual            \\
+		\addlinespace[0.5ex]
+		Sun et al.~\cite{sun2020emr}                    & Healthcare              & EMR bundles                                 & ABE                      & No                    & No                         & No                          & Scenario              \\
+		\addlinespace[0.5ex]
+		Rana et al.~\cite{rana2022healthcare}           & Healthcare              & EMR, identity                               & SC-ABAC                  & Partial               & Yes                        & No                          & Conceptual            \\
+		\addlinespace[0.5ex]
+		Liang et al.~\cite{liang2017mhealth}            & Mobile health           & Patient data                                & Permission               & No                    & Yes                        & No                          & Conceptual            \\
+		\addlinespace[0.5ex]
+		Theodouli et al.~\cite{theodouli2018healthcare} & Healthcare              & Records                                     & Smart cont.              & No                    & Yes                        & No                          & Architectural         \\
 		\midrule
-		\textbf{This Work}                                     & \textbf{Auto-insurance evidence} & \textbf{FNOL, PDFs, images, telematics, videos} & \textbf{PureChain ABAC} & \textbf{Yes (CRUD, append, adjudicate)} & \textbf{Yes (Verifiable contract rules)} & \textbf{Yes (Gateway + capabilities)} & \textbf{Simulation vs RBAC baseline} \\
+		\textbf{ClaimGuard (This Work)}                 & \textbf{Auto insurance} & \textbf{FNOL, PDFs, images, telem., videos} & \textbf{Pure-Chain ABAC} & \textbf{Yes (CRUD+)}  & \textbf{Yes}               & \textbf{Yes (Gateway)}      & \textbf{Sim. vs RBAC} \\
 		\bottomrule
-	\end{tabularx}
+	\end{tabular}
 	\label{tab:comparison}
 \end{table*}
 
@@ -375,22 +382,24 @@ Despite the above mitigations, several residual risks remain:
 
 \begin{table}[!htbp]
 	\centering
+	\small
 	\caption{Security Properties: ClaimGuard vs. Baseline Approaches}
-	\begin{tabularx}{\columnwidth}{X c c c}
+	\setlength{\tabcolsep}{3pt}
+	\begin{tabular}{@{}p{3.2cm}ccc@{}}
 		\toprule
-		\textbf{Property}                       & \textbf{RBAC-DB} & \textbf{Hybrid-Audit} & \textbf{ClaimGuard} \\
+		\textbf{Property}                       & \textbf{RBAC} & \textbf{Hybrid} & \textbf{Claim\-Guard} \\
 		\midrule
-		Honest-but-curious cloud resistance     & \xmark           & \xmark                & \cmark              \\
-		Insider privilege escalation prevention & \xmark           & \xmark                & \cmark              \\
-		Immutable audit logs                    & \xmark           & \cmark                & \cmark              \\
-		Revocation enforcement                  & \cmark           & \cmark                & \cmark              \\
-		Time-bounded access                     & \xmark           & \xmark                & \cmark              \\
-		On-chain policy integrity               & \xmark           & \xmark                & \cmark              \\
-		DoS resistance                          & \cmark           & \cmark                & \cmark$^{\dagger}$  \\
+		Honest-but-curious cloud resistance     & \xmark        & \xmark          & \cmark                \\
+		Insider privilege escalation prevention & \xmark        & \xmark          & \cmark                \\
+		Immutable audit logs                    & \xmark        & \cmark          & \cmark                \\
+		Revocation enforcement                  & \cmark        & \cmark          & \cmark                \\
+		Time-bounded access                     & \xmark        & \xmark          & \cmark                \\
+		On-chain policy integrity               & \xmark        & \xmark          & \cmark                \\
+		DoS resistance                          & \cmark        & \cmark          & \cmark$^{\dagger}$    \\
 		\bottomrule
-	\end{tabularx}
+	\end{tabular}
 
-	\small $^{\dagger}$Dependent on gateway availability and consensus liveness.
+	\footnotesize $^{\dagger}$Dependent on gateway availability and consensus liveness.
 	\label{tab:security-comparison}
 \end{table}
 
