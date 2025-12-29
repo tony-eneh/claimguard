@@ -412,6 +412,13 @@ Table~\ref{tab:security-comparison} summarizes the security trade-offs. While Cl
 
 \subsubsection{PureChain Network}
 
+PureChain is a private, permissioned, Ethereum-compatible blockchain employing Proof-of-Authority and Association (PoA$^2$) consensus~\cite{KIM2025100397}. Unlike proof-of-work (PoW) or proof-of-stake (PoS), PoA$^2$ relies on identity and reputation as the validator stake, making validators accountable through reputational damage and potential legal liability for misbehavior~\cite{joshi2021feasibility}. Critically, PoA$^2$ introduces a redundant standby validator mechanism that monitors active validators and automatically transfers authority if an active validator fails, enabling fault-tolerant operation without disrupting Byzantine consensus~\cite{KIM2025100397}.
+
+PureChain achieves 7,000 transactions per second (TPS)—100× higher than standard Ethereum (30 TPS) and 1,000× higher than Bitcoin (7 TPS)—while maintaining deterministic finality within seconds~\cite{KIM2025100397}. This performance advantage stems from the small, known validator set (typically 3--7 consortium members) and elimination of proof-of-work's computational overhead. Additionally, PureChain's Smart Auto Mining Plus (SAM+) algorithm enables mining only when transactions are pending, dramatically reducing energy consumption. The EVM-compatible design allows unmodified deployment of Solidity smart contracts, eliminating porting overhead.
+
+Consortium operation preserves data residency and regulatory compliance (CCPA, GDPR) by keeping evidence metadata within the consortium's boundaries. PoA$^2$'s identity-based validators with auditable credentials and fault-tolerant standby mechanisms naturally align with enterprise regulatory requirements, in contrast to pseudonymous PoW/PoS validators.
+
+In our evaluation, Experiment 1 (E1) uses local Hardhat (single-node, instant finality) representing an idealized PoA$^2$ network; Experiment 2 (E2) repeats measurements on Sepolia testnet (proof-of-stake) to demonstrate feasibility on public networks. The comparison reveals that ClaimGuard benefits substantially from PoA$^2$'s deterministic finality, fault-tolerance, and exceptional throughput, while remaining compatible with public blockchains for scenarios prioritizing decentralization.
 
 
 \subsubsection{Summary}
