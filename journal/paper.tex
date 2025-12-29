@@ -54,14 +54,14 @@
 	%\title{Action-Aware ABAC for Heterogeneous Insurance Evidence: Architecture, Evaluation and Results}
 	\title{Evaluating Action-Aware Attribute-Based Access Control for Secure Insurance Evidence Management}
 
-	\author[kumoh1]{Anthony Uchenna Eneh}
-	\author[kumoh2]{Love Allen Chijioke Ahakonye}
-	\author[kumoh1]{Jae Min Lee}
-	\author[kumoh1,nslab]{Dong-Seong Kim}
+	% \author[kumoh1]{Anthony Uchenna Eneh}
+	% \author[kumoh2]{Love Allen Chijioke Ahakonye}
+	% \author[kumoh1]{Jae Min Lee}
+	% \author[kumoh1,nslab]{Dong-Seong Kim}
 
-	\address[kumoh1]{IT-Convergence Engineering, Kumoh National Institute of Technology, Gumi, South Korea}
-	\address[kumoh2]{ICT Convergence Research Center, Kumoh National Institute of Technology, Gumi, South Korea}
-	\address[nslab]{NSLab Co. Ltd., Gumi, South Korea}
+	% \address[kumoh1]{IT-Convergence Engineering, Kumoh National Institute of Technology, Gumi, South Korea}
+	% \address[kumoh2]{ICT Convergence Research Center, Kumoh National Institute of Technology, Gumi, South Korea}
+	% \address[nslab]{NSLab Co. Ltd., Gumi, South Korea}
 
 	\begin{abstract}
 		Auto-insurance platforms rely on cloud infrastructure to store and process diverse evidence assets, including first notice of loss (FNOL) reports, medical documents, telematics logs, photographs, and high-resolution accident videos. Although recent blockchain approaches provide tamper resistance and partial access control, they lack a unified, enforceable model capable of governing heterogeneous resources, supporting action-level permissions, and binding authorization decisions to off-chain storage. This paper extends \textbf{ClaimGuard}~\cite{eneh2025claimguard}, a PureChain-backed, verifiable, attribute-based access control (ABAC) architecture previously introduced for multi-stakeholder auto-insurance evidence workflows. While the initial conference publication presented the core architecture and demonstrated feasibility through local network experiments, this journal extension provides a comprehensive evaluation comparing ClaimGuard against baseline cloud-only role-based access control (RBAC) across four new experimental dimensions: quantitative RBAC baseline comparison under varying load (E1), real-world network conditions on public Sepolia testnet (E2), security stress testing against adversarial attack vectors (E3), and policy churn at scale with up to 1000 policies and subjects (E4). Results demonstrate that ClaimGuard introduces modest latency overhead on local networks (60.9\,ms P50 vs.\ 1.9\,ms for pure RBAC) while significantly improving authorization correctness, policy integrity, and cross-organizational trust. Policy evaluation latency remains stable (2--3\,ms median) across 11 to 1000 active rules, revocation propagates within 1.1\,ms, and security experiments confirm successful blocking of unauthorized access attempts including cloud bypass, gateway abuse, and role spoofing. Public testnet evaluation validates operational feasibility on real blockchain infrastructure, positioning ClaimGuard as the first resource-agnostic, action-aware, enforceable access control framework tailored to operational requirements of modern auto-insurance evidence management.
@@ -75,7 +75,7 @@
 
 \section{Introduction}
 
-Auto-insurance claim handling depends on heterogeneous digital evidence---FNOL reports, medical documents, telematics logs, photographs, and high-resolution accident videos---shared across multiple stakeholders including insurers, reinsurers, adjusters, police, courts, repair vendors, and regulators. These workflows generate sensitive, legally significant evidence that must be accessed selectively by authorized parties under context-specific constraints such as time windows, case assignments, and jurisdictional mandates. Cloud storage infrastructure scales to these workloads but forces reliance on centralized operators and makes access control vulnerable to insider abuse, misconfiguration, and opaque enforcement. Prior surveys repeatedly highlight access control as a persistent and operationally critical gap in blockchain-enabled insurance and transport systems~\cite{pournader2020blockchaininsurance, xu2021survey, yli2020blockchain, tarr2018insurance, wang2020secure}.
+Auto-insurance claim handling depends on heterogeneous digital evidence, FNOL reports, medical documents, telematics logs, photographs, and high-resolution accident videos, shared across multiple stakeholders ,including insurers, reinsurers, adjusters, police, courts, repair vendors, and regulators. These workflows generate sensitive, legally significant evidence that must be accessed selectively by authorized parties under context-specific constraints such as time windows, case assignments, and jurisdictional mandates. Cloud storage infrastructure scales to these workloads but forces reliance on centralized operators and makes access control vulnerable to insider abuse, misconfiguration, and opaque enforcement. Prior surveys repeatedly highlight access control as a persistent and operationally critical gap in blockchain-enabled insurance and transport systems~\cite{pournader2020blockchaininsurance, xu2021survey, yli2020blockchain, tarr2018insurance, wang2020secure}.
 
 Traditional cloud-based role-based access control (RBAC) mechanisms are ill-suited for this environment. RBAC assigns coarse permissions to roles (e.g., adjuster, investigator) and typically over-grants access across unrelated claims, creating privacy risks and enabling insider leakage. Moreover, RBAC cannot natively express context-dependent policies such as temporary legal access windows, purpose-based restrictions (fraud analysis vs. litigation), or action-level permissions (allowing repair shops to append estimates but not modify adjuster notes). Revocation in cloud-only RBAC must propagate across distributed enforcement points, creating dangerous delay windows during which compromised credentials remain exploitable.
 
@@ -182,7 +182,7 @@ Consider four representative scenarios that motivate verifiable attribute-based 
 
 Any practical access control architecture for auto-insurance evidence must reconcile several fundamental constraints inherent to multi-stakeholder environments. Evidence remains predominantly in cloud or IPFS storage due to size and cost considerations, necessitating mechanisms that bind on-chain authorization decisions to off-chain retrieval. Multi-organization governance demands that no single party can unilaterally modify policies, while verifiable audit requires that policy changes and access decisions remain immutable and attributable. Authorization decisions must account for context including time, jurisdiction, workflow stage, and legal mandates. Fast revocation becomes critical when temporary access grants expire or credentials are compromised, and the architecture must minimize trust in cloud storage operators who should not gain plaintext access or the ability to mediate retrieval independently.
 
-These constraints translate into specific system requirements. The architecture must provide resource-agnostic ABAC spanning documents, media, sensor data, and derived artifacts. Authorization must be action-aware, distinguishing between read, append, update, delete, adjudicate, and disclose operations rather than treating all access uniformly. Policy evaluation must consider multiple attributes drawn from subject characteristics, object metadata, and contextual factors such as case scope, sensitivity classification, temporal constraints, purpose of use, and workflow stage. Verifiable governance requires tamper-resistant shared policy state maintained on-chain, while enforceable off-chain binding demands mechanisms such as short-lived capability tokens. The system must support immediate revocation and temporal access control, provide comprehensive auditability and non-repudiation of access events, enforce least privilege with traceable delegation, and demonstrate resilience against both cloud provider threats and organizational insider attacks.
+These constraints translate into specific system requirements. The architecture must provide resource-agnostic ABAC spanning documents, media, sensor data, and derived artifacts. Authorization must be action-aware, distinguishing between read, append, update, delete, adjudicate, and disclose operations rather than treating all access uniformly. Policy evaluation must consider multiple attributes drawn from subject characteristics, object metadata, and contextual factors such as case scope, sensitivity classification, temporal constraints, purpose of use, and workflow stage. Verifiable governance requires tamper-resistant, on-chain shared policy state, while enforceable off-chain binding demands mechanisms such as short-lived capability tokens. The system must support immediate revocation and temporal access control, provide comprehensive auditability and non-repudiation of access events, enforce least privilege with traceable delegation, and demonstrate resilience against both cloud provider threats and organizational insider attacks.
 
 \subsection{ClaimGuard Architecture}
 \label{sec:architecture}
@@ -275,73 +275,79 @@ Fourth, network adversaries employing man-in-the-middle attacks may eavesdrop on
 ClaimGuard does not protect against several out-of-scope threats that require different mitigation strategies. Compromise of the gateway's private signing key or the gateway host itself would allow attackers to forge valid capability tokens, requiring operational security measures such as hardware security modules and intrusion detection systems. Smart contract code vulnerabilities including logical flaws or unintended behaviors require thorough testing, formal verification, and security auditing before production deployment. Consensus-layer attacks succeeding when adversaries control blockchain node majorities fall outside the threat model, as does the potential for cryptographic breaks in ECDSA signatures or SHA-3 hashing. Finally, side-channel attacks exploiting microarchitectural features of gateway or blockchain node hardware require defenses beyond the access control architecture itself.
 
 \subsubsection{Gateway Security and DoS Mitigation}
+The Policy Enforcement Gateway serves as the system’s primary enforcement boundary between on-chain authorization decisions and off-chain resource access; consequently, its compromise or overload constitutes a system-level failure mode. To sustain availability under adversarial conditions, the gateway combines per-subject rate limiting (default \(100\,\mathrm{req/s}\) per IP or credential, exceeding traffic rejected with HTTP 429), bounded on-chain \texttt{checkAccess} execution (default \(10\,\mathrm{s}\), with blockchain unresponsiveness mapped to HTTP 503 rather than unbounded queueing), and a stateless architecture that enables horizontal scaling while reducing susceptibility to memory-exhaustion vectors. In addition, short-lived capability tokens (\(\leq 15\,\mathrm{min}\)) constrain replay windows and prevent long-duration resource pinning. As reported in Section~VI.C, ClaimGuard empirically rejects \(100\%\) of unauthorized requests and remains responsive under adversarial W3 workloads characterized by repeated spoofing, replay, and direct-access attempts.
 
-The Policy Enforcement Gateway is the critical enforcement point between on-chain decisions and off-chain resource access. A compromised or overloaded gateway threatens the entire system.
 
-\paragraph{DoS Resistance}
+% The Policy Enforcement Gateway is the critical enforcement point between on-chain decisions and off-chain resource access. A compromised or overloaded gateway threatens the entire system.
 
-The gateway implements the following DoS mitigations:
+% \paragraph{DoS Resistance}
+% The gateway implements the following DoS mitigations:
 
-\begin{itemize}
-	\item \textbf{Rate Limiting:} Requests from a single IP or credential are rate-limited (default: 100 req/s per subject). Excess requests are rejected with HTTP 429 (Too Many Requests).
+% \begin{itemize}
+% 	\item \textbf{Rate Limiting:} Requests from a single IP or credential are rate-limited (default: 100 req/s per subject). Excess requests are rejected with HTTP 429 (Too Many Requests).
 
-	\item \textbf{Request Timeouts:} Each on-chain \texttt{checkAccess} call is bounded by a timeout (default: 10s). If the blockchain is unresponsive, the gateway returns HTTP 503 (Service Unavailable) rather than queueing indefinitely.
+% 	\item \textbf{Request Timeouts:} Each on-chain \texttt{checkAccess} call is bounded by a timeout (default: 10s). If the blockchain is unresponsive, the gateway returns HTTP 503 (Service Unavailable) rather than queueing indefinitely.
 
-	\item \textbf{Stateless Design:} The gateway maintains no session state, allowing horizontal scaling and preventing memory exhaustion attacks.
+% 	\item \textbf{Stateless Design:} The gateway maintains no session state, allowing horizontal scaling and preventing memory exhaustion attacks.
 
-	\item \textbf{Capability Token Expiration:} All issued tokens expire within 15 minutes, preventing indefinite resource locks.
-\end{itemize}
+% 	\item \textbf{Capability Token Expiration:} All issued tokens expire within 15 minutes, preventing indefinite resource locks.
+% \end{itemize}
 
-In evaluation Section~VI.C, experimental results demonstrate that ClaimGuard rejects 100\% of unauthorized requests and remains responsive under adversarial W3 loads (repeated spoofing, replay, and direct-access attempts).
+% In evaluation Section~VI.C, experimental results demonstrate that ClaimGuard rejects 100\% of unauthorized requests and remains responsive under adversarial W3 loads (repeated spoofing, replay, and direct-access attempts).
 
-\paragraph{Private Key Management}
+The gateway is provisioned with a private key (\texttt{GATEWAY\_PRIVATE\_KEY}) that is used to sign capability tokens for non-repudiation, authorize smart-contract write operations (e.g., administrator-driven policy updates), and sign audit-log entries. Because key compromise would enable capability forgery, policy manipulation, and audit-trail spoofing, key material is confined to environment-backed secret mechanisms or external vault/KMS services (e.g., HashiCorp Vault, AWS KMS), the gateway executes under least-privilege container settings with filesystem isolation to reduce exfiltration avenues, and rotation is performed out-of-band with staged rollouts (e.g., blue--green deployment) to migrate to new keys while preserving service continuity.
 
-The gateway is provisioned with a private key (\texttt{GATEWAY\_PRIVATE\_KEY}) used to:
-\begin{itemize}
-	\item Sign capability tokens for non-repudiation.
-	\item Call smart contract write operations (policy updates via administrator endpoints).
-	\item Sign audit log entries.
-\end{itemize}
 
-Key exposure would allow an attacker to forge capabilities, manipulate policies, or spoof audit trails. Mitigations include:
-\begin{itemize}
-	\item Keys are stored in environment variables or secure vaults (HashiCorp Vault, AWS KMS).
-	\item Gateway containers run with minimal privileges and isolated filesystems.
-	\item Key rotation is performed out-of-band; new keys are deployed via blue-green deployment strategies.
-\end{itemize}
+% \paragraph{Private Key Management}
+
+% The gateway is provisioned with a private key (\texttt{GATEWAY\_PRIVATE\_KEY}) used to:
+% \begin{itemize}
+% 	\item Sign capability tokens for non-repudiation.
+% 	\item Call smart contract write operations (policy updates via administrator endpoints).
+% 	\item Sign audit log entries.
+% \end{itemize}
+
+% Key exposure would allow an attacker to forge capabilities, manipulate policies, or spoof audit trails. Mitigations include:
+% \begin{itemize}
+% 	\item Keys are stored in environment variables or secure vaults (HashiCorp Vault, AWS KMS).
+% 	\item Gateway containers run with minimal privileges and isolated filesystems.
+% 	\item Key rotation is performed out-of-band; new keys are deployed via blue-green deployment strategies.
+% \end{itemize}
 
 \subsubsection{Smart Contract Upgrade Risk}
+ClaimGuard's core contracts (AccessPolicyManager, EvidenceRegistry, SubjectAttributeRegistry, AccessAuditLog) are immutable post-deployment; consequently, any discovered logical flaw necessitates redeploying a corrected instance at a new address, migrating policies and on-chain state from the legacy contract, and coordinating all stakeholders to update referenced addresses in their gateways. This operational coupling makes upgrades costly and prone to failure, particularly under wide deployment. Risk is mitigated through rigorous pre-deployment testing (unit, integration, and fuzzing), and, for large-scale rollouts, an independent assurance step via formal verification and/or third-party audit. Additionally, the contracts expose pausable control, allowing administrators to invoke \texttt{pause()} to suspend policy evaluation upon vulnerability detection while preserving revocation enforcement, thereby reducing the exploitable window without weakening ongoing access invalidation.
 
-ClaimGuard smart contracts (AccessPolicyManager, EvidenceRegistry, SubjectAttributeRegistry, AccessAuditLog) are immutable once deployed. If a logical flaw is discovered, remediation requires:
+% ClaimGuard smart contracts (AccessPolicyManager, EvidenceRegistry, SubjectAttributeRegistry, AccessAuditLog) are immutable once deployed. If a logical flaw is discovered, remediation requires:
 
-\begin{enumerate}
-	\item Deployment of a corrected contract at a new address.
-	\item Migration of policies and state from the old to the new contract.
-	\item Coordination with all stakeholders to update contract addresses in their gateways.
-\end{enumerate}
+% \begin{enumerate}
+% 	\item Deployment of a corrected contract at a new address.
+% 	\item Migration of policies and state from the old to the new contract.
+% 	\item Coordination with all stakeholders to update contract addresses in their gateways.
+% \end{enumerate}
 
-To reduce upgrade risk:
-\begin{itemize}
-	\item All contracts are thoroughly tested (unit, integration, fuzzing) before production deployment.
-	\item A formal verification or code-audit process is strongly recommended before large-scale deployment.
-	\item Contracts implement pausable logic: administrators can call \texttt{pause()} to halt policy evaluation in the event of detected vulnerabilities, although revocation continues to be enforced.
-\end{itemize}
+% To reduce upgrade risk:
+% \begin{itemize}
+% 	\item All contracts are thoroughly tested (unit, integration, fuzzing) before production deployment.
+% 	\item A formal verification or code-audit process is strongly recommended before large-scale deployment.
+% 	\item Contracts implement pausable logic: administrators can call \texttt{pause()} to halt policy evaluation in the event of detected vulnerabilities, although revocation continues to be enforced.
+% \end{itemize}
 
 \subsubsection{Key Compromise and Revocation}
+If an authorized stakeholder’s private key is compromised, an adversary can mint forged capability tokens and impersonate that identity. ClaimGuard constrains the blast radius by supporting subject-level revocation via an on-chain \texttt{revokeSubjectAccess(subjectAddr)} call that immediately invalidates all tokens issued to the affected address, and by binding each capability token to the subject’s blockchain address. Hence, it is non-transferable and cannot be delegated. All token issuances and access attempts are immutably recorded by the \texttt{AccessAuditLog} contract, enabling post-compromise attribution and forensic reconstruction. Policies may further restrict exposure through enforceable time windows (e.g., access only over $[t_s,t_e]$), with expiration checked on-chain and thus not bypassable. Revocation reaches the cloud storage layer within the remaining lifetime of already-issued tokens (typically 1--15 minutes); after token expiry, access is denied even if the adversary retains the compromised key.
 
-If the private key of an authorized stakeholder (e.g., police officer) is compromised, the attacker can forge capability tokens and impersonate the compromised party. ClaimGuard mitigates this via:
+% If the private key of an authorized stakeholder (e.g., police officer) is compromised, the attacker can forge capability tokens and impersonate the compromised party. ClaimGuard mitigates this via:
 
-\begin{itemize}
-	\item \textbf{Subject-level revocation:} Administrators invoke \texttt{revokeSubjectAccess(subjectAddr)} on-chain, immediately invalidating all tokens issued to that subject.
+% \begin{itemize}
+% 	\item \textbf{Subject-level revocation:} Administrators invoke \texttt{revokeSubjectAccess(subjectAddr)} on-chain, immediately invalidating all tokens issued to that subject.
 
-	\item \textbf{Capability token binding:} Each token encodes the subject's blockchain address, making tokens non-transferable and non-delegable.
+% 	\item \textbf{Capability token binding:} Each token encodes the subject's blockchain address, making tokens non-transferable and non-delegable.
 
-	\item \textbf{Audit trail:} The AccessAuditLog contract records all access attempts and token issuances, enabling forensic analysis of suspected compromises.
+% 	\item \textbf{Audit trail:} The AccessAuditLog contract records all access attempts and token issuances, enabling forensic analysis of suspected compromises.
 
-	\item \textbf{Time windows:} Policies can enforce narrow legal access windows (e.g., "police access only between 2024-01-15 and 2024-02-15"). Expiration is enforced on-chain and cannot be circumvented.
-\end{itemize}
+% 	\item \textbf{Time windows:} Policies can enforce narrow legal access windows (e.g., "police access only between 2024-01-15 and 2024-02-15"). Expiration is enforced on-chain and cannot be circumvented.
+% \end{itemize}
 
-Revocation propagates to the cloud storage layer within the lifetime of existing capability tokens (typically 1-15 minutes); once a token expires, the compromised party loses access regardless of key possession.
+% Revocation propagates to the cloud storage layer within the lifetime of existing capability tokens (typically 1-15 minutes); once a token expires, the compromised party loses access regardless of whether they possess the key.
 
 \subsubsection{Insider Threat Scenarios}
 
@@ -359,7 +365,6 @@ A cloud provider employee with S3 console access attempts to list or retrieve al
 A police officer with temporary court-mandated access attempts to access evidence beyond their legal window or for unrelated incidents.
 
 \textbf{Mitigation:} On-chain policies enforce \texttt{notBefore} and \texttt{notAfter} timestamps. The \texttt{checkAccess} contract checks the current block timestamp; if the request falls outside the legal window, access is denied. Additionally, the AccessAuditLog records all access attempts, enabling post-facto forensic investigation.
-
 These scenarios are quantitatively evaluated in Section~VI.C (Adversarial Resilience); all malicious requests are correctly denied.
 
 \subsubsection{Residual Risks and Limitations}
@@ -403,19 +408,20 @@ Despite the above mitigations, several residual risks remain:
 	\label{tab:security-comparison}
 \end{table}
 
-Table~\ref{tab:security-comparison} summarizes the security trade-offs. While ClaimGuard introduces additional complexity and consensus dependency, it eliminates the single point of trust (cloud provider) present in traditional RBAC systems and provides immutable, verifiable policy evaluation.
+Table~\ref{tab:security-comparison} summarizes the security trade-offs. While ClaimGuard introduces additional complexity and a reliance on consensus, it eliminates the single point of trust (the cloud provider) in traditional RBAC systems and provides immutable, verifiable policy evaluation.
+
+\subsubsection{PureChain Network}
+
+
 
 \subsubsection{Summary}
-
-ClaimGuard's security posture rests on three pillars: (1) capability-based access with short lifetimes, (2) on-chain policy evaluation with immutable audit trails, and (3) defensive gateway design. While no system is perfect, ClaimGuard addresses the specific threat of honest-but-curious cloud providers and supports the multi-stakeholder, context-sensitive authorization scenarios prevalent in auto-insurance. Residual risks are acknowledged and mitigated through operational practices (key management, consensus redundancy, gateway failover) rather than cryptographic guarantees alone.
-
-The following section describes the experimental methodology and evaluation results.
+ClaimGuard's security posture rests on three pillars: (1) capability-based access with short lifetimes, (2) on-chain policy evaluation with immutable audit trails, and (3) defensive gateway design. While no system is perfect, ClaimGuard addresses the specific threat of honest-but-curious cloud providers and supports the multi-stakeholder, context-sensitive authorization scenarios prevalent in auto-insurance. Residual risks are acknowledged and mitigated through operational practices (key management, consensus redundancy, gateway failover) rather than cryptographic guarantees alone. The following section describes the experimental methodology and evaluation results.
 
 
 \section{System Implementation and Experimental Observation}
 \label{sec:implementation-and-observation}
 
-This section describes the ClaimGuard prototype implementation, experimental setup, evaluation methodology, and observed results. We evaluate ClaimGuard by comparing PureChain-backed ABAC with policy enforcement gateway against two cloud-RBAC baselines under normal, burst, adversarial, revocation, and policy-churn workloads. Unless noted, Experiment 1 (E1) uses local Hardhat (Ethereum-compatible Proof-of-Authority); Experiment 2 (E2) repeats key measurements on Sepolia testnet to capture public-network conditions.
+This section describes the ClaimGuard prototype implementation, the experimental setup, the evaluation methodology, and the observed results. We evaluate ClaimGuard by comparing PureChain-backed ABAC with policy enforcement gateway against two cloud-RBAC baselines under normal, burst, adversarial, revocation, and policy-churn workloads. Unless noted, Experiment 1 (E1) uses local Hardhat (Ethereum-compatible Proof-of-Authority); Experiment 2 (E2) repeats key measurements on Sepolia testnet to capture public-network conditions.
 
 \subsection{Experimental Setup}
 
@@ -503,21 +509,17 @@ concurrent users increases from 10 to 200.
 % \end{tabularx}
 % \label{tab:security-comparison}
 % \end{table}
-Overall, ClaimGuard sustains throughput sufficient for typical insurer access rates while providing stronger enforcement guarantees than RBAC.
+Overall, ClaimGuard maintains sufficient throughput for typical insurer access rates while providing stronger enforcement guarantees than RBAC.
 
 \subsection{Policy Update and Revocation Overhead (Q3)}
-
 We benchmarked three policy operations:
-
 \begin{enumerate}
 	\item adding a new policy rule,
 	\item updating workflow-stage constraints,
 	\item revoking a subject's access to all case assets.
 \end{enumerate}
-
 Each operation was repeated 10 times; Table~\ref{tab:policy} reports means
 and standard deviations.
-
 \begin{table}[!htbp]
 	\centering
 	\caption{Policy Update Latency Across Baseline Systems (mean $\pm$ std. dev.)}
@@ -532,22 +534,10 @@ and standard deviations.
 	\end{tabularx}
 	\label{tab:policy}
 \end{table}
-
-ClaimGuard's policy evaluation path is slower than Hybrid-Audit by 20$\times$
-due to full on-chain smart contract invocation, yet remains in the tens of
-milliseconds---acceptable for policy changes that are infrequent in practice
-(minutes to hours apart). The 128k gas cost reflects comprehensive policy rule
-evaluation and state updates on the blockchain. Standard deviation (2.3 ms)
-indicates some variance in block inclusion times, consistent with local network
-consensus variance.
-
-Hybrid-Audit is faster because it logs on-chain without enforcing on-chain, whereas ClaimGuard pays on-chain execution cost to obtain verifiable enforcement.
+ClaimGuard's policy evaluation path is 20$\times$ slower than Hybrid-Audit due to full on-chain smart contract invocations. Yet, it remains in the tens of milliseconds, which is acceptable for policy changes that are infrequent in practice (minutes to hours apart). The 128k gas cost reflects comprehensive policy rule evaluation and state updates on the blockchain. The standard deviation (2.3 ms) indicates some variance in block inclusion times, consistent with local network consensus. Hybrid-Audit is faster because it logs on-chain without enforcing on-chain, whereas ClaimGuard pays on-chain execution cost to obtain verifiable enforcement.
 
 \subsection{Policy Churn and Scale (E4)}
-
-To evaluate governance realism, we stress the \emph{policy plane} by growing the
-number of active rules and measuring ClaimGuard's authorization cost as policy
-count increases. We also test revocation effectiveness under churn.
+To evaluate governance realism, we focus on the \emph{policy plane} by increasing the number of active rules and measuring ClaimGuard's authorization cost as the policy count rises. We also test the effectiveness of revocation under churn.
 
 \begin{table}[!htbp]
 	\centering
@@ -596,30 +586,26 @@ rejects (authorized but denied) across all workloads.
 	\end{tabular}
 	\label{tab:correctness}
 \end{table}
-Allow rates are similar across modes (82.6--84.1\%), indicating that ABAC policies and RBAC equivalents produce comparable outcomes on this workload. ClaimGuard's slightly lower allow rate reflects stricter constraints (e.g., time windows, type/jurisdiction filters). No false accepts or false rejects were observed.
+Allow rates are similar across modes (82.6--84.1\%), indicating that ABAC policies and RBAC equivalents produce comparable outcomes on this workload. ClaimGuard's slightly lower allowance rate reflects stricter constraints (e.g., time windows, type/jurisdiction filters). No false accepts or false rejects were observed.
 
 \subsection{Security and Attack Resilience (Q5)}
 
-Under adversarial workload W3, ClaimGuard blocked replay, spoofing, direct cloud bypass, and token tampering; no unauthorized cloud-layer reads succeeded without a gateway-issued capability. This supports tamper-resistance even against a malicious-but-privileged cloud operator.
+Under adversarial workload W3, ClaimGuard blocked replay, spoofing, direct cloud bypass, and token tampering; no unauthorized cloud-layer reads succeeded without a gateway-issued capability. This supports tamper resistance even against a malicious but privileged cloud operator.
 
 \subsection{Resource Utilization}
-
 Average consumption remained stable across workloads: PureChain nodes (18--35\% CPU, 1.2\,GB RAM each), gateway (9--17\% CPU, 320\,MB RAM), and MinIO/IPFS (20--40\% CPU, 1.5\,GB RAM under W2).
 
 \subsection{Adversarial Attack Resistance (E3)}
-
 To validate ClaimGuard's security claims, we conducted a dedicated adversarial
 test suite (E3) evaluating five attack vectors against both the gateway and
 file server. These tests measure whether unauthorized evidence access remains
 impossible even under malicious or compromised conditions.
-
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[width=.45\textwidth]{./figures/e3_attack_block_rates.png}
+	\includegraphics[width=.42\textwidth]{./figures/e3_attack_block_rates.png}
 	\caption{E3 attack block rates by vector.}
 	\label{fig:e3-attacks}
 \end{figure}
-
 \begin{table}[ht]
 	\centering
 	\caption{E3 Attack Resistance}
@@ -635,18 +621,11 @@ impossible even under malicious or compromised conditions.
 	\end{tabular}
 	\label{tab:e3-attacks}
 \end{table}
-
-
 E3 confirms the core invariant: unauthorized evidence access is blocked at the file server (capability validation) and the gateway rejects malformed/abusive requests without granting access. The role-spoofing \emph{partial} result reflects input-validation differences for malformed addresses rather than authorization bypass; expired/tampered token rejection is also observed in E1.
 
 \subsection{Realistic Network Conditions: Local vs Public Testnet (E2)}
-
-To assess ClaimGuard's real-world viability, we deployed the full system on both
-a local Hardhat development node (representing optimal conditions) and the public
-Sepolia testnet (representing realistic blockchain network latency, RPC provider
-variability, and block confirmation times). This comparison isolates the overhead
-introduced by \emph{public blockchain infrastructure} while holding the gateway,
-application logic, and workload characteristics constant.
+To assess ClaimGuard's real-world viability, we deployed the full system on both a local Hardhat development node (representing optimal conditions) and the public Sepolia testnet (representing realistic blockchain network latency, RPC provider variability, and block confirmation times). This comparison isolates the overhead
+introduced by \emph{public blockchain infrastructure} while holding the gateway, application logic, and workload characteristics constant.
 
 \subsubsection{Access Latency}
 
@@ -673,7 +652,7 @@ Table~\ref{tab:e2-latency} compares end-to-end latency for the
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[width=.45\textwidth]{./figures/e2_latency_comparison.png}
+	\includegraphics[width=.42\textwidth]{./figures/e2_latency_comparison.png}
 	\caption{Access latency: local vs public network (E2).}
 	\label{fig:e2-latency}
 \end{figure}
@@ -702,7 +681,7 @@ performance under concurrency levels 10, 50, and 100.
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[width=.45\textwidth]{./figures/e2_throughput_comparison.png}
+	\includegraphics[width=.42\textwidth]{./figures/e2_throughput_comparison.png}
 	\caption{Access throughput: local vs public network (E2).}
 	\label{fig:e2-throughput}
 \end{figure}
@@ -733,7 +712,7 @@ and confirmation times.
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[width=.45\textwidth]{./figures/e2_policy_comparison.png}
+	\includegraphics[width=.42\textwidth]{./figures/e2_policy_comparison.png}
 	\caption{Policy confirmation time: local vs public network (E2).}
 	\label{fig:e2-policy}
 \end{figure}
@@ -752,62 +731,48 @@ governance operations (minutes to hours apart).
 E2 validates functional correctness under realistic network conditions while showing that most overhead comes from public RPC/confirmation time rather than contract compute. Sepolia throughput (142--373\,req/s) remains operationally viable, but policy updates should be treated as asynchronous administrative operations; consortium/private deployments reduce latency when needed.
 
 
-\section{Experimental Analysis and Discussion}
-\label{sec:discussion}
-
+\subsection{Experimental Analysis}
+%\label{sec:discussion}
 This section synthesizes the experimental observations presented in Section~IV, interprets the performance and security trade-offs, compares ClaimGuard against baseline approaches, and discusses the implications for production auto-insurance evidence workflows.
 
-\subsection{Performance Trade-offs: ClaimGuard vs. Cloud-Only RBAC}
-
-The baseline experiment (E1) demonstrates that ClaimGuard introduces a median access-check overhead of approximately 60--70\,ms compared to cloud-only RBAC (1.9\,ms at P50). This overhead arises from on-chain policy evaluation, RPC communication, and consensus latency inherent to blockchain-backed authorization. However, this latency remains operationally acceptable for evidence access workflows, which prioritize auditability and tamper-resistance over microsecond response times. ClaimGuard sustains 100--200\,requests/second under concurrent load, sufficient for multi-stakeholder insurance claim handling where access frequency is typically measured in tens to hundreds of requests per hour per active case rather than sustained high-frequency bursts.
+\subsubsection{Performance Trade-offs: ClaimGuard vs. Cloud-Only RBAC}
+The baseline experiment (E1) demonstrates that ClaimGuard introduces a median access-check overhead of approximately 60--70\,ms compared to cloud-only RBAC (1.9\,ms at P50). This overhead arises from on-chain policy evaluation, RPC communication, and the inherent consensus latency of blockchain-backed authorization. However, this latency remains operationally acceptable for evidence access workflows, which prioritize auditability and tamper-resistance over microsecond response times. ClaimGuard sustains 100--200\, requests/second under concurrent load, sufficient for multi-stakeholder insurance claim handling where access frequency is typically measured in tens to hundreds of requests per hour per active case rather than sustained high-frequency bursts.
 
 Policy operations (add, update, revoke) cost approximately 21.9\,ms and 128k gas on average. While higher than database updates, policy changes are infrequent administrative operations compared to access checks. The gas cost translates to under \$0.01 USD on many consortium or Layer-2 networks, making policy management economically feasible for production deployments. Revocation takes effect immediately without propagation delay, eliminating the dangerous grace period characteristic of distributed cloud-RBAC systems where credential invalidation must propagate across multiple enforcement points.
 
-The Hybrid-Audit baseline isolates the cost of on-chain logging (136\,ms at P50) versus full on-chain decision-making (ClaimGuard at 61\,ms). This counterintuitive result---logging alone incurs higher latency than decision-plus-logging---arises because Hybrid-Audit performs two sequential operations (local decision followed by asynchronous logging confirmation), while ClaimGuard performs a single synchronous on-chain check. This finding suggests that architectures attempting to "add blockchain for audit" to existing cloud systems may not achieve the latency benefits expected from offloading authorization.
+The Hybrid-Audit baseline isolates the cost of on-chain logging (136\,ms at P50) from that of full on-chain decision-making (ClaimGuard at 61\,ms). This counterintuitive result, logging alone incurs higher latency than decision-plus-logging, arises because Hybrid-Audit performs two sequential operations (local decision followed by asynchronous logging confirmation). In contrast, ClaimGuard performs a single synchronous on-chain check. This finding suggests that architectures attempting to "add blockchain for audit" to existing cloud systems may not achieve the latency benefits expected from offloading authorization.
 
-\subsection{Security Gains and Threat Mitigation}
+\subsubsection{Security Gains and Threat Mitigation}
 
-E3 security stress experiments confirm that ClaimGuard successfully blocks unauthorized access attempts across five attack vectors: cloud provider bypass (80\% block rate), gateway abuse (100\%), role spoofing (50\%, with caveats), token replay, and revocation evasion. The "partial" result for role spoofing reflects input-validation differences for malformed Ethereum addresses rather than authorization bypass; well-formed spoofed requests with invalid credentials were consistently rejected.
+E3 security stress experiments confirm that ClaimGuard successfully blocks unauthorized access attempts across five attack vectors: cloud provider bypass (80\% block rate), gateway abuse (100\%), role spoofing (50\%, with caveats), token replay, and revocation evasion. The "partial" result for role spoofing reflects input-validation differences for malformed Ethereum addresses rather than authorization bypass; well-formed spoofed requests with invalid credentials were consistently rejected. These results validate the core security hypothesis: capability-based access with gateway-enforced signatures prevents cloud operators from enumerating or retrieving evidence via direct storage API calls. Unlike encryption-only approaches (CP-ABE, proxy re-encryption) that couple authorization to key distribution, ClaimGuard's token-based model enables immediate revocation without key re-issuance or ciphertext re-encryption. The immutable on-chain audit trail provides forensic evidence for post-incident analysis, deterring insider abuse through transparency and non-repudiation. Compared to traditional cloud-RBAC, ClaimGuard eliminates the single point of trust represented by centralized IAM systems and database-backed permission tables. While introducing dependency on blockchain consensus liveness, this trade-off is favorable for regulated domains where policy integrity and audit verifiability outweigh the operational complexity of running consortium nodes.
 
-These results validate the core security hypothesis: capability-based access with gateway-enforced signatures prevents cloud operators from enumerating or retrieving evidence via direct storage API calls. Unlike encryption-only approaches (CP-ABE, proxy re-encryption) that couple authorization to key distribution, ClaimGuard's token-based model enables immediate revocation without key re-issuance or ciphertext re-encryption. The immutable on-chain audit trail provides forensic evidence for post-incident analysis, deterring insider abuse through transparency and non-repudiation.
+\subsubsection{Real-World Viability: Public Testnet Performance (E2)}
 
-Compared to traditional cloud-RBAC, ClaimGuard eliminates the single point of trust represented by centralized IAM systems and database-backed permission tables. While introducing dependency on blockchain consensus liveness, this trade-off is favorable for regulated domains where policy integrity and audit verifiability outweigh the operational complexity of running consortium nodes.
+Deploying ClaimGuard on Sepolia testnet reveals the performance impact of public blockchain infrastructure. Access latency increases to 244\,ms (P50) from 61\,ms on local Hardhat, primarily due to variability in public RPC providers and multi-second block confirmation times. Policy update confirmation times increase from 22\,ms to 25,389\,ms (25 seconds), dominated by Sepolia's 12-second block time. Despite these increases, Sepolia throughput (142--373\,req/s) remains operationally viable for evidence access, demonstrating that ClaimGuard can function on public infrastructure without requiring private consortium deployment. For production use cases requiring lower latency, organizations can deploy on consortium networks (Hyperledger Besu, Quorum, private Ethereum PoA) or Layer-2 solutions (Polygon, Optimism) to achieve local-network performance while retaining public settlement for cross-organizational disputes. The E2 findings highlight a key architectural decision: policy updates should be treated as asynchronous administrative operations initiated by governance workflows, not synchronous user-facing actions. Access checks, in contrast, require synchronous on-chain evaluation but benefit from caching strategies (e.g., short-lived subject attribute caches) to reduce repeated RPC calls for the same user within a session.
 
-\subsection{Real-World Viability: Public Testnet Performance (E2)}
+\subsubsection{Scalability and Policy Churn (E4)}
 
-Deploying ClaimGuard on Sepolia testnet reveals the performance impact of public blockchain infrastructure. Access latency increases to 244\,ms (P50) compared to 61\,ms on local Hardhat, primarily due to public RPC provider variability and multi-second block confirmation times. Policy update confirmation times increase from 22\,ms to 25,389\,ms (25 seconds), dominated by Sepolia's 12-second block time.
+E4 tests ClaimGuard's behavior under large policy counts (100--1000 policies) and high subject populations (500--1000 subjects). Median access latency remains stable (increasing from 61\,ms to only 71\,ms at 1000 policies), indicating that the on-chain policy evaluation algorithm scales sublinearly with policy count. This is achieved through indexed storage and early-exit evaluation: if the first matching policy grants access, subsequent policies need not be evaluated. Gas costs for policy operations scale linearly with policy size but remain under 200k gas even for complex multi-condition rules. Batch policy updates (adding multiple policies in a single transaction) reduce per-policy gas overhead by amortizing transaction costs. These results suggest ClaimGuard can handle enterprise-scale policy sets (thousands of rules across hundreds of resources) without prohibitive cost or latency degradation.
 
-Despite these increases, Sepolia throughput (142--373\,req/s) remains operationally viable for evidence access, demonstrating that ClaimGuard can function on public infrastructure without requiring private consortium deployment. For production use cases requiring lower latency, organizations can deploy on consortium networks (Hyperledger Besu, Quorum, private Ethereum PoA) or Layer-2 solutions (Polygon, Optimism) to achieve local-network performance while retaining public settlement for cross-organizational disputes.
+\subsubsection{Correctness and Functional Validation}
 
-The E2 findings highlight a key architectural decision: policy updates should be treated as asynchronous administrative operations initiated by governance workflows, not synchronous user-facing actions. Access checks, in contrast, require synchronous on-chain evaluation but benefit from caching strategies (e.g., short-lived subject attribute caches) to reduce repeated RPC calls for the same user within a session.
+Functional correctness tests (Q4) observed zero false accepts (unauthorized access granted) and zero false rejects (legitimate access denied) across all tested scenarios in E1. Access grant rates matched RBAC baseline expectations within 2.5\%, confirming that ClaimGuard's ABAC evaluation logic correctly implements intended policies. This high correctness rate is critical for production deployment: false rejects disrupt legitimate workflows, while false accepts create regulatory liability and privacy violations. The correctness guarantee depends on accurate policy authoring and subject attribute management. ClaimGuard delegates policy creation to governance workflows (e.g., multi-signature approval for policy additions) but does not prevent administrators from writing overly permissive rules. Future work on policy conflict detection and least-privilege analysis tools would strengthen this aspect.
 
-\subsection{Scalability and Policy Churn (E4)}
+\subsubsection{Implications for Production Deployment}
 
-E4 tests ClaimGuard's behavior under large policy counts (100--1000 policies) and high subject populations (500--1000 subjects). Median access latency remains stable (increasing from 61\,ms to only 71\,ms at 1000 policies), indicating that the on-chain policy evaluation algorithm scales sublinearly with policy count. This is achieved through indexed storage and early-exit evaluation: if the first matching policy grants access, subsequent policies need not be evaluated.
-
-Gas costs for policy operations scale linearly with policy size but remain under 200k gas even for complex multi-condition rules. Batch policy updates (adding multiple policies in a single transaction) reduce per-policy gas overhead through amortized transaction cost. These results suggest ClaimGuard can handle enterprise-scale policy sets (thousands of rules across hundreds of resources) without prohibitive cost or latency degradation.
-
-\subsection{Correctness and Functional Validation}
-
-Functional correctness tests (Q4) observed zero false accepts (unauthorized access granted) and zero false rejects (legitimate access denied) across all tested scenarios in E1. Access grant rates matched RBAC baseline expectations within 2.5\%, confirming that ClaimGuard's ABAC evaluation logic correctly implements intended policies. This high correctness rate is critical for production deployment: false rejects disrupt legitimate workflows, while false accepts create regulatory liability and privacy violations.
-
-The correctness guarantee depends on accurate policy authoring and subject attribute management. ClaimGuard delegates policy creation to governance workflows (e.g., multi-signature approval for policy additions) but does not prevent administrators from writing overly permissive rules. Future work on policy conflict detection and least-privilege analysis tools would strengthen this aspect.
-
-\subsection{Implications for Production Deployment}
-
-The experimental findings position ClaimGuard as a viable architecture for production auto-insurance evidence workflows. Organizations prioritizing audit verifiability, insider threat mitigation, and multi-stakeholder governance should deploy ClaimGuard on consortium or Layer-2 networks to achieve <100\,ms access latency. Those requiring public infrastructure compatibility can accept 200--300\,ms latency in exchange for reduced operational overhead (no private node management).
-
-Key operational recommendations include: (1) treat policy updates as asynchronous governance operations rather than user-facing actions; (2) implement subject attribute caching with short TTLs to reduce RPC load; (3) use batch policy updates to amortize gas costs; (4) deploy gateway clusters for availability and load distribution; and (5) integrate capability token validation into existing cloud storage authorization layers (e.g., S3 bucket policies, IPFS pinning services with custom auth hooks).
+The experimental findings position ClaimGuard as a viable architecture for production auto-insurance evidence workflows. Organizations prioritizing audit verifiability, insider threat mitigation, and multi-stakeholder governance should deploy ClaimGuard on consortium or Layer-2 networks to achieve <100\,ms access latency. Those requiring public infrastructure compatibility can accept 200--300\,ms latency in exchange for reduced operational overhead (no private node management). Key operational recommendations include: (1) treat policy updates as asynchronous governance operations rather than user-facing actions; (2) implement subject attribute caching with short TTLs to reduce RPC load; (3) use batch policy updates to amortize gas costs; (4) deploy gateway clusters for availability and load distribution; and (5) integrate capability token validation into existing cloud storage authorization layers (e.g., S3 bucket policies, IPFS pinning services with custom auth hooks).
 
 \section{Conclusion}
+This work extends the earlier study, ClaimGuard~\cite{eneh2025claimguard}, by providing a production-oriented validation of its blockchain-based, attribute-based access control (ABAC) architecture for multi-stakeholder auto-insurance. Beyond the initial architectural presentation (smart-contract policy layer, policy enforcement gateway, and capability-token authorization) and local-network feasibility results, the extension closes key evaluation gaps via (i) systematic baseline comparisons, (ii) deployment under real-world network conditions, (iii) security stress testing, and (iv) large-scale validation, collectively substantiating deployment readiness. ClaimGuard mitigates limitations in cloud-centric RBAC and prior blockchain access-control designs through three mechanisms: (1) verifiable on-chain policy evaluation that encodes $\langle\text{subject}, \text{resource}, \text{action}, \text{context}\rangle$ as smart-contract, enforced attributes; (2) a gateway that translates on-chain decisions into short-lived capability tokens to mediate access to cloud/IPFS-backed data; and (3) immutable, tamper-evident audit trails covering access attempts and policy evolution. By decoupling authorization from encryption, the design achieves transparent, storage-agnostic enforcement while preserving compatibility with existing storage systems.
 
-This paper extended ClaimGuard~\cite{eneh2025claimguard}, a blockchain-based attribute-based access control architecture initially presented at a prior conference, with comprehensive evaluation across four experimental dimensions that validate its readiness for production deployment in multi-stakeholder auto-insurance environments. While the conference publication introduced the core architecture comprising on-chain smart contracts, policy enforcement gateway, and capability token model with initial feasibility demonstration on local networks, this journal extension addresses critical evaluation gaps through systematic baseline comparison, real-world network deployment, security stress testing, and large-scale validation.
+Across E1-E4 (baseline, real-world networking, security stress, and policy-scale tests), \textsc{ClaimGuard} meets production insurance requirements. It sustains $>800$~req/s with modest overhead versus cloud-only RBAC (median $+45$-$60$~ms), keeps on-chain ABAC evaluation low-latency at $\geq 10^{3}$ policies, applies revocation immediately (no propagation delay), and achieves perfect functional correctness ($0$ false accepts/rejects). Adversarial tests show it blocks cloud-provider bypass, gateway circumvention, role spoofing, and replay attacks. More broadly, the architecture generalizes to other multi-stakeholder domains that require verifiable, fine-grained control over off-chain resources, supporting decentralized ABAC as a practical, more auditable alternative for enterprise data governance.
 
-The ClaimGuard architecture addresses fundamental limitations of both traditional cloud-centric RBAC and existing blockchain approaches through three core mechanisms: verifiable on-chain policy evaluation using smart contracts that model subjects, resources, actions, and contextual attributes; a policy enforcement gateway that bridges blockchain decisions to cloud or IPFS storage via short-lived capability tokens; and immutable audit trails providing tamper-evident records of all access attempts and policy changes. This decoupling of authorization from encryption enables transparent, resource-agnostic enforcement while maintaining compatibility with existing storage infrastructure.
 
-Our experimental evaluation, spanning quantitative baseline comparison (E1), real-world network conditions (E2), security stress testing (E3), and policy scale analysis (E4), demonstrates that ClaimGuard achieves the operational requirements for production insurance workflows. The system maintains throughput suitable for evidence-access workloads (exceeding 800 requests/second) while incurring modest latency overhead compared to cloud-only RBAC (median increase of 45-60ms). On-chain policy evaluation remains low-latency even under large policy counts (1000+ policies), revocation takes effect immediately without propagation delay, and functional correctness tests observed zero false accepts or false rejects across all tested scenarios. Security experiments confirmed that ClaimGuard successfully blocks unauthorized access attempts including cloud provider bypass, gateway circumvention, role spoofing, and replay attacks, demonstrating resilience against both insider and external threats.
 
-The broader implications of this work extend beyond insurance. The ClaimGuard architecture provides a reusable pattern for any multi-stakeholder domain requiring verifiable, fine-grained access control over off-chain resources---including healthcare records, legal discovery, supply chain documentation, and regulatory compliance workflows. By demonstrating that blockchain-based ABAC can achieve practical performance while delivering stronger security and auditability guarantees than centralized alternatives, this work validates decentralized authorization as a viable approach for enterprise data governance.
+
+% This paper extended ClaimGuard~\cite{eneh2025claimguard}, a blockchain-based attribute-based access control architecture initially presented at a prior conference, with a comprehensive evaluation across four experimental dimensions that validate its readiness for production deployment in multi-stakeholder auto-insurance environments. While the conference publication introduced the core architecture comprising on-chain smart contracts, a policy enforcement gateway, and a capability token model, with an initial feasibility demonstration on local networks, this journal extension addresses critical evaluation gaps through systematic baseline comparison, real-world network deployment, security stress testing, and large-scale validation. The ClaimGuard architecture addresses fundamental limitations of both traditional cloud-centric RBAC and existing blockchain approaches through three core mechanisms: verifiable on-chain policy evaluation using smart contracts that model subjects, resources, actions, and contextual attributes; a policy enforcement gateway that bridges blockchain decisions to cloud or IPFS storage via short-lived capability tokens; and immutable audit trails providing tamper-evident records of all access attempts and policy changes. This decoupling of authorization from encryption enables transparent, resource-agnostic enforcement while maintaining compatibility with existing storage infrastructure.
+
+% Our experimental evaluation, spanning quantitative baseline comparison (E1), real-world network conditions (E2), security stress testing (E3), and policy-scale analysis (E4), demonstrates that ClaimGuard meets the operational requirements for production insurance workflows. The system maintains throughput suitable for evidence-access workloads (exceeding 800 requests/second) while incurring modest latency overhead compared to cloud-only RBAC (median increase of 45-60ms). On-chain policy evaluation remains low-latency even under large policy counts (1000+ policies), revocation takes effect immediately without propagation delay, and functional correctness tests observed zero false accepts or false rejects across all tested scenarios. Security experiments confirmed that ClaimGuard successfully blocks unauthorized access attempts, including cloud provider bypass, gateway circumvention, role spoofing, and replay attacks, demonstrating resilience against both insider and external threats. The broader implications of this work extend beyond insurance. The ClaimGuard architecture provides a reusable pattern for any multi-stakeholder domain requiring verifiable, fine-grained access control over off-chain resources, including healthcare records, legal discovery, supply chain documentation, and regulatory compliance workflows. By demonstrating that blockchain-based ABAC can achieve practical performance while delivering stronger security and auditability guarantees than centralized alternatives, this work validates decentralized authorization as a viable approach for enterprise data governance.
 
 \subsection{Limitations and Future Work}
 
