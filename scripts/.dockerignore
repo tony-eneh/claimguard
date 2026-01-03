@@ -1,0 +1,5 @@
+# Docker ignore file for ClaimGuard
+node_modules
+*.log
+.env
+.git

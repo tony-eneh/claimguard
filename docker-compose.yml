@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: claimguard-postgres
+    environment:
+      POSTGRES_DB: audit_logs
+      POSTGRES_USER: claimguard
+      POSTGRES_PASSWORD: testpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/setup_postgres_audit.sql:/docker-entrypoint-initdb.d/setup.sql
+    shm_size: 256mb
+    networks:
+      - claimguard-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U claimguard"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongo:
+    image: mongo:7
+    container_name: claimguard-mongo
+    environment:
+      MONGO_INITDB_DATABASE: audit_logs
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./scripts/setup_mongo_audit.js:/docker-entrypoint-initdb.d/setup.js
+    networks:
+      - claimguard-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local
+  mongo_data:
+    driver: local
+
+networks:
+  claimguard-network:
+    driver: bridge
