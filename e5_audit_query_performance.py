@@ -35,7 +35,7 @@ PG_CONFIG = {
     'database': 'audit_logs',
     'user': 'claimguard',
     'password': 'testpass',
-    'port': 5432
+    'port': 55432  # mapped host port to avoid conflict with local Postgres
 }
 
 MONGO_URI = 'mongodb://localhost:27017/'
@@ -45,6 +45,8 @@ MONGO_DB = 'audit_logs'
 HARDHAT_URL = 'http://127.0.0.1:8545'
 
 # Load contract info
+CONTRACT_NAME = 'AccessAuditLog'
+
 def load_contract_abi(contract_name: str) -> dict:
     """Load contract ABI from artifacts."""
     artifact_path = f'artifacts/contracts/{contract_name}.sol/{contract_name}.json'
@@ -67,21 +69,26 @@ print(f"Connected to Hardhat: {w3.is_connected()}")
 try:
     with open('deployments/latest.json', 'r') as f:
         deployment = json.load(f)
-        AUDIT_LOG_ADDRESS = deployment.get('AuditLog', {}).get('address')
-except:
+        raw_address = (
+            deployment.get('AccessAuditLog', {}).get('address')
+            or deployment.get('AuditLog', {}).get('address')
+        )
+        AUDIT_LOG_ADDRESS = Web3.to_checksum_address(raw_address) if raw_address else None
+except Exception:
     AUDIT_LOG_ADDRESS = None
-    print("Warning: AuditLog contract address not found. Will skip blockchain queries.")
+    print("Warning: AccessAuditLog contract address not found. Will skip blockchain queries.")
 
 if AUDIT_LOG_ADDRESS:
-    audit_log_abi = load_contract_abi('AuditLog')
+    audit_log_abi = load_contract_abi(CONTRACT_NAME)
     audit_log = w3.eth.contract(address=AUDIT_LOG_ADDRESS, abi=audit_log_abi)
-    print(f"AuditLog contract loaded at {AUDIT_LOG_ADDRESS}")
+    print(f"AccessAuditLog contract loaded at {AUDIT_LOG_ADDRESS}")
 
 
 # Data generation functions
 def generate_random_address() -> str:
-    """Generate random Ethereum address."""
-    return '0x' + ''.join(random.choices('0123456789abcdef', k=40))
+    """Generate random Ethereum checksum address."""
+    raw = '0x' + ''.join(random.choices('0123456789abcdef', k=40))
+    return Web3.to_checksum_address(raw)
 
 def generate_random_hash() -> str:
     """Generate random keccak256 hash."""
@@ -120,18 +127,20 @@ def log_to_mongo(event: Dict):
     mongo_collection.insert_one(event)
 
 def log_to_blockchain(event: Dict, account):
-    """Log event to blockchain (AuditLog contract)."""
+    """Log event to blockchain (AccessAuditLog contract)."""
     if not AUDIT_LOG_ADDRESS:
         return
     
     try:
+        from_account = Web3.to_checksum_address(account)
+        resource_bytes = Web3.to_bytes(hexstr=event['resourceIdHash'])
+        action_hash = Web3.keccak(text=event['action'])
         tx = audit_log.functions.logAccess(
-            event['subject'],
-            Web3.keccak(text=event['resourceIdHash']),
-            event['action'],
+            Web3.to_checksum_address(event['subject']),
+            resource_bytes,
+            action_hash,
             event['allowed']
-        ).transact({'from': account})
-        
+        ).transact({'from': from_account})
         receipt = w3.eth.wait_for_transaction_receipt(tx)
         return receipt
     except Exception as e:
@@ -221,12 +230,11 @@ def query_blockchain_by_subject(subject: str, from_block: int, to_block: int) ->
     """Query blockchain by subject."""
     if not AUDIT_LOG_ADDRESS:
         return 0.0, 0
-    
     start = time.time()
     events = audit_log.events.AccessChecked.get_logs(
-        fromBlock=from_block,
-        toBlock=to_block,
-        argument_filters={'subject': subject}
+        from_block=from_block,
+        to_block=to_block,
+        argument_filters={'subject': Web3.to_checksum_address(subject)}
     )
     latency = (time.time() - start) * 1000
     return latency, len(events)
@@ -235,12 +243,12 @@ def query_blockchain_by_resource(resource_hash: str, from_block: int, to_block: 
     """Query blockchain by resource hash."""
     if not AUDIT_LOG_ADDRESS:
         return 0.0, 0
-    
     start = time.time()
+    resource_bytes = Web3.to_bytes(hexstr=resource_hash)
     events = audit_log.events.AccessChecked.get_logs(
-        fromBlock=from_block,
-        toBlock=to_block,
-        argument_filters={'resourceIdHash': Web3.keccak(text=resource_hash)}
+        from_block=from_block,
+        to_block=to_block,
+        argument_filters={'resourceIdHash': resource_bytes}
     )
     latency = (time.time() - start) * 1000
     return latency, len(events)
@@ -252,8 +260,8 @@ def query_blockchain_time_range(from_block: int, to_block: int) -> Tuple[float, 
     
     start = time.time()
     events = audit_log.events.AccessChecked.get_logs(
-        fromBlock=from_block,
-        toBlock=to_block
+        from_block=from_block,
+        to_block=to_block
     )
     latency = (time.time() - start) * 1000
     return latency, len(events)
@@ -265,9 +273,9 @@ def query_blockchain_all_denials(from_block: int, to_block: int) -> Tuple[float,
     
     start = time.time()
     events = audit_log.events.AccessChecked.get_logs(
-        fromBlock=from_block,
-        toBlock=to_block,
-        argument_filters={'allowed': False}
+        from_block=from_block,
+        to_block=to_block,
+        argument_filters={'allow': False}
     )
     latency = (time.time() - start) * 1000
     return latency, len(events)
@@ -315,24 +323,23 @@ async def run_experiment():
         # Get blockchain block range (if available)
         start_block = w3.eth.block_number if AUDIT_LOG_ADDRESS else 0
         
-        # Note: Blockchain logging would take too long for large event counts
-        # For production, we'd batch transactions or use a separate test
-        if AUDIT_LOG_ADDRESS and event_count <= 100:
-            print("Logging to blockchain (limited to 100 events)...")
+        if AUDIT_LOG_ADDRESS:
+            log_count = min(event_count, 500)  # cap to keep runtime reasonable
+            print(f"Logging {log_count} events to blockchain...")
             accounts = w3.eth.accounts
-            for event in events[:100]:
+            for event in events[:log_count]:
                 log_to_blockchain(event, accounts[0])
         
         end_block = w3.eth.block_number if AUDIT_LOG_ADDRESS else 0
         
-        # Run queries
-        print("\nRunning query tests...")
-        
-        # Select random test queries
-        test_subject = random.choice(test_subjects)
-        test_resource = random.choice(test_resources)
+        # Choose subjects/resources that are guaranteed to exist in the logged set
+        test_subject = events[0]['subject']
+        test_resource = events[0]['resourceIdHash']
         test_start_date = datetime.now() - timedelta(days=180)
         test_end_date = datetime.now() - timedelta(days=90)
+
+        # Run queries
+        print("\nRunning query tests...")
         
         for pattern in QUERY_PATTERNS:
             print(f"  Testing pattern: {pattern}")

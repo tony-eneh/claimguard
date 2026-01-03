@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: claimguard
       POSTGRES_PASSWORD: testpass
     ports:
-      - "5432:5432"
+      - "55432:5432"  # host port avoids conflict with local Postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./scripts/setup_postgres_audit.sql:/docker-entrypoint-initdb.d/setup.sql
