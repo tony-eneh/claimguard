@@ -19,9 +19,16 @@ matplotlib.use('Agg')
 
 # Set style for publication-quality figures
 plt.style.use('seaborn-v0_8-paper')
-matplotlib.rcParams['font.size'] = 10
+matplotlib.rcParams['font.size'] = 18
 matplotlib.rcParams['font.family'] = 'serif'
 matplotlib.rcParams['font.serif'] = ['Times New Roman']
+matplotlib.rcParams['axes.labelsize'] = 18
+matplotlib.rcParams['axes.titlesize'] = 20
+matplotlib.rcParams['xtick.labelsize'] = 16
+matplotlib.rcParams['ytick.labelsize'] = 16
+matplotlib.rcParams['legend.fontsize'] = 16
+matplotlib.rcParams['lines.linewidth'] = 2.5
+matplotlib.rcParams['lines.markersize'] = 10
 
 # Read results
 print("Loading experiment results...")
@@ -46,10 +53,15 @@ stats.columns = ['_'.join(col).strip('_') for col in stats.columns.values]
 # Create output directory
 os.makedirs('papers/3_conference/figures', exist_ok=True)
 
-# Figure 1: Query Latency vs Event Count (4 subplots)
-print("\nGenerating Figure 1: Query Latency vs Event Count...")
-fig, axes = plt.subplots(2, 2, figsize=(10, 8))
+# Generate 4 separate figures for each query pattern
+print("\nGenerating Figures 1-4: Query Latency vs Event Count (separate plots)...")
 patterns = ['by_subject', 'by_resource', 'time_range', 'all_denials']
+pattern_filenames = {
+    'by_subject': 'e5_latency_by_subject',
+    'by_resource': 'e5_latency_by_resource',
+    'time_range': 'e5_latency_time_range',
+    'all_denials': 'e5_latency_all_denials'
+}
 pattern_titles = {
     'by_subject': 'By Subject',
     'by_resource': 'By Resource',
@@ -57,34 +69,35 @@ pattern_titles = {
     'all_denials': 'All Denials'
 }
 
-for idx, pattern in enumerate(patterns):
-    ax = axes[idx // 2, idx % 2]
+for pattern in patterns:
+    fig, ax = plt.subplots(figsize=(7, 5))
     data = stats[stats['pattern'] == pattern]
     
     # Plot with error bars
     ax.errorbar(data['event_count'], data['blockchain_latency_ms_median'],
                 yerr=data['blockchain_latency_ms_std'],
-                marker='o', capsize=3, label='Blockchain', linewidth=2)
+                marker='o', capsize=4, label='Blockchain')
     ax.errorbar(data['event_count'], data['postgres_latency_ms_median'],
                 yerr=data['postgres_latency_ms_std'],
-                marker='s', capsize=3, label='PostgreSQL', linewidth=2)
+                marker='s', capsize=4, label='PostgreSQL')
     ax.errorbar(data['event_count'], data['mongo_latency_ms_median'],
                 yerr=data['mongo_latency_ms_std'],
-                marker='^', capsize=3, label='MongoDB', linewidth=2)
+                marker='^', capsize=4, label='MongoDB')
     
-    ax.set_xlabel('Event Count', fontsize=10)
-    ax.set_ylabel('Median Latency (ms)', fontsize=10)
-    ax.set_title(pattern_titles[pattern], fontsize=11, fontweight='bold')
-    ax.legend(fontsize=8, loc='best')
+    ax.set_xlabel('Event Count')
+    ax.set_ylabel('Median Latency (ms)')
+    # No title - use LaTeX caption instead
+    ax.legend(loc='best')
     ax.grid(True, alpha=0.3, linestyle='--')
     ax.set_xscale('log')
     ax.set_yscale('log')
-
-plt.tight_layout()
-plt.savefig('papers/3_conference/figures/e5_query_latency.png', dpi=300, bbox_inches='tight')
-plt.savefig('papers/3_conference/figures/e5_query_latency.pdf', bbox_inches='tight')
-print("  Saved: papers/3_conference/figures/e5_query_latency.{png,pdf}")
-plt.close()
+    
+    plt.tight_layout()
+    filename = pattern_filenames[pattern]
+    plt.savefig(f'papers/3_conference/figures/{filename}.png', dpi=300, bbox_inches='tight')
+    plt.savefig(f'papers/3_conference/figures/{filename}.pdf', bbox_inches='tight')
+    print(f"  Saved: papers/3_conference/figures/{filename}.{{png,pdf}}")
+    plt.close()
 
 # Figure 2: Comparison at 10K Events (Bar Chart)
 print("\nGenerating Figure 2: Latency Comparison at 10K Events...")
@@ -106,12 +119,12 @@ bars1 = ax.bar(x - width, blockchain_vals, width, label='Blockchain', color='#1f
 bars2 = ax.bar(x, postgres_vals, width, label='PostgreSQL', color='#ff7f0e')
 bars3 = ax.bar(x + width, mongo_vals, width, label='MongoDB', color='#2ca02c')
 
-ax.set_xlabel('Query Pattern', fontsize=11)
-ax.set_ylabel('Median Latency (ms)', fontsize=11)
-ax.set_title('Query Latency Comparison at 10K Events', fontsize=12, fontweight='bold')
+ax.set_xlabel('Query Pattern')
+ax.set_ylabel('Median Latency (ms)')
+# No title - use LaTeX caption instead
 ax.set_xticks(x)
 ax.set_xticklabels([pattern_titles[p] for p in patterns], rotation=15, ha='right')
-ax.legend(fontsize=10)
+ax.legend(loc='best')
 ax.grid(True, alpha=0.3, axis='y', linestyle='--')
 ax.set_yscale('log')
 
