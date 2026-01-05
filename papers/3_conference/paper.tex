@@ -9,6 +9,7 @@
 \usepackage{url}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{makecell}
 
 % Code listing style
 \lstset{
@@ -42,26 +43,26 @@
 % Title and authors
 \title{Query Performance Analysis of Blockchain-Based Audit Trails for Insurance Access Control}
 
-\author{\IEEEauthorblockN{Anthony Uchenna Eneh $^{1}$, Love Allen Chijioke Ahakonye $^{2}$, Jae Min Lee $^{1}$, Dong-Seong Kim $^{1}$ $^{\ast}$} 
-\IEEEauthorblockA{$^{1}$ IT-Convergence Engineering, \textit{Kumoh National Institute of Technology}, Gumi, South Korea \\
-$^{\ast}$ NSLab Co. Ltd., Gumi, South Korea,
-\textit{Kumoh National Institute of Technology}, Gumi, South Korea}
-\IEEEauthorblockA{$^{2}$ ICT Convergence Research Center, 
-\textit{Kumoh National of Technology}, Gumi, South Korea}
-{(anthony, loveahakonye, dskim, ljmpaul)}@kumoh.ac.kr}
+\author{\IEEEauthorblockN{Anthony Uchenna Eneh $^{1}$, Love Allen Chijioke Ahakonye $^{2}$, Jae Min Lee $^{1}$, Dong-Seong Kim $^{1}$ $^{\ast}$}
+	\IEEEauthorblockA{$^{1}$ IT-Convergence Engineering, \textit{Kumoh National Institute of Technology}, Gumi, South Korea \\
+		$^{\ast}$ NSLab Co. Ltd., Gumi, South Korea,
+		\textit{Kumoh National Institute of Technology}, Gumi, South Korea}
+	\IEEEauthorblockA{$^{2}$ ICT Convergence Research Center,
+		\textit{Kumoh National of Technology}, Gumi, South Korea}
+	{(anthony, loveahakonye, dskim, ljmpaul)}@kumoh.ac.kr}
 \maketitle
 
 
 \begin{abstract}
-Blockchain-based access control offers tamper-proof audit trails for regulatory compliance, but prior work has not quantified query performance, critical for compliance workflows. We present the first comparison of Ethereum event logs against PostgreSQL and MongoDB for audit queries, benchmarking four patterns (by subject, resource, time range, and denials) across 100--10,000 events. Results show blockchain indexed queries are 6--8$\times$ slower than PostgreSQL while scan-heavy queries are 35--41$\times$ slower, with significantly higher gas costs, trading latency for immutability. These findings inform hybrid architectures: routing critical decisions to blockchain while delegating routine logs to databases.
+	Blockchain-based access control offers tamper-proof audit trails for regulatory compliance, but prior work has not quantified query performance, critical for compliance workflows. We present the first comparison of Ethereum event logs against PostgreSQL and MongoDB for audit queries, benchmarking four patterns (by subject, resource, time range, and denials) across 100--10,000 events. Results show blockchain indexed queries are 6--8$\times$ slower than PostgreSQL while scan-heavy queries are 35--41$\times$ slower, with significantly higher gas costs, trading latency for immutability. These findings inform hybrid architectures: routing critical decisions to blockchain while delegating routine logs to databases.
 \end{abstract}
 
 \section{Introduction}
-Auto-insurance claims processing involves sensitive evidence across multiple stakeholders, with regulatory frameworks (GDPR, HIPAA) mandating comprehensive audit trails. Compliance officers routinely query these logs: ``Show all unauthorized accesses in Q4'' or ``List accesses to record \#12345.'' Traditional centralized systems suffer from tampering vulnerability \cite{centralized_iam}. ClaimGuard \cite{claimguard_conf}, a blockchain-based ABAC system, addresses this by emitting immutable audit events to Ethereum. Prior work demonstrated authorization correctness but \textbf{never quantified audit log queryability}, a critical gap.
+Auto-insurance claims processing involves sensitive evidence across multiple stakeholders, with regulatory frameworks (GDPR, HIPAA) mandating comprehensive audit trails. Traditional centralized systems suffer from tampering vulnerability \cite{centralized_iam}. ClaimGuard \cite{claimguard_conf}, a blockchain-based ABAC system, addresses this by emitting immutable audit events to Ethereum. Prior work demonstrated authorization correctness but \textbf{never quantified audit log queryability}, a critical gap.
 
-Related work on blockchain audit logging includes BLSQ~\cite{li2024blsq} (Merkle tree optimization without database comparison), BCALS~\cite{bcals2022} (insertion time, not query latency), hybrid blockchain-database benchmarks~\cite{hybrid_bcdb2022} (write throughput only), and VeriBench~\cite{veribench2023} (verification overhead). Blockchain ABAC systems~\cite{oliveira2022smartaccess,ullah2024ehr} lack query benchmarks.
+Related work on blockchain audit logging includes BLSQ~\cite{li2024blsq} (Merkle tree optimization), BCALS~\cite{bcals2022} (insertion time), hybrid benchmarks~\cite{hybrid_bcdb2022} (write throughput), and VeriBench~\cite{veribench2023} (verification overhead). Blockchain ABAC systems~\cite{oliveira2022smartaccess,ullah2024ehr} lack query benchmarks.
 
-This paper provides the first audit query performance analysis of blockchain-based access control, comparing Ethereum, PostgreSQL 16, and MongoDB 7 across four compliance patterns (100--10K events) with storage cost analysis and hybrid architecture recommendations.
+This paper provides the first audit query performance analysis of blockchain-based access control, comparing Ethereum, PostgreSQL 16, and MongoDB 7 across four compliance patterns (100--10K events).
 
 %\section{Related Work}
 
@@ -109,69 +110,91 @@ The Policy Enforcement Gateway (PEG) calls \texttt{logAccess()} after evaluating
 
 \subsection{Baseline Systems}
 
-\textbf{PostgreSQL 16:} Traditional relational database with B-tree indexes on \texttt{subject}, \texttt{resource\_id\_hash}, \texttt{timestamp}, and \texttt{allowed}. Partial index on \texttt{WHERE allowed = false} optimizes denial queries. Deployed in Docker (postgres:16-alpine).
-
-\textbf{MongoDB 7:} Document store with indexes on all query fields. Schema validation enforces structure. Deployed in Docker (mongo:7).
-
-Both baselines run on the same hardware as Ethereum (Hardhat local network), ensuring fair comparison.
+\textbf{PostgreSQL 16:} B-tree indexes on \texttt{subject}, \texttt{resource\_id\_hash}, \texttt{timestamp}, and \texttt{allowed}; partial index optimizes denial queries.
+\textbf{MongoDB 7:} Indexes on all query fields with schema validation.
+Both deployed in Docker on the same hardware as Ethereum (Hardhat local network).
 
 \subsection{Experimental Design}
 
-\textbf{Event Generation:} We generate 100, 1K, 5K, and 10K synthetic audit events with realistic distributions: 200 unique subjects (Ethereum addresses), 1000 unique resources (evidence items), 6 action types (READ, APPEND, UPDATE, DELETE, ADJUDICATE, DISCLOSE), and 80\% allowed / 20\% denied ratio.
+\textbf{Event Generation:} 100--10K synthetic events with 200 subjects, 1000 resources, 6 action types, and 80\% allowed / 20\% denied ratio.
 
-\textbf{Query Patterns:} We evaluate four compliance-driven query patterns. \textit{By Subject} retrieves all accesses by a specific user (e.g., ``What did 0x123... access?'') for compliance audits. \textit{By Resource} identifies all subjects who accessed a specific evidence item for forensic analysis. \textit{Time Range} queries return all accesses within a date window for periodic reporting. \textit{All Denials} filters unauthorized access attempts for security monitoring.
+\textbf{Query Patterns:} Four compliance-driven patterns: \textit{By Subject} (user audit), \textit{By Resource} (forensic analysis), \textit{Time Range} (periodic reporting), and \textit{All Denials} (security monitoring).
 
-\textbf{Metrics:} Query latency (median, P90, P99 over 10 repetitions), result count, storage costs. We measure end-to-end latency including network overhead (JSON-RPC for blockchain, TCP for databases).
+\textbf{Metrics:} Query latency (median, P90, P99 over 10 repetitions) and storage costs, including network overhead.
 
-\textbf{Environment:} Hardhat 3.0 (local Ethereum node), PostgreSQL 16-alpine, MongoDB 7 in Docker, same machine (Intel i7, 16GB RAM, SSD). Ensures minimal network variability for local testing.
+\textbf{Environment:} Hardhat 3.0, PostgreSQL 16, MongoDB 7 in Docker (Intel i7, 16GB RAM, SSD).
 
 \section{Results and Discussion}
 
+\subsection{Comparison with Related Works}
+
+Table~\ref{tab:comparison} compares ClaimGuard against related blockchain systems. While prior works focused on write throughput and access control latency, none evaluated audit log \textit{query} performance against traditional databases.
+
+\begin{table}[t]
+	\centering
+	\caption{Performance Comparison with Related Works}
+	\label{tab:comparison}
+	\scalebox{0.72}{
+		\begin{tabular}{lcccc}
+			\toprule
+			System                                     & \makecell{Write                                                     \\Throughput\\(tps)} & \makecell{Insertion\\Latency\\(ms)} & \makecell{Query\\Latency\\(ms)} & \makecell{Gas Cost\\(per event)} \\
+			\midrule
+			SmartAccess~\cite{oliveira2022smartaccess} & 10--50             & 200--800       & --        & 50--150K          \\
+			Hybrid BCDB~\cite{hybrid_bcdb2022}         & 100--500$^\dagger$ & --             & --        & --                \\
+			G{\"u}rsoy et al.~\cite{gursoy2020eth}     & --                 & 400$^\ddagger$ & 35--750   & --                \\
+			\midrule
+			\textbf{This work}                   & 47                 & 20.2           & 6.8--335  & 26K               \\
+			% \textbf{ClaimGuard (PG)}                   & 2,900              & 1.7            & 1.1--9.2  & --                \\
+			% \textbf{ClaimGuard (Mongo)}                & 47,000             & 1.0            & 2.0--19.4 & --                \\
+			% \bottomrule
+			% \multicolumn{5}{l}{\footnotesize $^\dagger$BFT consensus; $^\ddagger$1000 entries; BC=Blockchain, PG=PostgreSQL} \\
+		\end{tabular}
+	}
+\end{table}
+
+ClaimGuard's blockchain achieves 47 tps with 20.2~ms insertion latency---comparable to SmartAccess (10--50 tps, 200--800~ms) while consuming only 26K gas versus 50--150K. PostgreSQL and MongoDB achieve 62$\times$ and 1000$\times$ higher throughput respectively.
+
 \subsection{Query Latency Analysis}
 
-Figure \ref{fig:latency} compares query latency across all systems and query patterns at 10K events. Table \ref{tab:latency} reports detailed medians.
+Figure~\ref{fig:latency} and Table~\ref{tab:latency} compare query latency across all systems at 10K events.
 
 \begin{figure}[t]
-\centering
-\includegraphics[width=.35\textwidth]{figures/e5_comparison_bar.png}
-\caption{Query latency comparison at 10K events. Indexed queries (By Subject, By Resource) show blockchain 6--8$\times$ slower than PostgreSQL. Scan-heavy queries (Time Range, All Denials) show blockchain 35--41$\times$ slower.}
-\label{fig:latency}
+	\centering
+	\includegraphics[width=.35\textwidth]{figures/e5_comparison_bar.png}
+	\caption{Query latency comparison at 10K events. Indexed queries (By Subject, By Resource) show blockchain 6--8$\times$ slower than PostgreSQL. Scan-heavy queries (Time Range, All Denials) show blockchain 35--41$\times$ slower.}
+	\label{fig:latency}
 \end{figure}
 
 \begin{table}[t]
-\centering
-\caption{Median Query Latency (ms) at 10,000 Events}
-\label{tab:latency}
-\scalebox{.8}{
-\begin{tabular}{lrrrc}
-\toprule
-Query Pattern & Blockchain & PostgreSQL & MongoDB & Ratio (BC/PG) \\
-\midrule
-By Subject     &  9.2 &  1.2 &  3.2 &  7.9$\times$ \\
-By Resource    &  6.8 &  1.1 &  2.0 &  6.1$\times$ \\
-Time Range     & 323.8 &  9.2 & 19.4 & 35.3$\times$ \\
-All Denials    & 335.1 &  8.2 & 15.0 & 40.6$\times$ \\
-\bottomrule
-\end{tabular}}
+	\centering
+	\caption{Median Query Latency (ms) at 10,000 Events}
+	\label{tab:latency}
+	\scalebox{.8}{
+		\begin{tabular}{lrrrc}
+			\toprule
+			Query Pattern & Blockchain & PostgreSQL & MongoDB & Ratio (BC/PG) \\
+			\midrule
+			By Subject    & 9.2        & 1.2        & 3.2     & 7.9$\times$   \\
+			By Resource   & 6.8        & 1.1        & 2.0     & 6.1$\times$   \\
+			Time Range    & 323.8      & 9.2        & 19.4    & 35.3$\times$  \\
+			All Denials   & 335.1      & 8.2        & 15.0    & 40.6$\times$  \\
+			\bottomrule
+		\end{tabular}}
 \end{table}
 
-\textbf{Key Findings:} Indexed queries (by subject/resource) show blockchain 6--8$\times$ slower than PostgreSQL due to JSON-RPC overhead, while PostgreSQL B-tree indexes deliver sub-2~ms lookups. Time-range queries are 35$\times$ slower (323.8~ms vs. 9.2~ms) because block scans cannot leverage timestamp indexes. Denial queries are 41$\times$ slower since \texttt{allow} is not indexed on-chain. Database latency remains stable through 10K events; blockchain scan latency grows with block span.
+\textbf{Key Findings:} Indexed queries show blockchain 6--8$\times$ slower than PostgreSQL due to JSON-RPC overhead. Time-range queries are 35$\times$ slower (323.8~ms vs. 9.2~ms) because block scans cannot leverage timestamp indexes. Denial queries are 41$\times$ slower since \texttt{allow} is not indexed on-chain.
 
 \subsection{Storage Cost Analysis}
 
-\textbf{Blockchain:} Each \texttt{AccessChecked} event costs $\sim$50,000 gas (event emit + calldata). 10K events $\approx$ 500M gas; at 10 gwei this is about 5 ETH ($\sim$\$10{,}000 at \$2{,}000/ETH). Data persists permanently; retrieval via RPC is read-only but latency is higher for scans.
-
-\textbf{PostgreSQL/MongoDB:} 10K events $\approx$ 1-2 MB disk space, negligible cost. Can be archived/deleted per retention policies.
-
-\textbf{Trade-off:} On-chain Ethereum event storage is orders of magnitude more expensive than database storage due to gas fees---our 10K event benchmark costs approximately \$10,000 on mainnet versus pennies for equivalent database storage. Note this applies to \textit{on-chain} event logs; off-chain decentralized storage (IPFS, Filecoin) offers different economics.
+Each blockchain event costs $\sim$26K gas (\$0.52 at 10 gwei, \$2K/ETH). PostgreSQL uses $\sim$819 bytes/event; MongoDB $\sim$279 bytes. On-chain storage is orders of magnitude more expensive---10K events cost $\sim$\$5,000 on mainnet versus pennies for databases.
 
 \subsection{Deployment Implications}
 
-Blockchain audit logs are best suited for high-value transactions such as claim settlements and legal disputes, multi-party systems requiring trust minimization, and regulatory scenarios demanding tamper-proof evidence. Databases are preferable for high-frequency low-value accesses, complex analytical queries requiring JOINs, and cost-sensitive deployments. We recommend a hybrid approach: log critical access decisions on-chain while routing routine logs to PostgreSQL/MongoDB, reducing costs 10--100$\times$ while maintaining verifiability for important events.
+Blockchain audit logs suit high-value transactions requiring tamper-proof evidence; databases are preferable for high-frequency, cost-sensitive workloads. We recommend a hybrid approach: log critical decisions on-chain while routing routine logs to databases, reducing costs 10--100$\times$.
 
 \section{Conclusion}
 
-We present the first quantitative analysis of blockchain audit log query performance for insurance access control. Testing Ethereum, PostgreSQL, and MongoDB across 100- 10K events, blockchain-indexed queries are 6- 8$\times$ slower while scan-heavy queries are 35- 41$\times$ slower, with gas costs orders of magnitude higher. These findings inform hybrid architectures: routing critical decisions to blockchain while delegating routine logs to databases. Future work includes Layer~2 deployment and off-chain indexing via The Graph.
+We present the first quantitative analysis of blockchain audit log query performance. Blockchain-indexed queries are 6--8$\times$ slower than PostgreSQL; scan-heavy queries 35--41$\times$ slower, with gas costs orders of magnitude higher. These findings support hybrid architectures routing critical decisions to blockchain while delegating routine logs to databases. Future work includes Layer~2 deployment and off-chain indexing.
 
 
 \section*{Acknowledgment}

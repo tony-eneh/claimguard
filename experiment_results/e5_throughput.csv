@@ -1,0 +1,3 @@
+system,batch_size,repetition,total_time_ms,throughput_tps
+PostgreSQL,100,0,51.5657999785617,1939.269826931312
+MongoDB,100,0,4.042999935336411,24734.10873099091
