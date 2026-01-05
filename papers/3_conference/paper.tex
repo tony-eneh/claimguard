@@ -57,37 +57,35 @@ Blockchain-based access control offers tamper-proof audit trails for regulatory 
 \end{abstract}
 
 \section{Introduction}
+Auto-insurance claims processing involves sensitive evidence across multiple stakeholders, with regulatory frameworks (GDPR, HIPAA) mandating comprehensive audit trails. Compliance officers routinely query these logs: ``Show all unauthorized accesses in Q4'' or ``List accesses to record \#12345.'' Traditional centralized systems suffer from tampering vulnerability \cite{centralized_iam}. ClaimGuard \cite{claimguard_conf}, a blockchain-based ABAC system, addresses this by emitting immutable audit events to Ethereum. Prior work demonstrated authorization correctness but \textbf{never quantified audit log queryability}, a critical gap.
 
-Auto-insurance claims processing involves sensitive evidence management across multiple stakeholders: insurers, adjusters, police, medical providers, garages, and regulators. Regulatory frameworks including GDPR, HIPAA, and state insurance codes mandate comprehensive audit trails documenting who accessed what evidence, when, and whether access was authorized. Compliance officers routinely query these logs: ``Show me all unauthorized access attempts in Q4 2025'' or ``List all accesses to medical record \#12345.''
+Related work on blockchain audit logging includes BLSQ~\cite{li2024blsq} (Merkle tree optimization without database comparison), BCALS~\cite{bcals2022} (insertion time, not query latency), hybrid blockchain-database benchmarks~\cite{hybrid_bcdb2022} (write throughput only), and VeriBench~\cite{veribench2023} (verification overhead). Blockchain ABAC systems~\cite{oliveira2022smartaccess,ullah2024ehr} lack query benchmarks.
 
-Traditional centralized audit systems suffer from single points of failure, lack of transparency, and vulnerability to tampering \cite{centralized_iam}. ClaimGuard \cite{claimguard_conf}, a blockchain-based Attribute-Based Access Control (ABAC) system, addresses these limitations by emitting immutable audit events to Ethereum smart contracts. Prior work demonstrated authorization correctness and access latency performance, but \textbf{never quantified audit log queryability}, a critical gap for production deployment.
+This paper provides the first audit query performance analysis of blockchain-based access control, comparing Ethereum, PostgreSQL 16, and MongoDB 7 across four compliance patterns (100--10K events) with storage cost analysis and hybrid architecture recommendations.
 
-This paper provides the first comprehensive audit query performance analysis of blockchain-based access control. We compare Ethereum, PostgreSQL 16, and MongoDB 7 across four compliance query patterns using realistic insurance workloads (100--10K events), presenting a systematic benchmark, query pattern analysis covering indexed lookups and time-range scans, storage cost comparison, and deployment recommendations for hybrid architectures.
+%\section{Related Work}
 
-\section{Related Work}
+%Table~\ref{tab:related} compares our work against related approaches. Our work provides the \textbf{first direct comparison} of Ethereum \texttt{eth\_getLogs()} query latency against PostgreSQL and MongoDB for compliance audit patterns---addressing the overlooked dimension of audit \textit{queryability}.
 
-Blockchain-based audit logging has received significant attention. Li et al.~\cite{li2024blsq} proposed BLSQ, optimizing blockchain log queries via Merkle trees with 20--51\% improvement over baseline trees, but without database comparison. Ali et al.~\cite{bcals2022} presented BCALS using private blockchain with Elasticsearch, measuring insertion time but not query latency. Ge et al.~\cite{hybrid_bcdb2022} benchmarked hybrid blockchain-database systems focusing on write throughput. Yue et al.~\cite{veribench2023} developed VeriBench for ledger databases, measuring verification overhead rather than audit patterns. For access control, De Oliveira et al.~\cite{oliveira2022smartaccess} and Ullah et al.~\cite{ullah2024ehr} proposed blockchain ABAC systems without query benchmarks.
-
-Table~\ref{tab:related} compares our work against related approaches. Our work provides the \textbf{first direct comparison} of Ethereum \texttt{eth\_getLogs()} query latency against PostgreSQL and MongoDB for compliance audit patterns---addressing the overlooked dimension of audit \textit{queryability}.
-
-\begin{table}[t]
-\caption{Comparison with Related Works}
-\label{tab:related}
-\centering
-\footnotesize
-\begin{tabular}{lccccc}
-\toprule
-Work & \rotatebox{90}{Query Bench} & \rotatebox{90}{DB Comparison} & \rotatebox{90}{Audit Patterns} & \rotatebox{90}{Public Chain} & \rotatebox{90}{Access Control} \\
-\midrule
-BLSQ~\cite{li2024blsq}        & \checkmark &            &            & \checkmark &            \\
-BCALS~\cite{bcals2022}        &            &            & \checkmark &            &            \\
-Hybrid BCDB~\cite{hybrid_bcdb2022} &       & \checkmark &            &            &            \\
-VeriBench~\cite{veribench2023} & \checkmark &           &            &            &            \\
-SmartAccess~\cite{oliveira2022smartaccess} & &          &            & \checkmark & \checkmark \\
-\textbf{This Work}            & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
-\bottomrule
-\end{tabular}
-\end{table}
+% \begin{table}[t]
+% \centering
+% \caption{Comparison with Related Works}
+% \label{tab:related}
+% \scalebox{.8}{
+% %\footnotesize
+% \begin{tabular}{lccccc}
+% \toprule
+% Work & \rotatebox{90}{Query Bench} & \rotatebox{90}{DB Comparison} & \rotatebox{90}{Audit Patterns} & \rotatebox{90}{Public Chain} & \rotatebox{90}{Access Control} \\
+% \midrule
+% BLSQ~\cite{li2024blsq}        & \checkmark &            &            & \checkmark &            \\
+% BCALS~\cite{bcals2022}        &            &            & \checkmark &            &            \\
+% Hybrid BCDB~\cite{hybrid_bcdb2022} &       & \checkmark &            &            &            \\
+% VeriBench~\cite{veribench2023} & \checkmark &           &            &            &            \\
+% SmartAccess~\cite{oliveira2022smartaccess} & &          &            & \checkmark & \checkmark \\
+% \textbf{This Work}            & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+% \bottomrule
+% \end{tabular}}
+% \end{table}
 
 \section{System Methodology}
 
@@ -117,7 +115,7 @@ The Policy Enforcement Gateway (PEG) calls \texttt{logAccess()} after evaluating
 
 Both baselines run on the same hardware as Ethereum (Hardhat local network), ensuring fair comparison.
 
-\section{Experimental Design}
+\subsection{Experimental Design}
 
 \textbf{Event Generation:} We generate 100, 1K, 5K, and 10K synthetic audit events with realistic distributions: 200 unique subjects (Ethereum addresses), 1000 unique resources (evidence items), 6 action types (READ, APPEND, UPDATE, DELETE, ADJUDICATE, DISCLOSE), and 80\% allowed / 20\% denied ratio.
 
@@ -135,15 +133,16 @@ Figure \ref{fig:latency} compares query latency across all systems and query pat
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{figures/e5_comparison_bar.png}
+\includegraphics[width=.35\textwidth]{figures/e5_comparison_bar.png}
 \caption{Query latency comparison at 10K events. Indexed queries (By Subject, By Resource) show blockchain 6--8$\times$ slower than PostgreSQL. Scan-heavy queries (Time Range, All Denials) show blockchain 35--41$\times$ slower.}
 \label{fig:latency}
 \end{figure}
 
 \begin{table}[t]
+\centering
 \caption{Median Query Latency (ms) at 10,000 Events}
 \label{tab:latency}
-\centering
+\scalebox{.8}{
 \begin{tabular}{lrrrc}
 \toprule
 Query Pattern & Blockchain & PostgreSQL & MongoDB & Ratio (BC/PG) \\
@@ -153,7 +152,7 @@ By Resource    &  6.8 &  1.1 &  2.0 &  6.1$\times$ \\
 Time Range     & 323.8 &  9.2 & 19.4 & 35.3$\times$ \\
 All Denials    & 335.1 &  8.2 & 15.0 & 40.6$\times$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \textbf{Key Findings:} Indexed queries (by subject/resource) show blockchain 6--8$\times$ slower than PostgreSQL due to JSON-RPC overhead, while PostgreSQL B-tree indexes deliver sub-2~ms lookups. Time-range queries are 35$\times$ slower (323.8~ms vs. 9.2~ms) because block scans cannot leverage timestamp indexes. Denial queries are 41$\times$ slower since \texttt{allow} is not indexed on-chain. Database latency remains stable through 10K events; blockchain scan latency grows with block span.
@@ -172,7 +171,11 @@ Blockchain audit logs are best suited for high-value transactions such as claim 
 
 \section{Conclusion}
 
-We present the first quantitative analysis of blockchain audit log query performance for insurance access control. Testing Ethereum, PostgreSQL, and MongoDB across 100--10K events, blockchain indexed queries are 6--8$\times$ slower while scan-heavy queries are 35--41$\times$ slower, with on-chain gas costs orders of magnitude higher than database storage---trading latency and cost for cryptographic immutability. These findings inform hybrid architecture design: routing critical access decisions to blockchain for verifiability while delegating routine logs to databases achieves practical query latency without sacrificing tamper-proof guarantees for high-value transactions. Future work includes Layer~2 deployment for reduced costs and off-chain indexing via The Graph for improved scan performance.
+We present the first quantitative analysis of blockchain audit log query performance for insurance access control. Testing Ethereum, PostgreSQL, and MongoDB across 100- 10K events, blockchain-indexed queries are 6- 8$\times$ slower while scan-heavy queries are 35- 41$\times$ slower, with gas costs orders of magnitude higher. These findings inform hybrid architectures: routing critical decisions to blockchain while delegating routine logs to databases. Future work includes Layer~2 deployment and off-chain indexing via The Graph.
+
+
+\section*{Acknowledgment}
+This work was partly supported by the Innovative Human Resource Development for Local Intellectualization program through the IITP grant funded by the Korea government (MSIT) (IITP-2025-RS-2020-II201612, 25\%), by the Priority Research Centers Program through the NRF funded by the MEST (2018R1A6A1A03024003, 25\%), and by the MSIT, Korea, under the ITRC support program (IITP-2025-RS-2024-00438430, 25\%) and by the Basic Science Research Program through the National Research Foundation of Korea(NRF) funded by the Ministry of Education (RS-2025-25431637, 25\%).
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
