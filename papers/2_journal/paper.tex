@@ -75,7 +75,7 @@
 
 \section{Introduction}
 
-Auto-insurance claim handling depends on heterogeneous digital evidence, FNOL reports, medical documents, telematics logs, photographs, and high-resolution accident videos, shared across multiple stakeholders ,including insurers, reinsurers, adjusters, police, courts, repair vendors, and regulators. These workflows generate sensitive, legally significant evidence that must be accessed selectively by authorized parties under context-specific constraints such as time windows, case assignments, and jurisdictional mandates. Cloud storage infrastructure scales to these workloads but forces reliance on centralized operators and makes access control vulnerable to insider abuse, misconfiguration, and opaque enforcement. Prior surveys repeatedly highlight access control as a persistent and operationally critical gap in blockchain-enabled insurance and transport systems~\cite{pournader2020blockchaininsurance, xu2021survey, yli2020blockchain, tarr2018insurance, wang2020secure}.
+Auto-insurance claim handling depends on heterogeneous digital evidence, first notice of loss (FNOL) reports, medical documents, telematics logs, photographs, and high-resolution accident videos, shared across multiple stakeholders, including insurers, reinsurers, adjusters, police, courts, repair vendors, and regulators. These workflows generate sensitive, legally significant evidence that must be accessed selectively by authorized parties under context-specific constraints such as time windows, case assignments, and jurisdictional mandates. Cloud storage infrastructure scales to these workloads but forces reliance on centralized operators and makes access control vulnerable to insider abuse, misconfiguration, and opaque enforcement. Prior surveys repeatedly highlight access control as a persistent and operationally critical gap in blockchain-enabled insurance and transport systems~\cite{pournader2020blockchaininsurance, xu2021survey, yli2020blockchain, tarr2018insurance, wang2020secure}.
 
 Traditional cloud-based role-based access control (RBAC) mechanisms are ill-suited for this environment. RBAC assigns coarse permissions to roles (e.g., adjuster, investigator) and typically over-grants access across unrelated claims, creating privacy risks and enabling insider leakage. Moreover, RBAC cannot natively express context-dependent policies such as temporary legal access windows, purpose-based restrictions (fraud analysis vs. litigation), or action-level permissions (allowing repair shops to append estimates but not modify adjuster notes). Revocation in cloud-only RBAC must propagate across distributed enforcement points, creating dangerous delay windows during which compromised credentials remain exploitable.
 
@@ -412,13 +412,13 @@ Table~\ref{tab:security-comparison} summarizes the security trade-offs. While Cl
 
 \subsubsection{PureChain Network}
 
-PureChain is a private, permissioned, Ethereum-compatible blockchain employing Proof-of-Authority and Association (PoA$^2$) consensus~\cite{KIM2025100397}. Unlike proof-of-work (PoW) or proof-of-stake (PoS), PoA$^2$ relies on identity and reputation as the validator stake, making validators accountable through reputational damage and potential legal liability for misbehavior~\cite{joshi2021feasibility}. Critically, PoA$^2$ introduces a redundant standby validator mechanism that monitors active validators and automatically transfers authority if an active validator fails, enabling fault-tolerant operation without disrupting Byzantine consensus~\cite{KIM2025100397}.
+PureChain is a private, permissioned, Ethereum-compatible blockchain employing Proof-of-Authority and Association (PoA$^2$) consensus~\cite{ICCE2025}. Unlike proof-of-work (PoW) or proof-of-stake (PoS), PoA$^2$ relies on identity and reputation as the validator stake, making validators accountable through reputational damage and potential legal liability for misbehavior~\cite{joshi2021feasibility}. Critically, PoA$^2$ introduces a redundant standby validator mechanism that monitors active validators and automatically transfers authority if an active validator fails, enabling fault-tolerant operation without disrupting Byzantine consensus~\cite{AHAKONYE2025100354}.
 
 PureChain achieves 7,000 transactions per second (TPS)—100× higher than standard Ethereum (30 TPS) and 1,000× higher than Bitcoin (7 TPS)—while maintaining deterministic finality within seconds~\cite{KIM2025100397}. This performance advantage stems from the small, known validator set (typically 3--7 consortium members) and elimination of proof-of-work's computational overhead. Additionally, PureChain's Smart Auto Mining Plus (SAM+) algorithm enables mining only when transactions are pending, dramatically reducing energy consumption. The EVM-compatible design allows unmodified deployment of Solidity smart contracts, eliminating porting overhead.
 
 Consortium operation preserves data residency and regulatory compliance (CCPA, GDPR) by keeping evidence metadata within the consortium's boundaries. PoA$^2$'s identity-based validators with auditable credentials and fault-tolerant standby mechanisms naturally align with enterprise regulatory requirements, in contrast to pseudonymous PoW/PoS validators.
 
-In our evaluation, Experiment 1 (E1) uses local Hardhat (single-node, instant finality) representing an idealized PoA$^2$ network; Experiment 2 (E2) repeats measurements on Sepolia testnet (proof-of-stake) to demonstrate feasibility on public networks. The comparison reveals that ClaimGuard benefits substantially from PoA$^2$'s deterministic finality, fault-tolerance, and exceptional throughput, while remaining compatible with public blockchains for scenarios prioritizing decentralization.
+In our evaluation, Experiment 1 (E1) uses a local Hardhat (single-node, instant finality) to represent an idealized PoA$^2$ network; Experiment 2 (E2) repeats measurements on the Sepolia testnet (proof-of-stake) to demonstrate feasibility on public networks. The comparison reveals that ClaimGuard benefits substantially from PoA$^2$'s deterministic finality, fault-tolerance, and exceptional throughput, while remaining compatible with public blockchains for scenarios prioritizing decentralization.
 
 
 
@@ -673,7 +673,6 @@ Sepolia increases median latency from 16.0\,ms (local) to 224.7\,ms (P50), with 
 
 Table~\ref{tab:e2-throughput} and Fig.~\ref{fig:e2-throughput} show throughput
 performance under concurrency levels 10, 50, and 100.
-
 \begin{table}[!htbp]
 	\centering
 	\caption{Throughput: Local vs Public Network (E2)}
@@ -688,14 +687,12 @@ performance under concurrency levels 10, 50, and 100.
 		\bottomrule
 	\end{tabular}
 \end{table}
-
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[width=.42\textwidth]{./figures/e2_throughput_comparison.png}
 	\caption{Access throughput: local vs public network (E2).}
 	\label{fig:e2-throughput}
 \end{figure}
-
 Throughput drops from 569--999\,req/s locally to 142--373\,req/s on Sepolia (Table~\ref{tab:e2-throughput}, Fig.~\ref{fig:e2-throughput}) due to RPC/network constraints. Even so, observed Sepolia throughput supports moderate concurrency typical of evidence-access workflows.
 (estimated at 10--50\,req/s per organization during peak claim processing).
 
