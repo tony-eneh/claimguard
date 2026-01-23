@@ -411,28 +411,40 @@ Combine Options A + B + C:
 
 ### Phase 1: Core Reframing (REQUIRED, ~1 week)
 **Goal**: Address domain-specificity criticism without new experiments
+**Status**: ✅ **COMPLETE** (January 23, 2026)
 
-1. ✅ Title rewrite (Option A recommended)
-2. ✅ Abstract restructure
-3. ✅ Keywords update
-4. ✅ Introduction restructure (add cross-domain framing, 3+ domain examples)
-5. ✅ Problem statement generalization
-6. ✅ Related Work restructuring (cross-domain survey)
-7. ✅ System Methodology domain-neutral presentation
-8. ✅ PureChain repositioning as deployment option
-9. ✅ Experimental workload generalizability discussion
-10. ✅ Cross-domain mapping table
-11. ✅ Conclusion expansion (generalization, integration, deployment flexibility)
+1. ✅ Title rewrite (Option A recommended) — COMPLETED
+2. ✅ Abstract restructure — COMPLETED
+3. ✅ Keywords update — COMPLETED
+4. ✅ Introduction restructure (add cross-domain framing, 3+ domain examples) — COMPLETED
+5. ✅ Problem statement generalization — COMPLETED
+6. ✅ Related Work restructuring (cross-domain survey) — COMPLETED
+7. ✅ System Methodology domain-neutral presentation — COMPLETED
+8. ✅ PureChain repositioning as deployment option — COMPLETED
+9. ✅ Experimental workload generalizability discussion — COMPLETED
+10. ⏸️ Cross-domain mapping table — PARTIALLY COMPLETED (prose paragraph exists in Section 4.3; formal table structure not added)
+11. ✅ Conclusion expansion (generalization, integration, deployment flexibility) — COMPLETED
 
-**Deliverable**: Revised paper manuscript addressing generalizability through framing changes
+**Deliverable**: Revised paper manuscript addressing generalizability through framing changes ✅ DELIVERED
 
 ### Phase 2: Analytical Enhancement (OPTIONAL, +2-3 days)
 **Goal**: Add cross-domain analysis without experiments (Option A)
+**Status**: 🎯 **NEXT PRIORITY** (Recommended to tackle after Phase 1)
 
-1. ✅ Cross-Domain Applicability Analysis subsection
-2. ✅ Component-to-requirement mapping table
-3. ✅ Example healthcare policy YAML
-4. ✅ Architecture diagram with healthcare annotations
+1. ⬜ Cross-Domain Applicability Analysis subsection (NEW section in paper Section 5)
+2. ⬜ Component-to-requirement mapping table (shows how each PACE component addresses requirements across domains)
+3. ⬜ Example healthcare policy YAML (concrete example showing policy syntax for EMR access scenario)
+4. ⬜ Architecture diagram with healthcare annotations (visual showing how existing architecture maps to healthcare domain)
+
+**Effort**: 2-3 days writing, no code or experiments needed
+
+**What needs to be done**:
+- Write new subsection in Section 5 (Experimental Analysis Discussion) or Section 6 (Conclusion)
+- Create table showing: PACE Component × Domain Requirements (e.g., "Smart Contracts" supports "Multi-Org Trust Boundary" in all domains)
+- Pull healthcare EMR examples from literature and write concrete policy rules in YAML format showing insurance vs. healthcare differences
+- Annotate existing architecture diagram (Fig. 3) with healthcare stakeholder labels (Patient→Policyholder, Provider→Adjuster, etc.)
+
+**Impact**: Moderate — addresses reviewer concern about generalizability without requiring new experiments
 
 **Deliverable**: Strengthened generalizability claims with analytical evidence
 
