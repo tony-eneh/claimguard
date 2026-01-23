@@ -1,0 +1,68 @@
+% PACE architecture diagram (standalone TikZ)
+% Shows domain-agnostic multi-stakeholder flow
+\documentclass[tikz,border=4pt]{standalone}
+\usetikzlibrary{positioning,shapes.misc,fit,arrows.meta}
+
+\begin{document}
+\definecolor{clientbg}{RGB}{248,250,255}
+\definecolor{pegcolor}{RGB}{229,240,255}
+\definecolor{chaincolor}{RGB}{235,247,237}
+\definecolor{storagecolor}{RGB}{250,243,233}
+\definecolor{outline}{RGB}{80,80,80}
+\tikzset{
+  box/.style={draw=outline, rounded corners=4pt, thick, align=center, inner sep=6pt},
+  dashedbox/.style={box, dashed},
+  title/.style={font=\bfseries},
+  arrow/.style={-{Latex[length=3mm]}, thick},
+  note/.style={font=\footnotesize, align=center}
+}
+
+\begin{tikzpicture}[node distance=1.1cm]
+  % Client cluster
+  \node (client1) [box, fill=clientbg, minimum width=3.1cm] {Healthcare Provider\\(EHR portal)};
+  \node (client2) [box, fill=clientbg, right=0.4cm of client1, minimum width=3.1cm] {Insurer\\(claims desk)};
+  \node (client3) [box, fill=clientbg, right=0.4cm of client2, minimum width=3.1cm] {Law Firm\\(discovery portal)};
+  \node (client4) [box, fill=clientbg, right=0.4cm of client3, minimum width=3.1cm] {Auditor / Regulator};
+  \node (client5) [box, fill=clientbg, right=0.4cm of client4, minimum width=3.1cm] {Logistics Operator\\(supply chain)};
+  \node[fit=(client1)(client5), dashedbox, label=above:{\normalsize Client Applications}] (clients) {};
+
+  % PEG
+  \node (peg) [box, fill=pegcolor, below=1.4cm of client3, minimum width=4.8cm] {\textbf{Policy Enforcement Gateway (PEG)}\\\footnotesize API + Token Issuer};
+
+  % Blockchain box
+  \node (chain) [dashedbox, fill=chaincolor, below=1.5cm of peg, minimum width=7.5cm] {};
+  \node (chainTitle) [title, anchor=north west, xshift=6pt, yshift=6pt] at (chain.north west) {Blockchain (EVM)};
+  \node (apm) [box, fill=white, minimum width=3.6cm, below=0.4cm of chainTitle] {Access Policy Manager\\\footnotesize action-aware ABAC};
+  \node (sar) [box, fill=white, minimum width=3.6cm, below=0.3cm of apm] {Subject Attribute Registry\\\footnotesize org/role/clearance claims};
+  \node (er) [box, fill=white, minimum width=3.6cm, below=0.3cm of sar] {Evidence Registry\\\footnotesize URIs + integrity hashes};
+  \node (audit) [box, fill=white, minimum width=3.6cm, below=0.3cm of er] {Audit Log\\\footnotesize decisions + proofs};
+  \node[fit=(apm)(sar)(er)(audit), inner sep=8pt] (chainfit) {};
+
+  % Storage box
+  \node (storage) [dashedbox, fill=storagecolor, right=3.2cm of peg, minimum width=3.8cm] {};
+  \node (storageTitle) [title, anchor=north west, xshift=6pt, yshift=6pt] at (storage.north west) {Storage (Off-Chain)};
+  \node (s3) [box, fill=white, minimum width=2.8cm, below=0.2cm of storageTitle] {S3 / Azure Blob};
+  \node (ipfs) [box, fill=white, below=0.2cm of s3, minimum width=2.8cm] {IPFS / Filecoin};
+  \node (minio) [box, fill=white, below=0.2cm of ipfs, minimum width=2.8cm] {MinIO / NFS};
+  \node[fit=(s3)(ipfs)(minio), inner sep=8pt] (storagefit) {};
+
+  % Client to PEG arrows
+  \draw[arrow] (client1.south) -- node[note, left=0.05cm]{access\ request\\(SAML/OIDC JWT)} (peg.north);
+  \draw[arrow] (client2.south) -- (peg.north);
+  \draw[arrow] (client3.south) -- (peg.north);
+  \draw[arrow] (client4.south) -- (peg.north);
+  \draw[arrow] (client5.south) -- (peg.north);
+  \draw[arrow] (peg.north) -- node[note, right=0.1cm]{capability token\\or deny} (client3.south);
+
+  % PEG to blockchain
+  \draw[arrow] (peg.south) -- node[note, right=0.1cm]{checkAccess(subject, resource, action)} (chainfit.north);
+
+  % PEG to storage
+  \draw[arrow] (peg.east) -- node[note, above]{file request with capability} (storagefit.west);
+  \draw[arrow] (storagefit.west) -- node[note, below]{validate token\\fetch object} (peg.east);
+
+  % Notes
+  \node[note, left=3.8cm of chainfit] (legend) {Capabilities bind:\\subject \textbullet{} action \textbullet{} resource-URI\\expiry \textbullet{} nonce \textbullet{} signature};
+
+\end{tikzpicture}
+\end{document}
