@@ -837,7 +837,7 @@ Empirical validation of cross-domain generality would require E6 experiments rep
 The following code samples illustrate how PACE policies remain structurally identical across domains while domain-specific attributes and rules vary. All policies use the same JSON-RLP encoding for on-chain storage and follow the same evaluation semantics: match subject attributes against subject conditions, resource metadata against resource conditions, and current context (timestamp, jurisdiction, etc.) against contextual conditions; if all conditions hold, grant the specified action, otherwise deny.
 
 \textbf{Insurance Domain: Claim Adjuster Access}
-\begin{lstlisting}[language=json, frame=none, numbers=none]
+\begin{lstlisting}[frame=none, numbers=none]
 {
   "policyId": "claim-adjuster-read",
   "subjectConditions": {
@@ -859,7 +859,7 @@ The following code samples illustrate how PACE policies remain structurally iden
 \end{lstlisting}
 
 \textbf{Healthcare Domain: Specialist EMR Access}
-\begin{lstlisting}[language=json, frame=none, numbers=none]
+\begin{lstlisting}[frame=none, numbers=none]
 {
   "policyId": "specialist-emr-read",
   "subjectConditions": {
@@ -883,7 +883,7 @@ The following code samples illustrate how PACE policies remain structurally iden
 \end{lstlisting}
 
 \textbf{Legal Discovery Domain: Expert Witness Document Access}
-\begin{lstlisting}[language=json, frame=none, numbers=none]
+\begin{lstlisting}[frame=none, numbers=none]
 {
   "policyId": "expert-witness-discovery",
   "subjectConditions": {
@@ -906,7 +906,7 @@ The following code samples illustrate how PACE policies remain structurally iden
 \end{lstlisting}
 
 \textbf{Supply Chain Domain: Customs Auditor Access}
-\begin{lstlisting}[language=json, frame=none, numbers=none]
+\begin{lstlisting}[frame=none, numbers=none]
 {
   "policyId": "customs-audit-provenance",
   "subjectConditions": {
