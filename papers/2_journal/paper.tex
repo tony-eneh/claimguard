@@ -205,9 +205,9 @@ These constraints translate into specific system requirements applicable across 
 
 PACE anchors authorization decisions on Ethereum-compatible smart contracts while enforcing access to off-chain evidence through a Policy Enforcement Gateway. The smart contracts function as a tamper-resistant policy decision point, while file servers validate capability tokens before retrieving evidence from cloud or IPFS backends, as illustrated in Figure~\ref{fig:architecture}. This architecture implements three core components that together provide fine-grained, action-aware, context-sensitive authorization over heterogeneous evidence while maintaining tamper-resistant evaluation independent of cloud infrastructure.
 
-\begin{figure}
+\begin{figure}[t]
 	\centering
-	\includegraphics[width=0.45\textwidth]{figures/architecture_pace.pdf}
+	\includegraphics[width=0.45\textwidth]{figures/architecture.png}
 	\caption{System architecture: clients call the PEG, which queries blockchain smart contracts and issues short-lived capabilities for cloud/IPFS evidence access.}
 	\label{fig:architecture}
 \end{figure}
