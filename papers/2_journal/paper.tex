@@ -815,12 +815,11 @@ To illustrate cross-domain applicability concretely, consider a healthcare EMR a
 
 Table~\ref{tab:domain-mapping} maps each PACE architectural component to the multi-stakeholder requirements it satisfies across all four domains. This mapping demonstrates that no component is domain-specific; each addresses a requirement that emerges uniformly in healthcare (EMR access among providers and insurers), legal discovery (evidence sharing among law firms and courts), insurance (claim assessment across adjusters and investigators), and supply chain (provenance documentation across manufacturers and auditors).
 
-\begin{table}[!htbp]
+\begin{table*}[!htbp]
 	\centering
 	\small
 	\caption{PACE Component-to-Requirement Mapping: Domain-Agnostic Architecture}
-	\setlength{\tabcolsep}{2pt}
-	\begin{tabular}{@{}p{2.2cm}p{1.8cm}p{1.8cm}p{1.6cm}p{1.4cm}p{1.4cm}@{}}
+	\begin{tabularx}{\textwidth}{@{}l X X X X X@{}}
 		\toprule
 		\textbf{PACE Component} & \textbf{Multi-Org Trust} & \textbf{Dynamic Attributes} & \textbf{Off-Chain Storage} & \textbf{Action-Aware} & \textbf{Audit Trail} \\
 		\midrule
@@ -832,9 +831,9 @@ Table~\ref{tab:domain-mapping} maps each PACE architectural component to the mul
 		\midrule
 		Audit Log Contract & \cmark (shared record) & \cmark (attr. snapshots) & \cmark (access context) & \cmark (action tracking) & \cmark (immutable trail) \\
 		\bottomrule
-	\end{tabular}
+	\end{tabularx}
 	\label{tab:domain-mapping}
-\end{table}
+\end{table*}
 
 Empirical validation of cross-domain generality would require E6 experiments repeating E1--E5 workloads with healthcare policies and stakeholder definitions, but the architectural analysis above establishes that such experiments would yield comparable latency, throughput, and security results (within the variance expected from different blockchain deployment environments). The roadmap in Section VI articulates these empirical validation studies as future work.
 
@@ -943,10 +942,9 @@ Table~\ref{tab:domain-instantiation} illustrates how PACE's architectural compon
 
 \begin{table*}[!htbp]
 	\centering
-	\small
+	\scriptsize
 	\caption{PACE Architecture Instantiation: Generic Components Mapped to Domain-Specific Contexts}
-	\setlength{\tabcolsep}{3pt}
-	\begin{tabular}{@{}p{1.8cm}p{2cm}p{2.1cm}p{2.1cm}p{1.8cm}@{}}
+	\begin{tabularx}{\textwidth}{@{}l X X X X@{}}
 		\toprule
 		\textbf{PACE Component} & \textbf{Insurance} & \textbf{Healthcare} & \textbf{Legal Discovery} & \textbf{Supply Chain} \\
 		\midrule
@@ -960,7 +958,7 @@ Table~\ref{tab:domain-instantiation} illustrates how PACE's architectural compon
 		\midrule
 		\textbf{Audit Log Contract} & Events: access-attempt(adjuster-X, case-Y, DamagePhoto, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, admin-id) & Events: access-attempt(specialist-X, patient-Y, LabResults, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, hospital-admin-id) & Events: access-attempt(attorney-X, case-Y, Deposition, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, court-clerk-id) & Events: access-attempt(auditor-X, shipment-Y, Provenance, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, compliance-officer-id) \\
 		\bottomrule
-	\end{tabular}
+	\end{tabularx}
 	\label{tab:domain-instantiation}
 \end{table*}
 
@@ -974,25 +972,15 @@ Combined, these findings position PACE as the first framework to achieve verifia
 
 \section{Conclusion}
 
-We presented PACE, an Ethereum-compatible, action-aware attribute-based access control framework for multi-stakeholder digital evidence governance. This journal extension builds upon our earlier conference publication~\cite{eneh2025claimguard} by providing production-oriented validation across four experimental dimensions: quantitative baseline comparison against cloud-only RBAC, deployment under real-world network conditions on public testnet, security stress testing against adversarial attack vectors, and large-scale policy churn validation with up to 1000 policies and 1000 subjects. The architecture addresses fundamental limitations in both traditional cloud-centric IAM and existing blockchain approaches through three core mechanisms: verifiable on-chain policy evaluation encoding subject, resource, action, and contextual attributes; a policy enforcement gateway bridging blockchain decisions to cloud or IPFS storage via short-lived capability tokens; and immutable audit trails providing tamper-evident records of all access attempts and policy changes. By decoupling authorization from encryption, PACE achieves transparent, resource-agnostic enforcement while maintaining compatibility with existing storage infrastructure.
+We presented PACE, an Ethereum-compatible, action-aware attribute-based access control framework for multi-stakeholder digital evidence governance, and validated it through production-oriented experiments spanning baseline comparison, public-network latency, adversarial stress tests, and large-scale policy churn. Results show low-latency, high-throughput authorization with immediate revocation and strong resistance to gateway and token attacks, while preserving storage-agnostic enforcement and compatibility with existing IAM via the Policy Enforcement Gateway.
 
-We validated the architecture through auto-insurance claim workflows as a representative multi-stakeholder domain exhibiting diverse stakeholder types (insurers, adjusters, investigators, repair vendors, reinsurers, regulators), multi-level sensitivity classifications (public damage photos to protected health information), complex regulatory constraints (state insurance law, privacy regulations), and high-volume evidence artifacts requiring scalable off-chain storage. Experimental results demonstrate that PACE sustains throughput exceeding 800 requests/second with modest latency overhead versus cloud-only RBAC (median increase of 45-60ms), maintains stable on-chain policy evaluation latency across 1000+ policies, enforces immediate revocation without propagation delay, and achieves perfect functional correctness with zero false accepts or rejects. Security experiments confirmed successful blocking of unauthorized access including cloud provider bypass, gateway circumvention, role spoofing, and replay attacks.
-
-The architecture's resource-agnostic design and EVM-compatibility enable deployment across diverse multi-stakeholder scenarios beyond insurance. In healthcare, the framework can govern EMR access among patients, providers, specialists, insurance payers, and research institutions by reconfiguring subject attributes (patient consent status, provider credentials, IRB approval) and resource metadata (PHI sensitivity, treatment context). Legal discovery workflows can leverage PACE for time-bounded evidence sharing among law firms, courts, expert witnesses, and regulators by encoding case associations, evidence classifications, and legal mandates as policy attributes. Supply chain provenance documentation can be controlled across manufacturers, distributors, customs authorities, and auditors through jurisdiction-specific disclosure policies and trade secret classifications. The core architectural components, smart contracts, gateway pattern, capability tokens, audit log structure, require no changes across these domains; adaptation occurs solely through policy rule configuration and attribute schema definition.
-
-PACE integrates with existing enterprise IAM systems through the Policy Enforcement Gateway, which serves as an adapter between traditional authentication mechanisms (SAML, OIDC, LDAP) and blockchain-backed authorization. Organizations can maintain existing identity providers while layering PACE's verifiable policy evaluation for cross-organizational access scenarios where centralized trust is infeasible. The gateway maps authenticated identities to blockchain addresses, queries on-chain policies, and issues capabilities only upon successful authorization, providing a pragmatic migration path that preserves existing IAM investments while adding blockchain-backed auditability and multi-party governance.
-
-PACE's EVM-compatibility enables flexible deployment across public Ethereum mainnet and Layer-2 solutions (Polygon, Optimism, Arbitrum) for maximum decentralization and interoperability, enterprise and consortium blockchains (Hyperledger Besu, Quorum, PureChain) for data residency and regulatory compliance, and testnets (Sepolia, Goerli) for development and validation. Organizations select deployment platforms matching their specific requirements for throughput, transaction cost, decentralization, and governance. Public blockchains provide open, censorship-resistant policy evaluation suitable for adversarial multi-organization scenarios. Consortium blockchains offer high throughput (7,000+ TPS demonstrated on PureChain), deterministic finality, and regulatory alignment (CCPA, GDPR compliance through data residency) suitable for enterprise deployments. Our evaluation across Hardhat (local), Sepolia (public testnet), and PureChain (consortium) demonstrates portability and characterizes performance trade-offs across deployment options.
-
-Several limitations bound the current work and motivate future investigation. The experimental validation focused exclusively on insurance workflows; while the architecture's resource-agnostic design supports cross-domain applicability through policy reconfiguration, empirical validation in healthcare, legal, or supply chain domains would strengthen generalizability claims. The current policy model does not include privacy-preserving mechanisms such as attribute hiding or zero-knowledge proofs, which may be necessary for cross-organizational deployments where policy details themselves are sensitive. Production deployment requires operational tooling for policy authoring, stakeholder onboarding, and long-term audit log management. Multi-jurisdiction scenarios may require cross-blockchain coordination or interoperability protocols when evidence governance spans different regulatory domains. The policy language could be extended to support more expressive temporal constraints, delegation chains, or obligation enforcement (e.g., requiring post-access reporting).
-
-Future work will prioritize empirical validation in healthcare and supply chain domains to demonstrate cross-domain architectural portability, develop policy authoring tooling and domain-specific templates to reduce deployment friction, explore privacy-preserving policy mechanisms suitable for consortium environments, investigate hybrid architectures balancing on-chain verification costs against off-chain computation for complex policy evaluation, and conduct production pilot deployments with partner organizations to validate operational feasibility and long-term maintenance characteristics. Integration with decentralized identity standards (DIDs, Verifiable Credentials) would strengthen interoperability across blockchain-based IAM systems. Formal verification of smart contract policy evaluation logic would provide stronger correctness guarantees. Machine learning-based anomaly detection over audit logs could identify suspicious access patterns warranting further investigation. These extensions will position PACE as a comprehensive, production-ready framework for verifiable access control in any multi-stakeholder domain requiring transparent, auditable governance over off-chain digital evidence.
+PACE’s resource-agnostic policy model enables cross-domain deployment through configuration rather than code changes, making it suitable for healthcare, legal discovery, and supply-chain scenarios that require auditable, multi-organization access control. Limitations and future directions are summarized below.
 
 \subsection{Limitations and Future Work}
 
-The current work is bounded by several limitations that motivate future investigation. First, experimental validation focused exclusively on insurance workflows; while the architecture's resource-agnostic design supports cross-domain applicability through policy reconfiguration, empirical validation in healthcare, legal discovery, or supply chain domains would strengthen generalizability claims and reveal domain-specific tuning requirements. Second, the policy model does not include privacy-preserving mechanisms such as attribute hiding or zero-knowledge proofs, which may be necessary when policy details themselves are sensitive in cross-organizational deployments. Third, the evaluation relied on controlled experiments; production pilot deployments integrated with real enterprise workflows would provide operational insights regarding policy authoring usability, stakeholder onboarding friction, and long-term audit log management. Fourth, multi-jurisdiction scenarios may require cross-blockchain coordination or interoperability protocols when evidence governance spans different regulatory domains or blockchain networks. Fifth, the policy language could be extended to support more expressive temporal constraints, delegation chains, or obligation enforcement requiring post-access reporting.
+The evaluation focused on insurance workflows and controlled experiments; broader deployments in healthcare, legal discovery, and supply chain are needed to validate generalizability and operational usability. The policy model lacks privacy-preserving mechanisms for sensitive policies, and production tooling for policy authoring, stakeholder onboarding, and audit management remains to be developed. Multi-jurisdiction governance also motivates richer temporal constraints and obligation support in the policy language.
 
-Future research will prioritize empirical validation in healthcare and supply chain domains to demonstrate architectural portability with concrete cross-domain performance comparison, development of policy authoring tooling including domain-specific templates and visual policy editors to reduce deployment friction, exploration of privacy-preserving policy mechanisms such as confidential smart contracts or attribute commitments suitable for consortium environments, investigation of hybrid architectures that balance on-chain verification costs against off-chain computation for complex policy evaluation, and production pilot deployments with partner organizations in insurance, healthcare, or logistics to validate operational feasibility and identify long-term maintenance requirements. Integration with decentralized identity standards (DIDs, Verifiable Credentials) would strengthen interoperability across blockchain-based IAM systems and enable seamless subject attribute verification across organizational boundaries. Formal verification of smart contract policy evaluation logic through tools like Certora or K Framework would provide stronger correctness guarantees. Machine learning-based anomaly detection over audit logs could identify suspicious access patterns such as unusual time-of-day requests, cross-case enumeration attempts, or sudden policy changes warranting investigation. Cross-chain interoperability research would enable PACE deployment spanning multiple blockchain networks for evidence governance across jurisdictional boundaries.
+Future work will prioritize cross-domain empirical validation, authoring toolchains and templates, privacy-preserving policy mechanisms for consortium settings, hybrid on/off-chain evaluation for complex policies, and pilot deployments with partner organizations. We also plan to integrate decentralized identity standards (DIDs/VCs) and formally verify the smart-contract policy logic to strengthen interoperability and correctness guarantees.
 
 
 % \appendices
