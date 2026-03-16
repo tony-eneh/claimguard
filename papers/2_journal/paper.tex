@@ -1,4 +1,4 @@
-\documentclass[final,5p,times,twocolumn]{elsarticle}
+\documentclass[conference]{IEEEtran}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -45,34 +45,28 @@
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
-%\journal{Journal of Information Security and Applications}
-
 \begin{document}
 
-\begin{frontmatter}
+%\title{Action-Aware ABAC for Heterogeneous Insurance Evidence: Architecture, Evaluation and Results}
+%\title{Evaluating Action-Aware Attribute-Based Access Control for Secure Insurance Evidence Management}
+\title{PACE: Policy Anchor and Capability Enforcement for Multi-Stakeholder Digital Evidence Governance}
 
-	%\title{Action-Aware ABAC for Heterogeneous Insurance Evidence: Architecture, Evaluation and Results}
-	%\title{Evaluating Action-Aware Attribute-Based Access Control for Secure Insurance Evidence Management}
-	\title{PACE: Policy Anchor and Capability Enforcement for Multi-Stakeholder Digital Evidence Governance}
+\author{
+\IEEEauthorblockN{Anthony Uchenna Eneh, Love Allen Chijioke Ahakonye, Jae Min Lee, Dong-Seong Kim}
+\IEEEauthorblockA{IT-Convergence Engineering, Kumoh National Institute of Technology, Gumi, South Korea \\
+ICT Convergence Research Center, Kumoh National Institute of Technology, Gumi, South Korea \\
+NSLab Co. Ltd., Gumi, South Korea}
+}
 
-	\author[kumoh1]{Anthony Uchenna Eneh}
-	\author[kumoh2]{Love Allen Chijioke Ahakonye}
-	\author[kumoh1]{Jae Min Lee}
-	\author[kumoh1,nslab]{Dong-Seong Kim}
+\maketitle
 
-	\address[kumoh1]{IT-Convergence Engineering, Kumoh National Institute of Technology, Gumi, South Korea}
-	\address[kumoh2]{ICT Convergence Research Center, Kumoh National Institute of Technology, Gumi, South Korea}
-	\address[nslab]{NSLab Co. Ltd., Gumi, South Korea}
+\begin{abstract}
+Multi-stakeholder digital evidence workflows (healthcare, legal discovery, insurance, supply chain) require fine-grained, action-aware access controls across organizational boundaries and off-chain storage to minimize costs. Existing blockchain approaches provide tamper resistance but lack a unified, enforceable model that binds on-chain authorization to cloud or distributed backends. We generalize our prior ClaimGuard system into \textbf{PACE (Policy Anchor and Capability Enforcement)}, an Ethereum-compatible ABAC framework that anchors policy on-chain and enforces decisions via short-lived capabilities. This journal extension evaluates PACE against cloud-only RBAC across four new dimensions: baseline comparison under load (E1), public Sepolia testnet conditions (E2), adversarial stress testing (E3), and policy churn at scale up to 1000 policies and subjects (E4). Results show modest local-network latency overhead (60.9\,ms P50 vs.\ 1.9\,ms for RBAC) with improved authorization correctness and integrity; policy evaluation remains stable (2-3\,ms median) across 11-1000 rules, revocation propagates within 1.1\,ms, and attacks such as cloud bypass, gateway abuse, and role spoofing are blocked. Public testnet results confirm operational feasibility. PACE is resource-agnostic and deployable across heterogeneous, multi-stakeholder evidence governance scenarios.
+\end{abstract}
 
-	\begin{abstract}
-		Multi-stakeholder digital evidence workflows (healthcare, legal discovery, insurance, supply chain) require fine-grained, action-aware access controls across organizational boundaries and off-chain storage to minimize costs. Existing blockchain approaches provide tamper resistance but lack a unified, enforceable model that binds on-chain authorization to cloud or distributed backends. We generalize our prior ClaimGuard system into \textbf{PACE (Policy Anchor and Capability Enforcement)}, an Ethereum-compatible ABAC framework that anchors policy on-chain and enforces decisions via short-lived capabilities. This journal extension evaluates PACE against cloud-only RBAC across four new dimensions: baseline comparison under load (E1), public Sepolia testnet conditions (E2), adversarial stress testing (E3), and policy churn at scale up to 1000 policies and subjects (E4). Results show modest local-network latency overhead (60.9\,ms P50 vs.\ 1.9\,ms for RBAC) with improved authorization correctness and integrity; policy evaluation remains stable (2-3\,ms median) across 11-1000 rules, revocation propagates within 1.1\,ms, and attacks such as cloud bypass, gateway abuse, and role spoofing are blocked. Public testnet results confirm operational feasibility. PACE is resource-agnostic and deployable across heterogeneous, multi-stakeholder evidence governance scenarios.
-	\end{abstract}
-
-	\begin{keyword}
-		Attribute-Based Access Control \sep Blockchain \sep Capability-Based Authorization \sep ClaimGuard \sep Enterprise Data Governance  \sep Ethereum \sep Evidence Management \sep Multi-Stakeholder Systems \sep Policy Enforcement Gateway \sep Smart Contracts 
-	\end{keyword}
-
-\end{frontmatter}
+\begin{IEEEkeywords}
+Attribute-Based Access Control, Blockchain, Capability-Based Authorization, ClaimGuard, Enterprise Data Governance, Ethereum, Evidence Management, Multi-Stakeholder Systems, Policy Enforcement Gateway, Smart Contracts
+\end{IEEEkeywords}
 
 \section{Introduction}
 Digital evidence governance in multi-stakeholder environments presents persistent challenges across various industries. Different sectors, such as healthcare, legal, insurance, and supply chain management, each require the selective access and control of sensitive data among a range of stakeholders, under strict regulatory and compliance frameworks~\cite{su172310855}. In these industries, digital records and evidence must be shared in a controlled manner to ensure privacy, integrity, and accountability, with various stakeholders such as service providers, regulatory bodies, and third-party entities involved in the access and management of information~\cite{liang2017mhealth}. Common requirements across these domains include fine-grained access policies that account for the dynamic nature of stakeholder roles, comprehensive audit trails for compliance and transparency, and context-specific constraints, such as temporal limitations and purpose-driven access controls. Additionally, effective governance must address the practical management of large-scale off-chain resources stored in cloud or distributed systems, ensuring that data remains secure and accessible only to authorized parties within defined parameters~\cite{EsSamaali2017BlockchainAccessControl, theodouli2018healthcare}.
@@ -996,7 +990,7 @@ This work was partly supported by the Innovative Human Resource Development for 
 
 
 
-\bibliographystyle{elsarticle-num}
+\bibliographystyle{IEEEtran}
 \bibliography{refs}
 
 \end{document}
