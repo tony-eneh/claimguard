@@ -1,4 +1,5 @@
-\documentclass[conference]{IEEEtran}
+\documentclass[journal,comsoc,twoside]{IEEEtran}
+\IEEEoverridecommandlockouts
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -7,7 +8,9 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{textcomp}
+\usepackage{balance}
 \usepackage{xcolor}
+\usepackage{orcidlink}
 \usepackage{multirow}
 \usepackage{listings}
 \usepackage{tikz}
@@ -42,6 +45,15 @@
 }
 
 
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  filecolor=black,
+  urlcolor=cyan,
+}
+
+\hyphenation{op-tical net-works semi-conduc-tor IEEE-Xplore}
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
@@ -51,12 +63,22 @@
 %\title{Evaluating Action-Aware Attribute-Based Access Control for Secure Insurance Evidence Management}
 \title{PACE: Policy Anchor and Capability Enforcement for Multi-Stakeholder Digital Evidence Governance}
 
-\author{
-\IEEEauthorblockN{Anthony Uchenna Eneh, Love Allen Chijioke Ahakonye, Jae Min Lee, Dong-Seong Kim}
-\IEEEauthorblockA{IT-Convergence Engineering, Kumoh National Institute of Technology, Gumi, South Korea \\
-ICT Convergence Research Center, Kumoh National Institute of Technology, Gumi, South Korea \\
-NSLab Co. Ltd., Gumi, South Korea}
+\author{Anthony Uchenna Eneh\orcidlink{0009-0000-6339-3225},
+Love Allen Chijioke Ahakonye\orcidlink{0000-0003-2840-1693}, \textit{Member, IEEE},\\   Jae-Min Lee\orcidlink{0000-0001-6885-5185}, \textit{Member, IEEE}, Dong-Seong Kim\orcidlink{0000-0002-2977-5964}, \textit{Senior Member, IEEE}
+\thanks{Manuscript received Month XX, 2026; revised Month XX, 2026; accepted Month XX, 2026.}
+
+\thanks{This work was partly supported by the Innovative Human Resource Development for Local Intellectualization program through the IITP grant funded by the Korea government (MSIT) (IITP-2026-RS-2020-II201612, 25\%), by the Priority Research Centers Program through the NRF funded by the MEST (2018R1A6A1A03024003, 25\%), and by the MSIT, Korea, under the ITRC support program (IITP-2026-RS-2024-00438430, 25\%) and by the Basic Science Research Program through the National Research Foundation of Korea(NRF) funded by the Ministry of Education (RS-2026-25431637, 25\%).}
+
+\thanks{(Corresponding author: Dong-Seong Kim.)}
+\thanks{A.U. Eneh, and J.-M. Lee, are with the Department of IT Convergence Engineering, Kumoh National Institute of Technology, Gumi 39177, South Korea (e-mail: (anthony; ljmpaul)@kumoh.ac.kr.}
+
+\thanks{D.-S. Kim is with the Department of IT Convergence Engineering and NSLab Co., Ltd., Kumoh National Institute of Technology, Gumi 39177, South Korea (e-mail: dskim@kumoh.ac.kr).}
+
+\thanks{ L. A. C. Ahakonye is with the ICT Convergence Research Center, Kumoh National Institute of Technology, Gumi 39177, South Korea (e-mail: loveahakonye@kumoh.ac.kr).}
 }
+
+\markboth{IEEE Transactions on Information Forensics and Security,~Vol.~XX, No.~XX, Month~2026}{Eneh \MakeLowercase{\textit{et al.}}: PACE}
+
 
 \maketitle
 
@@ -106,8 +128,9 @@ The remainder of this paper is organized as follows: Section~\ref{rel} surveys r
 \label{rel}
 \begin{table*}[!htbp]
 	\centering
-	\small
-	\caption{Comparison of Related Blockchain-Based Access Control Systems}
+	%\small
+	\caption{Comparison of Related Blockchain-Based Access Control Systems}\label{tab:comparison}
+    \scalebox{.95}{
 	\setlength{\tabcolsep}{3.5pt}
 	\begin{tabular}{@{}p{2.5cm}p{1.8cm}p{2cm}p{1.8cm}p{1.6cm}p{1.4cm}p{1.4cm}p{1.8cm}@{}}
 		\toprule
@@ -133,9 +156,8 @@ The remainder of this paper is organized as follows: Section~\ref{rel} surveys r
 		\midrule
 		\textbf{PACE (This Work)}                      & \textbf{Multi-Stakeholder} & \textbf{Resource-Agnostic} & \textbf{Ethereum ABAC} & \textbf{Yes}  & \textbf{Yes}               & \textbf{Yes}      & \textbf{Quantitative \& Qualitative} \\
 		\bottomrule
-	\end{tabular}
-	\label{tab:comparison}
-\end{table*}
+	\end{tabular}}
+	\end{table*}
 
 \subsection{Multi-Stakeholder Data Governance Challenges}
 Multi-stakeholder digital evidence workflows span diverse domains including healthcare, legal discovery, insurance, and supply chain management. In healthcare, electronic medical record (EMR) systems must govern access among patients, providers, specialists, insurers, and researchers under HIPAA and patient consent requirements~\cite{liang2017mhealth,theodouli2018healthcare,sun2020emr,rana2022healthcare}. Legal discovery processes require controlled evidence sharing among law firms, courts, expert witnesses, and regulators with chain-of-custody tracking and time-bounded access. Insurance claims involve insurers, adjusters, repair vendors, law enforcement, reinsurers, and regulators accessing heterogeneous evidence including reports, medical documents, telematics, and media~\cite{sun2020insurance, liu2021auto, raikwar2018insurance, tarr2018insurance, singh2019ubi}. Supply chain workflows generate provenance documentation shared among manufacturers, distributors, customs, and auditors with jurisdiction-specific disclosure rules.
@@ -180,7 +202,6 @@ In contrast, PACE combines verifiable on-chain ABAC with off-chain enforcement v
 The ClaimGuard architecture and core components were introduced in our prior conference publication~\cite{eneh2025claimguard}; this journal extension generalizes that design into PACE. Here, we summarize the methodology and design rationale that support the extended evaluation. Detailed implementation specifics are available in the conference paper and the open-source repository~\cite{claimguard-repo}.
 
 Multi-stakeholder evidence workflows span healthcare, legal discovery, insurance, and supply chains, involving data owners, processors, auditors, regulators, and external service providers~\cite{raghav2024optimizing}. Evidence ranges from structured documents to unstructured media and telemetry, and it moves through creation, validation, analysis, and settlement or archival phases.
-
 Because evidence is stored off-chain (cloud object stores or IPFS) for scale and cost, the core challenge is binding blockchain-backed policy decisions to storage systems that lack on-chain semantics. Stakeholders need action-level permissions (read, append, update, delete, analyze, disclose) constrained by case scope, time windows, jurisdiction, and purpose.
 
 \subsection{Multi-Stakeholder Governance Scenarios}
@@ -496,7 +517,7 @@ Table~\ref{tab:latency} shows that PACE increases median end-to-end latency vers
 \subsection{System Throughput (Q2)}
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[width=0.9\linewidth]{./figures/throughput.png}
+	\includegraphics[width=.4\textwidth]{./figures/throughput.png}
 	\caption{Throughput vs. Concurrent Users (W1 Normal Load)}
 	\label{fig:throughput}
 \end{figure}
@@ -571,7 +592,7 @@ To evaluate governance realism, we focus on the \emph{policy plane} by increasin
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[width=0.95\linewidth]{./figures/e4_policy_count_vs_latency_p50.png}
+	\includegraphics[width=0.4\textwidth]{./figures/e4_policy_count_vs_latency_p50.png}
 	\caption{Policy-plane scaling: \texttt{checkAccess} latency vs.\ active policy count (E4).}
 	\label{fig:e4-policy-latency}
 \end{figure}
@@ -809,9 +830,9 @@ Table~\ref{tab:domain-mapping} maps each PACE architectural component to the mul
 
 \begin{table*}[!htbp]
 	\centering
-	\small
-	\caption{PACE Component-to-Requirement Mapping: Domain-Agnostic Architecture}
-    %\scalebox{.75}{
+	%\small
+	\caption{PACE Component-to-Requirement Mapping: Domain-Agnostic Architecture}\label{tab:domain-mapping}
+    \scalebox{.9}{
 	\begin{tabularx}{\textwidth}{@{}l X X X X X@{}}
 		\toprule
 		\textbf{PACE Component} & \textbf{Multi-Org Trust} & \textbf{Dynamic Attributes} & \textbf{Off-Chain Storage} & \textbf{Action-Aware} & \textbf{Audit Trail} \\
@@ -824,9 +845,8 @@ Table~\ref{tab:domain-mapping} maps each PACE architectural component to the mul
 		\midrule
 		Audit Log Contract & \cmark (shared record) & \cmark (attr. snapshots) & \cmark (access context) & \cmark (action tracking) & \cmark (immutable trail) \\
 		\bottomrule
-	\end{tabularx}
-	\label{tab:domain-mapping}
-\end{table*}
+	\end{tabularx}}
+	\end{table*}
 
 Empirical validation of cross-domain generality would require E6 experiments repeating E1--E5 workloads with healthcare policies and stakeholder definitions, but the architectural analysis above establishes that such experiments would yield comparable latency, throughput, and security results (within the variance expected from different blockchain deployment environments). The roadmap in Section VI articulates these empirical validation studies as future work.
 
@@ -976,8 +996,6 @@ The evaluation tested insurance workflows, but broader deployments in healthcare
 % The evaluation focused on insurance workflows and controlled experiments; broader deployments in healthcare, legal discovery, and supply chain are needed to validate generalizability and operational usability. The policy model lacks privacy-preserving mechanisms for sensitive policies, and production tooling for policy authoring, stakeholder onboarding, and audit management remains to be developed. Multi-jurisdiction governance also motivates richer temporal constraints and obligation support in the policy language.
 % Future work will prioritize cross-domain empirical validation, authoring toolchains and templates, privacy-preserving policy mechanisms for consortium settings, hybrid on/off-chain evaluation for complex policies, and pilot deployments with partner organizations. We also plan to integrate decentralized identity standards (DIDs/VCs) and formally verify the smart contract policy logic to strengthen interoperability and provide stronger correctness guarantees.
 
-\section*{Acknowledgment}
-This work was partly supported by the Innovative Human Resource Development for Local Intellectualization program through the IITP grant funded by the Korea government (MSIT) (IITP-2026-RS-2020-II201612, 25\%), by the Priority Research Centers Program through the NRF funded by the MEST (2018R1A6A1A03024003, 25\%), and by the MSIT, Korea, under the ITRC support program (IITP-2026-RS-2024-00438430, 25\%) and by the Basic Science Research Program through the National Research Foundation of Korea(NRF) funded by the Ministry of Education (RS-206-25431637, 25\%).
 
 % \appendices
 
@@ -988,10 +1006,27 @@ This work was partly supported by the Innovative Human Resource Development for 
 
 % For readability and space, we omit the full Solidity listings from the manuscript and instead describe the contract interfaces and evaluation behavior in Sections~\ref{sec:architecture}--\ref{sec:evaluation}. The repository contains the exact versions used to generate all reported results.
 
-
-
 \bibliographystyle{IEEEtran}
 \bibliography{references}
+
+\begin{IEEEbiography}
+[{\includegraphics[width=1.1in,height=1.25in,clip,keepaspectratio]{figures/Anthony.jpg}}]{Anthony Uchenna Eneh} is an Integrated Msc--Ph.D. candidate in IT Convergence Engineering at Kumoh National Institute of Technology, South Korea. He is affiliated with the Networked Systems Laboratory under Prof. Dong-Seong Kim, where his research focuses on blockchain-backed systems, verifiable access control, and artificial intelligence for high-risk and cyber-physical systems. He received his B.Eng. in Electrical and Electronics Engineering from the Federal University of Technology, Owerri, Nigeria in 2014.
+
+Anthony has over nine years of professional experience in full-stack software engineering, with extensive work in the design and development of web and mobile applications. His work spans distributed systems, AI-enabled applications, and blockchain-integrated architectures.
+\end{IEEEbiography}
+
+\begin{IEEEbiography}
+[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/Love_New_Pix.png}}]{Love Allen Chijioke Ahakonye} 
+received Ph.D. in IT-Convergence Engineering from the Networked System Laboratory, IT-Convergence Engineering, Kumoh National Institute of Technology, Gumi, South Korea in 2024. She holds an MSc in Information Technology from the Federal University of Technology, Nigeria, in 2016. In 2001, she got a B.Sc in  Mathematics/Computer Science from the University of Port Harcourt, Nigeria. She has over a decade of experience in the Nigerian oil and gas sector as a Network and System Administrator from 2002 to 2016. In 2017, she briefly worked as a Logistics Superintendent with the Nigerian Petroleum Development Company until 2019. She is also a postdoctoral researcher at the ICT Convergence Research Center (ICT-CRC), Kumoh National Institute of Technology, Gumi, South Korea. She is a member of the IEEE and the Computer Professionals Registration Council of Nigeria (CPN). Her research interest is artificial intelligence (AI) application to the Internet of Things (IoT) and industrial IoT, Supervisory Control and Data Acquisition (SCADA), and industrial control system (ICS) for intrusion/anomaly detection, cyber-security, fault detection, XAI and manufacturing execution systems. 
+\end{IEEEbiography}
+
+\begin{IEEEbiography}
+[{\includegraphics[width=1in,height=1.25in, clip,keepaspectratio]{figures/lee.png}}]{Jae-Min Lee} received his Ph.D. degree in electrical and computer engineering from Seoul National University, Seoul, Korea, in 2005. From 2005 to 2014, he was a senior engineer at Samsung Electronics in Suwon, Korea. From 2015 to 2016, he was a Principal Engineer at Samsung Electronics, Suwon, Korea. Since 2017, he has been an Associate Professor in the School of Electronic Engineering and the Department of IT Convergence Engineering at Kumoh National Institute of Technology, Gyeongbuk, Korea. Since 2024, he has been the Director of the Smart Defense Logistics Innovation Convergence Research Center (ITRC Program). He is a member of IEEE. He is the Executive Director of the Korean Institute of Communications and Information Sciences (KICS). His current main research interests are smart IoT convergence application, industrial wireless control network, UAV, Metaverse and Blockchain.
+\end{IEEEbiography}
+
+\begin{IEEEbiography}
+[{\includegraphics[width=1in,height=1.25in, clip,keepaspectratio]{figures/Dong.png.jpg}}]{Dong-Seong Kim (SM'14)} received his Ph.D. degree in Electrical and Computer Engineering from Seoul National University, Seoul, Korea, in 2003. From 1994 to 2003, he worked as a full-time researcher at the ERC-ACI at Seoul National University. From March 2003 to February 2005, he served as a postdoctoral researcher at the Wireless Network Laboratory in the School of Electrical and Computer Engineering at Cornell University, NY. Between 2007 and 2009, he was a visiting professor in the Department of Computer Science at the University of California, Davis, CA. He served as Dean of IACF from 2019 to 2022. He is currently a Professor in the Department of IT Convergence Engineering at the School of Electronic Engineering, Kumoh National Institute of Technology, Gumi, South Korea. He is also the director of the KIT Convergence Research Institute and the ICT Convergence Research Center (ITRC and NRF advanced research center program), supported by the Korean government at Kumoh National Institute of Technology, and the director of NSLab Co., Ltd. He is a senior member of IEEE and ACM. His primary research interests include real-time IoT and smart platforms, industrial wireless control networks, networked embedded systems, Fieldbus, metaverse, and blockchain. 
+\end{IEEEbiography}
 
 \end{document}
 
