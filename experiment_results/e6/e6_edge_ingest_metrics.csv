@@ -1,0 +1,3 @@
+scenario,producers,requests_per_producer,total_requests,mean_ingest_latency_ms,mean_decision_latency_ms,replay_attempts,replay_blocked,replay_block_rate,invalid_attestation_attempts,invalid_attestation_rejected,invalid_attestation_reject_rate
+standard,200,20,4000,22.43,32.342,294,281,0.95578,0,0,1.0
+attestation_aware,200,20,4000,27.458,34.904,306,305,0.99673,239,238,0.99582

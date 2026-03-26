@@ -1,0 +1,15 @@
+{
+  "experiment": "E6-lite edge ingest simulation",
+  "generated_at_utc": "2026-03-26T00:13:38.049399+00:00",
+  "config": {
+    "producers": 200,
+    "requests_per_producer": 20,
+    "seed": 42,
+    "burst_factor": 1.5
+  },
+  "notes": [
+    "Simulation-based edge clients only",
+    "No hardware-rooted remote attestation in this revision",
+    "Bounded scope for IoT/edge deployment profile validation"
+  ]
+}

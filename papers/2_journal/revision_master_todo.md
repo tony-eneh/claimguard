@@ -1,10 +1,31 @@
-# PACE Journal Revision Master To-Do
+# PACE Journal Revision Master To-Do (Execution Runbook)
 
-Purpose: close all reviewer concerns with evidence-backed revisions (not argument-only), including reruns, new baselines, expanded analysis, and full manuscript rewrite.
+Purpose: close reviewer concerns with evidence-backed revisions and implement concrete architectural deltas (not only expanded evaluation) so novelty vs ClaimGuard is explicit and defensible.
 
 How to use:
-- Check items only when artifact evidence exists (tables, logs, scripts, figures, text edits).
+- Check items only when artifact evidence exists (code diffs, logs, tables, figures, manuscript edits).
+- Execute phases in order unless a task is explicitly marked parallelizable.
 - Treat each phase gate as mandatory before moving to the next phase.
+
+---
+
+## Quick Start (One-Session Bootstrap)
+
+Run these first from repo root:
+
+```bash
+npm install
+npx hardhat compile
+npx hardhat test
+cd claimguard-peg && npm install && npm run build && cd ..
+python -m pip install -r requirements.txt
+```
+
+Create a revision artifacts workspace:
+
+```bash
+mkdir -p papers/2_journal/artifacts/{env,delta,experiments,figures,tables,responses}
+```
 
 ---
 
@@ -12,247 +33,379 @@ How to use:
 
 ### 0.1 Scope lock and issue mapping
 - [ ] Freeze reviewer concern list from all critiques + human review.
-- [ ] Map each concern to one owner and one concrete evidence artifact.
-- [ ] Create a concern-to-evidence matrix (Concern → New content/experiment/table/section).
-- [ ] Define acceptance criterion per concern (what would convince a skeptical reviewer).
+- [ ] Create `papers/2_journal/artifacts/responses/concern_to_evidence_matrix.md`.
+- [ ] Map each concern to owner + concrete evidence artifact + acceptance criterion.
 - [ ] Add a “won’t do now” list with rationale for non-critical stretch tasks.
 
 ### 0.2 Reproducible environment
-- [ ] Pin Node, npm, Python versions used for all reruns.
-- [ ] Pin dependency lockfiles and verify clean install from scratch.
-- [ ] Snapshot hardware/software environment used for experiments.
-- [ ] Ensure all experiment scripts are runnable from one top-level command set.
-- [ ] Add a single experiment runbook document for end-to-end replication.
+- [ ] Record Node/npm/Python versions in `papers/2_journal/artifacts/env/toolchain.txt`.
+- [ ] Verify clean install + compile + test on fresh shell session.
+- [ ] Snapshot hardware/software environment in `papers/2_journal/artifacts/env/system_profile.md`.
+- [ ] Ensure all experiment scripts can run from top-level command set (Phase 8).
 
 ### 0.3 Data and artifact discipline
-- [ ] Define canonical output folders for each experiment round.
+- [ ] Define canonical output folders per experiment round under `experiment_results/`.
 - [ ] Add metadata sidecar per run (commit hash, date, config, seed, env).
-- [ ] Add naming convention for figures/tables linked to manuscript sections.
-- [ ] Add checksum or manifest file for final artifacts.
+- [ ] Add a manifest file for final artifacts:
+	- `papers/2_journal/artifacts/manifest.sha256`
 
 ### Phase 0 Gate
-- [ ] Every concern has a measurable evidence target.
-- [ ] Any teammate can rerun the stack from clean checkout using the runbook.
+- [ ] Every concern has measurable evidence target.
+- [ ] Any teammate can rerun stack from clean checkout.
 
 ---
 
-## Phase 1 — Novelty/Incrementality (ClaimGuard Delta) Proof
+## Phase 1 — ClaimGuard vs PACE Delta Proof (Truthful Baseline)
 
-### 1.1 Explicit delta from conference version
-- [ ] Build a side-by-side table: ClaimGuard (conference) vs PACE (journal).
-- [ ] Separate “reused components” from “new contributions”.
-- [ ] Document architectural changes (if any) with precise scope.
-- [ ] Document methodological changes: E1/E2/E3/E4(+new) additions.
-- [ ] Document operational/deployment additions absent in conference version.
+### 1.1 Explicit current-state delta
+- [ ] Build side-by-side table: ClaimGuard (conference) vs PACE (journal) in `papers/2_journal/artifacts/delta/claimguard_vs_pace_table.md`.
+- [ ] Separate reused components from new contributions.
+- [ ] Mark current architecture status explicitly: “core architecture reused; journal currently extends evaluation.”
 
-### 1.2 Contribution statement rewrite
-- [ ] Rewrite contribution bullets to avoid overclaiming “entirely new architecture” unless proven.
-- [ ] Frame novelty as generalized framework + expanded validation where appropriate.
-- [ ] Add one paragraph defending scientific value of controlled extension work.
-- [ ] Ensure abstract/introduction/conclusion use the same novelty language.
+### 1.2 Contribution language correction
+- [ ] Rewrite claims to avoid overcalling “new architecture” before Phase 2 implementation.
+- [ ] Align abstract/introduction/conclusion wording.
 
 ### 1.3 Prior work positioning
-- [ ] Update related-work matrix to explicitly show what prior systems evaluate and what they do not.
-- [ ] Add missing closest alternatives flagged by reviewers.
-- [ ] Include quantitative comparison rows where possible (latency, throughput, revocation model, auditability).
+- [ ] Update related-work matrix to show what prior systems evaluate vs omit.
+- [ ] Add quantitative rows where possible: latency, throughput, revocation model, auditability.
 
 ### Phase 1 Gate
-- [ ] A skeptical reviewer can clearly see what is new, what is reused, and why it matters.
+- [ ] Skeptical reviewer can see exactly what is reused and what is newly added.
 
 ---
 
-## Phase 2 — Experimental Integrity Rebuild (Current E1–E4)
+## Phase 2 — Architectural Delta Implementation (NEW)
 
-### 2.1 Measurement protocol hardening
-- [ ] Standardize trial counts across experiments (or justify exceptions explicitly).
-- [ ] Define warm-up, steady-state, cooldown protocol.
-- [ ] Define concurrency levels and load profile per experiment.
-- [ ] Include confidence intervals or dispersion metrics consistently.
-- [ ] Clarify all symbols (N, runs, requests, subjects, policies) in each table caption.
+Goal: introduce concrete architecture changes beyond ClaimGuard.
 
-### 2.2 Number consistency audit
-- [ ] Recompute all manuscript numbers from source outputs.
-- [ ] Reconcile any E1 vs E2 local discrepancies with explicit setup differences.
-- [ ] Ensure every prose number appears in exactly one canonical source table/figure.
-- [ ] Add a pre-submission consistency script/checklist.
+### 2.0 Required implementation order
+1. Emergency Revocation Overlay (mandatory)
+2. Async/Batched Audit Plane (mandatory)
+3. Indexed Policy Evaluation Engine (mandatory)
+4. Federated PEG signing (optional in this revision unless time permits)
 
-### 2.3 E1 rerun (baseline comparison, local)
-- [ ] Rerun local benchmark with fixed seeds and repeated trials.
-- [ ] Capture p50/p95/p99, throughput, error rates for all baselines.
-- [ ] Include resource usage (CPU/memory) with hardware context.
-- [ ] Replot E1 figures from regenerated CSV outputs.
+### 2.1 Delta A — Emergency Revocation Overlay (mandatory)
 
-### 2.4 E2 rerun (public testnet realism)
-- [ ] Rerun Sepolia tests with clear tx confirmation sampling.
-- [ ] Report both median and tail behavior for access and policy updates.
-- [ ] Separate read-path latency from policy-update finality latency.
-- [ ] Add operational interpretation for incident-response windows.
+Problem addressed: public-network policy-finality window creates revocation lag risk.
 
-### 2.5 E3 rerun (adversarial)
-- [ ] Redesign role-spoofing test cases: malformed input vs valid-but-unauthorized identity.
-- [ ] Report attack outcome taxonomy: blocked by validation, blocked by authorization, succeeded.
-- [ ] Recompute false accept/false reject with strict definitions.
-- [ ] Ensure no contradiction between E3 table and abstract/conclusion claims.
+Code targets:
+- `contracts/AccessPolicyManager.sol`
+- `claimguard-peg/src/` (access path + middleware)
+- New: `claimguard-peg/src/revocation_overlay.ts`
 
-### 2.6 E4 rerun (policy churn/scale)
-- [ ] Rerun with same and expanded policy/subject scales.
-- [ ] Report latency drift under churn (create/update/revoke cycles).
-- [ ] Add operationally relevant churn scenarios (burst updates, emergency revokes).
+Implementation tasks:
+- [ ] Add subject-level emergency deny overlay checked before token issuance.
+- [ ] Overlay precedence rule: emergency deny overrides on-chain allow.
+- [ ] Add admin endpoint for emergency deny/unset + audit emission.
+- [ ] Add TTL/expiry semantics for emergency overlays to avoid stale lockout.
+- [ ] Add explicit manuscript threat-model update: “fast revocation path vs eventual on-chain finalization.”
+
+Validation tasks:
+- [ ] Add test: compromised subject denied immediately without waiting for chain finality.
+- [ ] Add experiment: measure emergency revoke propagation latency (target sub-second at PEG boundary).
+
+Run:
+
+```bash
+npx hardhat test
+cd claimguard-peg && npm run build && cd ..
+python claimguard-peg/e4_revocation_test.py
+```
+
+### 2.2 Delta B — Async/Batched Audit Plane (mandatory)
+
+Problem addressed: baseline fairness criticism from synchronous audit coupling.
+
+Code targets:
+- `contracts/AccessAuditLog.sol`
+- `claimguard-peg/src/` (audit pipeline)
+- New: `claimguard-peg/src/audit_queue.ts`
+- New: `claimguard-peg/src/audit_batcher.ts`
+
+Implementation tasks:
+- [ ] Split decision path from audit persistence path.
+- [ ] Add asynchronous queue with bounded retries + dead-letter handling.
+- [ ] Add batch anchor mode (Merkle root or grouped hashes) for periodic on-chain anchoring.
+- [ ] Keep compatibility mode: synchronous audit toggle for A/B experiments.
+
+Validation tasks:
+- [ ] Benchmark sync vs async under same workload.
+- [ ] Report decision latency, audit lag, dropped-event rate, retry success rate.
+
+Run:
+
+```bash
+cd claimguard-peg && npm run build && cd ..
+python e5_audit_query_performance.py
+python e5_additional_metrics.py
+python analyze_e5.py
+```
+
+### 2.3 Delta C — Indexed Policy Evaluation Engine (mandatory)
+
+Problem addressed: linear rule scan architecture does not scale cleanly.
+
+Code targets:
+- `contracts/AccessPolicyManager.sol`
+- `contracts/Types.sol` (if index key struct needed)
+
+Implementation tasks:
+- [ ] Add policy indexing strategy (e.g., role+action+resourceType buckets).
+- [ ] Preserve existing policy semantics and conflict resolution.
+- [ ] Add migration path for existing policies.
+- [ ] Add gas and latency comparison with previous linear scan mode.
+
+Validation tasks:
+- [ ] Add tests for equivalence: old vs new evaluator decisions match.
+- [ ] Add E4 extension run up to higher policy counts.
+
+Run:
+
+```bash
+npx hardhat test
+cd claimguard-peg && python e4_seed_policies.py && python e4_run.py && cd ..
+python claimguard-peg/analyze_e4.py
+```
+
+### 2.4 Delta D — Federated PEG Signing (optional / stretch)
+
+Problem addressed: single gateway signing key as concentration risk.
+
+Code targets:
+- `claimguard-peg/src/` auth/signing modules
+- Optional new contract for signer set governance
+
+Implementation tasks:
+- [ ] Implement M-of-N signer policy (or staged dual-signature fallback).
+- [ ] Add signer rotation and failover procedure.
+- [ ] Add key-compromise blast-radius analysis.
+
+Validation tasks:
+- [ ] Simulate one signer compromise/unavailability while preserving service.
+
+### 2.5 Delta artifacts to produce
+- [ ] `papers/2_journal/artifacts/delta/architecture_delta_summary.md`
+- [ ] `papers/2_journal/artifacts/delta/before_after_sequence.md`
+- [ ] `papers/2_journal/artifacts/delta/delta_experiment_results.csv`
 
 ### Phase 2 Gate
-- [ ] All published numbers are regenerated and reproducible from scripts + raw outputs.
-- [ ] No unresolved numerical contradiction remains.
+- [ ] At least 3 mandatory architectural deltas implemented and tested (A, B, C).
+- [ ] Manuscript can claim concrete architecture changes, not only broader evaluation.
 
 ---
 
-## Phase 3 — New Baselines and Fairness Upgrades
+## Phase 3 — Experimental Integrity Rebuild (E1–E4 + Delta Experiments)
 
-### 3.1 Hybrid-Audit fairness correction
-- [ ] Implement asynchronous/batched audit variant (not only synchronous).
-- [ ] Benchmark sync vs async hybrid under same workload.
-- [ ] Report fairness caveat and interpretation boundaries.
+### 3.1 Measurement protocol hardening
+- [ ] Standardize trial counts, warm-up, steady-state, cooldown.
+- [ ] Define concurrency/load profile per experiment.
+- [ ] Include confidence intervals/dispersion metrics consistently.
+- [ ] Clarify all symbols (N, runs, requests, subjects, policies) in captions.
 
-### 3.2 Additional baseline families (at least one strong addition)
-- [ ] Add one stronger modern baseline relevant to reviewer concerns (permissioned-chain ABAC, DID-based control, or cryptographic policy enforcement proxy).
-- [ ] Document why selected baseline is representative and feasible.
-- [ ] Normalize benchmarking assumptions across systems.
+### 3.2 Number consistency audit
+- [ ] Recompute all manuscript numbers from source outputs.
+- [ ] Reconcile E1 vs E2 local discrepancies with setup differences.
+- [ ] Ensure every prose number maps to canonical source artifact.
+- [ ] Add pre-submission consistency script/checklist.
 
-### 3.3 Baseline transparency
-- [ ] Publish baseline implementation details and config knobs.
-- [ ] Explicitly disclose where baseline design choices differ from production deployments.
-- [ ] Add sensitivity analysis where baseline design materially changes results.
+### 3.3 Core reruns
+- [ ] E1 rerun with fixed seeds + repeated trials.
+- [ ] E2 rerun on Sepolia with tail latency and confirmation sampling.
+- [ ] E3 rerun with role-spoof split: malformed vs well-formed unauthorized.
+- [ ] E4 rerun with churn + emergency revoke scenarios.
+
+### 3.4 New delta-focused experiments
+- [ ] E5-A: emergency overlay revoke latency vs on-chain-only revoke.
+- [ ] E5-B: sync vs async audit latency + reliability.
+- [ ] E5-C: indexed vs linear policy evaluation at scale.
+- [ ] E6-lite (IoT/Edge): attestation-aware edge ingest profile vs standard ingest.
+
+E6-lite output requirements:
+- [ ] Create `experiment_results/e6/` outputs + metadata sidecar.
+- [ ] Report exactly 4 metrics: ingest latency overhead, replay block rate, invalid-attestation reject rate, decision latency under burst.
+- [ ] Keep workload bounded (100-500 simulated edge producers) and avoid broad IoT claims.
+
+Run:
+
+```bash
+cd claimguard-peg
+python e2_run.py
+python e3_run.py
+python e4_run.py
+python run_experiments.py
+cd ..
+python analyze_e5.py
+python analyze_e6.py
+```
 
 ### Phase 3 Gate
-- [ ] Comparative claims are robust against “strawman baseline” criticism.
+- [ ] All published numbers regenerated from scripts + raw outputs.
+- [ ] No unresolved numerical contradiction.
 
 ---
 
-## Phase 4 — Cross-Domain Validation Strengthening
+## Phase 4 — Baselines and Fairness Upgrades
 
-### 4.1 From mapping-only to evidence-backed portability
-- [ ] Keep configuration mapping tables for healthcare/legal/supply-chain.
-- [ ] Add at least one empirical mini-run outside insurance (even reduced scale).
-- [ ] Report whether performance/security trends hold in the added domain.
+### 4.1 Hybrid-Audit fairness correction
+- [ ] Keep synchronous variant.
+- [ ] Add asynchronous/batched variant.
+- [ ] Benchmark both and report caveats/interpretation boundaries.
 
-### 4.2 Claims calibration
-- [ ] Replace universal language with scope-accurate wording where needed.
-- [ ] Distinguish “demonstrated empirically” from “architecturally transferable”.
+### 4.2 Additional baseline family
+- [ ] Add one stronger modern baseline (permissioned-chain ABAC or DID-mediated control).
+- [ ] Document representativeness and feasibility assumptions.
+
+### 4.3 Baseline transparency
+- [ ] Publish baseline implementation/config knobs.
+- [ ] Add sensitivity analysis for design choices that change outcomes.
 
 ### Phase 4 Gate
-- [ ] Cross-domain section includes at least one empirical anchor beyond configuration examples.
+- [ ] Comparative claims robust against strawman-baseline criticism.
 
 ---
 
-## Phase 5 — Security and Threat-Model Reinforcement
+## Phase 5 — Cross-Domain Validation Strengthening
 
-### 5.1 Threat model precision
-- [ ] Standardize terms: honest-but-curious vs malicious vs compromised component.
-- [ ] Add explicit assumptions for cloud configuration correctness and gateway trust.
-- [ ] State what guarantees are architectural vs operational.
+### 5.1 Empirical anchor beyond mapping
+- [ ] Keep mapping tables.
+- [ ] Add at least one reduced-scale empirical run outside insurance (healthcare or legal).
+- [ ] Report whether trend directions hold.
 
-### 5.2 Residual risk and mitigations
-- [ ] Add a clear residual-risk table (risk, condition, impact, mitigation).
-- [ ] Include gateway availability and key-management failure modes.
-- [ ] Include revocation-window risk due to token TTL and chain finality.
+### 5.2 Claims calibration
+- [ ] Replace universal language with scoped wording.
+- [ ] Distinguish “empirically shown” vs “architecturally transferable.”
 
-### 5.3 Security validation depth
-- [ ] Expand adversarial suite where feasible (replay variants, token misuse, denial patterns).
-- [ ] Add negative controls to prove test harness is not masking failures.
-- [ ] Add attack reproducibility notes (exact inputs and expected outcomes).
+### 5.3 IoT/Edge inclusion track (bounded scope)
+
+Scope guardrails (must keep):
+- [ ] Position IoT as a deployment profile of PACE, not a new standalone IoT framework.
+- [ ] Do not add unrelated IoT features (routing, device scheduling, edge ML, federated learning).
+- [ ] Constrain contribution to “edge-generated evidence governance with attestation-aware ingest.”
+
+Architecture/profile tasks:
+- [ ] Add an Edge Evidence Ingress Adapter concept to methodology text.
+- [ ] Define minimal edge attributes: `deviceClass`, `attestationLevel`, `firmwareEpoch`, `ingestWindow`.
+- [ ] Specify verification path: device/edge -> gateway verification -> on-chain policy decision -> capability.
+
+Implementation tasks (minimal viable):
+- [ ] Add edge ingest endpoint in `claimguard-peg/src/` (new module `edge_ingest.ts` or equivalent).
+- [ ] Add attestation verification stub/interface (deterministic mock acceptable for journal experiment).
+- [ ] Bind verified edge metadata into access/policy context without breaking existing flows.
+
+Experiment tasks:
+- [ ] Implement E6-lite harness script(s) under `claimguard-peg/` for bounded edge bursts.
+- [ ] Compare standard ingest vs attestation-aware ingest under identical load profile.
+- [ ] Add explicit limitations: simulation-based edge clients; no hardware-rooted attestation in this revision.
 
 ### Phase 5 Gate
-- [ ] Security claims and limits are explicit, test-backed, and non-contradictory.
+- [ ] Cross-domain section has at least one empirical anchor.
+- [ ] IoT/Edge addition remains tightly scoped and does not change paper thesis.
 
 ---
 
-## Phase 6 — Cost, Scalability, and Deployment Reality
+## Phase 6 — Security, Cost, Scalability, Deployment Reality
 
-### 6.1 Economic reporting
-- [ ] Expand gas/cost reporting with network context (L1/L2/consortium assumptions).
-- [ ] Include confidence ranges for cost estimates where volatility applies.
-- [ ] Add per-operation cost table for policy lifecycle operations.
+### 6.1 Threat model precision
+- [ ] Standardize terms: honest-but-curious vs malicious vs compromised component.
+- [ ] Explicitly state cloud-config assumptions.
+- [ ] Separate architectural guarantees from operational controls.
 
-### 6.2 Scalability envelope
-- [ ] State tested limits clearly (current max policies/subjects/workload).
-- [ ] Add at least one larger-scale run if feasible within resources.
-- [ ] Document expected bottlenecks and practical limits.
+### 6.2 Residual risk table
+- [ ] Add risk/condition/impact/mitigation table.
+- [ ] Include gateway availability, key management, and token TTL windows.
 
-### 6.3 Production-readiness calibration
-- [ ] Replace absolute production-readiness claims with evidence-based maturity level.
-- [ ] Add deployment blueprint: pilot stage, hardening stage, consortium rollout stage.
-- [ ] Add required controls list (HA gateway, monitoring, key custody, incident response).
+### 6.3 Economic + scale reporting
+- [ ] Expand gas/cost table with L1/L2/consortium assumptions.
+- [ ] Report tested envelope and practical bottlenecks.
+- [ ] Add per-operation lifecycle costs (create/update/revoke/access/audit).
+
+### 6.4 Production-readiness calibration
+- [ ] Replace absolute production-ready claims with maturity-level wording.
+- [ ] Add deployment blueprint: pilot → hardening → consortium rollout.
 
 ### Phase 6 Gate
-- [ ] Cost/scalability/deployment claims are bounded and operationally credible.
+- [ ] Security/cost/scale/deployment claims are bounded and credible.
 
 ---
 
-## Phase 7 — Full Manuscript Rewrite and Integration
+## Phase 7 — Manuscript Rewrite and Integration
 
-### 7.1 Structural refactor (journal template alignment)
-- [ ] Ensure final structure aligns with target journal format.
-- [ ] Split implementation/observation from discussion/analysis cleanly.
-- [ ] Remove duplicated text across abstract/introduction/results/discussion.
+### 7.1 Structural refactor
+- [ ] Align with target journal structure.
+- [ ] Split implementation/observation from discussion.
+- [ ] Remove duplicated claims across sections.
 
-### 7.2 Section-by-section rewrite
-- [ ] Introduction: gap, motivation, scoped contributions, paper roadmap.
-- [ ] Related Work: sharpened matrix + quantitative/qualitative positioning.
-- [ ] Methodology: architecture, protocol flow, threat model, assumptions.
-- [ ] Implementation/Observation: setup, datasets, baselines, metrics, experiment outputs.
-- [ ] Discussion: interpretation, limitations, deployment implications, transferability.
-- [ ] Conclusion: contributions aligned to demonstrated evidence only.
+### 7.2 New required subsection
+- [ ] Add “Architectural Delta from ClaimGuard” subsection with:
+	- [ ] explicit reused components
+	- [ ] explicit new components (A/B/C deltas)
+	- [ ] before/after sequence diagram reference
+	- [ ] evidence references to experiments
+- [ ] Add “IoT/Edge Deployment Profile (E6-lite)” subsection with:
+	- [ ] bounded scope statement
+	- [ ] edge ingest sequence and trust assumptions
+	- [ ] E6-lite metrics and limitations
 
-### 7.3 Figures, tables, and captions
+### 7.3 Figures/tables/captions
 - [ ] Rebuild all plots from rerun outputs.
-- [ ] Ensure table headers are complete and non-truncated.
-- [ ] Ensure every figure/table is legible in print and referenced in text.
-- [ ] Add appendix references for extended data where needed.
+- [ ] Ensure complete headers and legibility.
+- [ ] Reference every figure/table in text.
 
-### 7.4 Language and claims pass
-- [ ] Remove unsupported absolutes (first, universal, production-ready) unless substantiated.
-- [ ] Ensure tense and terminology consistency throughout.
-- [ ] Ensure claims match exact evidence source.
+### 7.4 Language pass
+- [ ] Remove unsupported absolutes (first, universal, production-ready).
+- [ ] Ensure claims map to exact evidence artifact.
+
+Compile:
+
+```bash
+cd papers/2_journal
+pdflatex paper.tex
+bibtex paper
+pdflatex paper.tex
+pdflatex paper.tex
+cd ../..
+```
 
 ### Phase 7 Gate
-- [ ] Manuscript reads as one coherent story, with no claim-evidence mismatch.
+- [ ] Manuscript is coherent with no claim-evidence mismatch.
 
 ---
 
-## Phase 8 — Reproducibility, Artifact, and Reviewer Package
+## Phase 8 — Reproducibility, Artifact, Reviewer Package
 
-### 8.1 Artifact package
-- [ ] Prepare scripts for one-command rerun per experiment group.
-- [ ] Include raw outputs + processed outputs + plotting scripts.
-- [ ] Include environment and configuration manifests.
-- [ ] Validate artifact package on a fresh machine/session.
+### 8.1 One-command rerun package
+- [ ] Add script `scripts/run_journal_revision_bundle.sh` that executes all required runs.
+- [ ] Include raw + processed outputs + plotting scripts + manifests.
+- [ ] Validate on fresh session.
 
 ### 8.2 Reviewer response packet
-- [ ] Build a concern-by-concern response matrix (Concern → What changed → Where in paper → Evidence artifact).
-- [ ] Include before/after claim wording for major disputed points.
-- [ ] Include list of newly added baselines and why they address fairness concerns.
+- [ ] Concern-by-concern response matrix with exact paper locations.
+- [ ] Before/after wording snippets for disputed claims.
+- [ ] Baseline fairness explanation with async/sync evidence.
 
 ### 8.3 Final quality checks
-- [ ] Full consistency pass for numbers, notation, and citations.
-- [ ] Check bibliography completeness and formatting.
-- [ ] Spell/grammar and style pass.
-- [ ] PDF compile checks with no broken refs/citations.
+- [ ] Consistency pass for numbers/notation/citations.
+- [ ] Bibliography completeness and formatting check.
+- [ ] Grammar/style pass.
+- [ ] PDF compile with no broken references.
 
 ### Phase 8 Gate
-- [ ] Submission bundle is reproducible, auditable, and reviewer-ready.
+- [ ] Submission bundle is reproducible, auditable, reviewer-ready.
 
 ---
 
-## Optional Stretch Items (If Time Allows)
-- [ ] Add formal verification plan or preliminary checks for critical contracts.
-- [ ] Add extended-scale tests beyond current envelope (10k+ policy scenarios).
-- [ ] Add user/admin workload study (policy authoring effort and operational burden).
-- [ ] Add additional public network runs for variance across days/time windows.
+## Optional Stretch Items
+- [ ] Federated PEG signing (if not completed in Phase 2.4).
+- [ ] Formal verification checks for critical contracts.
+- [ ] Extended-scale tests (10k+ policies).
+- [ ] Additional public-network variance runs across days/time windows.
 
 ---
 
 ## Master Definition of Done
-- [ ] Every major reviewer concern has direct empirical or textual evidence.
-- [ ] No major contradiction remains in results, claims, or threat model.
-- [ ] Novelty vs ClaimGuard is explicit and defensible.
+- [ ] Every major reviewer concern has direct empirical/textual evidence.
+- [ ] No contradiction remains in results, claims, or threat model.
+- [ ] Novelty vs ClaimGuard is explicit with implemented architectural deltas.
 - [ ] Baseline comparisons are fair and transparently documented.
-- [ ] Final paper can survive a hostile-but-fair rereview based on evidence.
+- [ ] Final paper can survive hostile-but-fair rereview based on evidence.

@@ -1,0 +1,45 @@
+{
+  "generated_at_utc": "2026-03-26T00:13:38.303684+00:00",
+  "input_file": "experiment_results/e6/e6_edge_ingest_metrics.csv",
+  "four_required_metrics": {
+    "ingest_latency_overhead_ms": 5.028,
+    "replay_block_rate_percent_attestation_aware": 99.67,
+    "invalid_attestation_reject_rate_percent": 99.58,
+    "decision_latency_under_burst_ms_attestation_aware": 34.904
+  },
+  "raw": {
+    "standard": {
+      "scenario": "standard",
+      "producers": 200,
+      "requests_per_producer": 20,
+      "total_requests": 4000,
+      "mean_ingest_latency_ms": 22.43,
+      "mean_decision_latency_ms": 32.342,
+      "replay_attempts": 294,
+      "replay_blocked": 281,
+      "replay_block_rate": 0.95578,
+      "invalid_attestation_attempts": 0,
+      "invalid_attestation_rejected": 0,
+      "invalid_attestation_reject_rate": 1.0
+    },
+    "attestation_aware": {
+      "scenario": "attestation_aware",
+      "producers": 200,
+      "requests_per_producer": 20,
+      "total_requests": 4000,
+      "mean_ingest_latency_ms": 27.458,
+      "mean_decision_latency_ms": 34.904,
+      "replay_attempts": 306,
+      "replay_blocked": 305,
+      "replay_block_rate": 0.99673,
+      "invalid_attestation_attempts": 239,
+      "invalid_attestation_rejected": 238,
+      "invalid_attestation_reject_rate": 0.99582
+    }
+  },
+  "limitations": [
+    "Simulation-based edge clients only",
+    "No hardware-rooted attestation in this revision",
+    "Bounded IoT/edge profile (not a general IoT framework)"
+  ]
+}
