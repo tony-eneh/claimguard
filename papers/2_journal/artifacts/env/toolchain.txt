@@ -1,0 +1,4 @@
+node v24.14.0
+npm 11.9.0
+python Python 3.12.3
+pip pip 26.0.1 from /home/aeneh/projects/claimguard/.venv_run/lib/python3.12/site-packages/pip (python 3.12)

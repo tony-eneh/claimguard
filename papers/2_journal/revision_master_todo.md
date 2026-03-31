@@ -2,6 +2,13 @@
 
 Purpose: close reviewer concerns with evidence-backed revisions and implement concrete architectural deltas (not only expanded evaluation) so novelty vs ClaimGuard is explicit and defensible.
 
+Execution status note (latest run):
+- E1/E2/E3/E4/E5/E6 runs were executed with fresh outputs in this workspace.
+- Sepolia E2 was executed and outputs were written to `claimguard-peg/experiment_results/e2-sepolia/`.
+- Local-chain E4 and E5 were re-run after enabling native Docker in WSL and starting PostgreSQL/Mongo via `docker compose`.
+- E4 1000-policy seeding required serialized policy creation (`e4_seed_policies.py --concurrency 1`) to avoid nonce-collision failures under automining.
+- E5 scripts now complete end-to-end; `e5_audit_query_performance.py` port mapping and `e5_additional_metrics.py` CSV/cleanup issues were fixed.
+
 How to use:
 - Check items only when artifact evidence exists (code diffs, logs, tables, figures, manuscript edits).
 - Execute phases in order unless a task is explicitly marked parallelizable.
@@ -33,21 +40,21 @@ mkdir -p papers/2_journal/artifacts/{env,delta,experiments,figures,tables,respon
 
 ### 0.1 Scope lock and issue mapping
 - [ ] Freeze reviewer concern list from all critiques + human review.
-- [ ] Create `papers/2_journal/artifacts/responses/concern_to_evidence_matrix.md`.
+- [x] Create `papers/2_journal/artifacts/responses/concern_to_evidence_matrix.md`.
 - [ ] Map each concern to owner + concrete evidence artifact + acceptance criterion.
 - [ ] Add a “won’t do now” list with rationale for non-critical stretch tasks.
 
 ### 0.2 Reproducible environment
-- [ ] Record Node/npm/Python versions in `papers/2_journal/artifacts/env/toolchain.txt`.
-- [ ] Verify clean install + compile + test on fresh shell session.
-- [ ] Snapshot hardware/software environment in `papers/2_journal/artifacts/env/system_profile.md`.
+- [x] Record Node/npm/Python versions in `papers/2_journal/artifacts/env/toolchain.txt`.
+- [x] Verify clean install + compile + test on fresh shell session.
+- [x] Snapshot hardware/software environment in `papers/2_journal/artifacts/env/system_profile.md`.
 - [ ] Ensure all experiment scripts can run from top-level command set (Phase 8).
 
 ### 0.3 Data and artifact discipline
 - [ ] Define canonical output folders per experiment round under `experiment_results/`.
 - [ ] Add metadata sidecar per run (commit hash, date, config, seed, env).
 - [ ] Add a manifest file for final artifacts:
-	- `papers/2_journal/artifacts/manifest.sha256`
+	- [x] `papers/2_journal/artifacts/manifest.sha256`
 
 ### Phase 0 Gate
 - [ ] Every concern has measurable evidence target.
@@ -185,8 +192,8 @@ Validation tasks:
 - [ ] Simulate one signer compromise/unavailability while preserving service.
 
 ### 2.5 Delta artifacts to produce
-- [ ] `papers/2_journal/artifacts/delta/architecture_delta_summary.md`
-- [ ] `papers/2_journal/artifacts/delta/before_after_sequence.md`
+- [x] `papers/2_journal/artifacts/delta/architecture_delta_summary.md`
+- [x] `papers/2_journal/artifacts/delta/before_after_sequence.md`
 - [ ] `papers/2_journal/artifacts/delta/delta_experiment_results.csv`
 
 ### Phase 2 Gate
@@ -210,10 +217,10 @@ Validation tasks:
 - [ ] Add pre-submission consistency script/checklist.
 
 ### 3.3 Core reruns
-- [ ] E1 rerun with fixed seeds + repeated trials.
-- [ ] E2 rerun on Sepolia with tail latency and confirmation sampling.
-- [ ] E3 rerun with role-spoof split: malformed vs well-formed unauthorized.
-- [ ] E4 rerun with churn + emergency revoke scenarios.
+- [x] E1 rerun with fixed seeds + repeated trials.
+- [x] E2 rerun on Sepolia with tail latency and confirmation sampling.
+- [x] E3 rerun with role-spoof split: malformed vs well-formed unauthorized.
+- [x] E4 rerun with churn + emergency revoke scenarios.
 
 ### 3.4 New delta-focused experiments
 - [ ] E5-A: emergency overlay revoke latency vs on-chain-only revoke.
@@ -222,9 +229,9 @@ Validation tasks:
 - [ ] E6-lite (IoT/Edge): attestation-aware edge ingest profile vs standard ingest.
 
 E6-lite output requirements:
-- [ ] Create `experiment_results/e6/` outputs + metadata sidecar.
-- [ ] Report exactly 4 metrics: ingest latency overhead, replay block rate, invalid-attestation reject rate, decision latency under burst.
-- [ ] Keep workload bounded (100-500 simulated edge producers) and avoid broad IoT claims.
+- [x] Create `experiment_results/e6/` outputs + metadata sidecar.
+- [x] Report exactly 4 metrics: ingest latency overhead, replay block rate, invalid-attestation reject rate, decision latency under burst.
+- [x] Keep workload bounded (100-500 simulated edge producers) and avoid broad IoT claims.
 
 Run:
 
@@ -375,7 +382,7 @@ cd ../..
 ## Phase 8 — Reproducibility, Artifact, Reviewer Package
 
 ### 8.1 One-command rerun package
-- [ ] Add script `scripts/run_journal_revision_bundle.sh` that executes all required runs.
+- [x] Add script `scripts/run_journal_revision_bundle.sh` that executes all required runs.
 - [ ] Include raw + processed outputs + plotting scripts + manifests.
 - [ ] Validate on fresh session.
 
