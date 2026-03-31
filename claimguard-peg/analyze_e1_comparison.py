@@ -161,7 +161,7 @@ def plot_throughput_comparison():
         if mode == "hybrid":
             label = "Hybrid-Audit"
         elif mode == "claimguard":
-            label = "ClaimGuard"
+            label = "PACE"
 
         ax.plot(subset["concurrency"], subset["throughput_rps"], marker="o", label=label, linewidth=2)
 
