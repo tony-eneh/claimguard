@@ -35,7 +35,7 @@ PG_CONFIG = {
     'database': 'audit_logs',
     'user': 'claimguard',
     'password': 'testpass',
-    'port': 55432  # mapped host port to avoid conflict with local Postgres
+    'port': 54320  # mapped host port to avoid conflict with local Postgres
 }
 
 MONGO_URI = 'mongodb://localhost:27017/'

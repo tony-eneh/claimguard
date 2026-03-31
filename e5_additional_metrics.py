@@ -548,8 +548,11 @@ def run_experiment():
     # Save throughput as CSV
     if results['throughput']:
         csv_file = 'experiment_results/e5_throughput.csv'
+        throughput_fieldnames = sorted({
+            key for row in results['throughput'] for key in row.keys()
+        })
         with open(csv_file, 'w', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=results['throughput'][0].keys())
+            writer = csv.DictWriter(f, fieldnames=throughput_fieldnames)
             writer.writeheader()
             writer.writerows(results['throughput'])
         print(f"  Saved: {csv_file}")
@@ -611,7 +614,7 @@ def run_experiment():
     # Cleanup
     if pg_conn:
         pg_conn.close()
-    if mongo_collection:
+    if mongo_collection is not None:
         mongo_collection.database.client.close()
 
 
