@@ -48,7 +48,7 @@
     {
       "request": "string_resource",
       "status": "exception",
-      "error": "[WinError 64] The specified network name is no lon"
+      "error": "Server disconnected"
     },
     {
       "flood_test": "100 rapid requests",

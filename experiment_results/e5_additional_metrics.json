@@ -4,326 +4,326 @@
       "system": "PostgreSQL",
       "batch_size": 100,
       "repetition": 0,
-      "total_time_ms": 51.5657999785617,
-      "throughput_tps": 1939.269826931312
+      "total_time_ms": 108.81743500067387,
+      "throughput_tps": 918.9703837384214
     },
     {
       "system": "MongoDB",
       "batch_size": 100,
       "repetition": 0,
-      "total_time_ms": 4.042999935336411,
-      "throughput_tps": 24734.10873099091
+      "total_time_ms": 27.97859899874311,
+      "throughput_tps": 3574.1603789557985
     },
     {
       "system": "Blockchain",
       "batch_size": 100,
       "repetition": 0,
-      "total_time_ms": 2293.408100027591,
-      "throughput_tps": 43.603229620928325,
+      "total_time_ms": 7460.234819998732,
+      "throughput_tps": 13.404403804010153,
+      "total_gas": 2622412
+    },
+    {
+      "system": "PostgreSQL",
+      "batch_size": 100,
+      "repetition": 1,
+      "total_time_ms": 94.32547799951863,
+      "throughput_tps": 1060.158953029746
+    },
+    {
+      "system": "MongoDB",
+      "batch_size": 100,
+      "repetition": 1,
+      "total_time_ms": 16.965220995189156,
+      "throughput_tps": 5894.411869338873
+    },
+    {
+      "system": "Blockchain",
+      "batch_size": 100,
+      "repetition": 1,
+      "total_time_ms": 45042.92557799636,
+      "throughput_tps": 2.2201044607291314,
+      "total_gas": 2596182
+    },
+    {
+      "system": "PostgreSQL",
+      "batch_size": 100,
+      "repetition": 2,
+      "total_time_ms": 93.48540200153366,
+      "throughput_tps": 1069.6857248189344
+    },
+    {
+      "system": "MongoDB",
+      "batch_size": 100,
+      "repetition": 2,
+      "total_time_ms": 8.053988000028767,
+      "throughput_tps": 12416.20921208758
+    },
+    {
+      "system": "Blockchain",
+      "batch_size": 100,
+      "repetition": 2,
+      "total_time_ms": 7120.741705999535,
+      "throughput_tps": 14.043480880052936,
       "total_gas": 2622268
     },
     {
       "system": "PostgreSQL",
       "batch_size": 100,
-      "repetition": 1,
-      "total_time_ms": 34.56729999743402,
-      "throughput_tps": 2892.9074589980455
-    },
-    {
-      "system": "MongoDB",
-      "batch_size": 100,
-      "repetition": 1,
-      "total_time_ms": 2.9393999138846993,
-      "throughput_tps": 34020.54940793694
-    },
-    {
-      "system": "Blockchain",
-      "batch_size": 100,
-      "repetition": 1,
-      "total_time_ms": 1954.8446999397129,
-      "throughput_tps": 51.15495875610169,
-      "total_gas": 2622160
-    },
-    {
-      "system": "PostgreSQL",
-      "batch_size": 100,
-      "repetition": 2,
-      "total_time_ms": 33.84679998271167,
-      "throughput_tps": 2954.4890521726775
-    },
-    {
-      "system": "MongoDB",
-      "batch_size": 100,
-      "repetition": 2,
-      "total_time_ms": 2.7612000703811646,
-      "throughput_tps": 36216.13698792775
-    },
-    {
-      "system": "Blockchain",
-      "batch_size": 100,
-      "repetition": 2,
-      "total_time_ms": 2066.397499991581,
-      "throughput_tps": 48.39339962442242,
-      "total_gas": 2622172
-    },
-    {
-      "system": "PostgreSQL",
-      "batch_size": 100,
       "repetition": 3,
-      "total_time_ms": 36.46730002947152,
-      "throughput_tps": 2742.1827203874077
+      "total_time_ms": 99.18532500159927,
+      "throughput_tps": 1008.2136646564156
     },
     {
       "system": "MongoDB",
       "batch_size": 100,
       "repetition": 3,
-      "total_time_ms": 3.301899996586144,
-      "throughput_tps": 30285.593174654186
+      "total_time_ms": 9.219703999406192,
+      "throughput_tps": 10846.335197576911
     },
     {
       "system": "Blockchain",
       "batch_size": 100,
       "repetition": 3,
-      "total_time_ms": 2394.766600104049,
-      "throughput_tps": 41.757722859361394,
-      "total_gas": 2622364
+      "total_time_ms": 64687.36560599791,
+      "throughput_tps": 1.5458969315443547,
+      "total_gas": 2622352
     },
     {
       "system": "PostgreSQL",
       "batch_size": 100,
       "repetition": 4,
-      "total_time_ms": 33.557599992491305,
-      "throughput_tps": 2979.950891076106
+      "total_time_ms": 221.70128199650208,
+      "throughput_tps": 451.0573827064192
     },
     {
       "system": "MongoDB",
       "batch_size": 100,
       "repetition": 4,
-      "total_time_ms": 2.769499900750816,
-      "throughput_tps": 36107.601943906855
+      "total_time_ms": 30.903394996130373,
+      "throughput_tps": 3235.8904260364175
     },
     {
       "system": "Blockchain",
       "batch_size": 100,
       "repetition": 4,
-      "total_time_ms": 2032.679000054486,
-      "throughput_tps": 49.19615935291283,
-      "total_gas": 2622304
+      "total_time_ms": 13744.94304900145,
+      "throughput_tps": 7.275403007745809,
+      "total_gas": 2622448
     },
     {
       "system": "PostgreSQL",
       "batch_size": 500,
       "repetition": 0,
-      "total_time_ms": 169.5527998963371,
-      "throughput_tps": 2948.933903218909
+      "total_time_ms": 1001.8651280042832,
+      "throughput_tps": 499.0691721110213
     },
     {
       "system": "MongoDB",
       "batch_size": 500,
       "repetition": 0,
-      "total_time_ms": 19.23890004400164,
-      "throughput_tps": 25989.011786351657
+      "total_time_ms": 78.83461999881547,
+      "throughput_tps": 6342.3911982770105
     },
     {
       "system": "PostgreSQL",
       "batch_size": 500,
       "repetition": 1,
-      "total_time_ms": 159.96780002024025,
-      "throughput_tps": 3125.629032447383
+      "total_time_ms": 1186.1746720023802,
+      "throughput_tps": 421.52307902170134
     },
     {
       "system": "MongoDB",
       "batch_size": 500,
       "repetition": 1,
-      "total_time_ms": 11.378200026229024,
-      "throughput_tps": 43943.68167613508
+      "total_time_ms": 114.1965060014627,
+      "throughput_tps": 4378.41767237253
     },
     {
       "system": "PostgreSQL",
       "batch_size": 500,
       "repetition": 2,
-      "total_time_ms": 184.2325999168679,
-      "throughput_tps": 2713.9605055002057
+      "total_time_ms": 872.5112640022417,
+      "throughput_tps": 573.0585043756128
     },
     {
       "system": "MongoDB",
       "batch_size": 500,
       "repetition": 2,
-      "total_time_ms": 10.595500003546476,
-      "throughput_tps": 47189.84472961562
+      "total_time_ms": 97.08021500409814,
+      "throughput_tps": 5150.380023147796
     },
     {
       "system": "PostgreSQL",
       "batch_size": 500,
       "repetition": 3,
-      "total_time_ms": 180.57830003090203,
-      "throughput_tps": 2768.8819748244164
+      "total_time_ms": 961.9017539953347,
+      "throughput_tps": 519.8036056418554
     },
     {
       "system": "MongoDB",
       "batch_size": 500,
       "repetition": 3,
-      "total_time_ms": 11.344400001689792,
-      "throughput_tps": 44074.60949239476
+      "total_time_ms": 55.557540996233,
+      "throughput_tps": 8999.67837010464
     },
     {
       "system": "PostgreSQL",
       "batch_size": 500,
       "repetition": 4,
-      "total_time_ms": 181.88669998198748,
-      "throughput_tps": 2748.9640531689
+      "total_time_ms": 822.8312369974446,
+      "throughput_tps": 607.6580196742734
     },
     {
       "system": "MongoDB",
       "batch_size": 500,
       "repetition": 4,
-      "total_time_ms": 9.855999960564077,
-      "throughput_tps": 50730.51968350293
+      "total_time_ms": 79.05194199702237,
+      "throughput_tps": 6324.955306206562
     },
     {
       "system": "PostgreSQL",
       "batch_size": 1000,
       "repetition": 0,
-      "total_time_ms": 315.33420004416257,
-      "throughput_tps": 3171.238640971864
+      "total_time_ms": 1701.719315002265,
+      "throughput_tps": 587.6409765018558
     },
     {
       "system": "MongoDB",
       "batch_size": 1000,
       "repetition": 0,
-      "total_time_ms": 17.590800067409873,
-      "throughput_tps": 56847.89754689329
+      "total_time_ms": 235.03904000244802,
+      "throughput_tps": 4254.612340101392
     },
     {
       "system": "PostgreSQL",
       "batch_size": 1000,
       "repetition": 1,
-      "total_time_ms": 325.1145000103861,
-      "throughput_tps": 3075.8394349315518
+      "total_time_ms": 1785.8455989990034,
+      "throughput_tps": 559.958823181868
     },
     {
       "system": "MongoDB",
       "batch_size": 1000,
       "repetition": 1,
-      "total_time_ms": 17.671999987214804,
-      "throughput_tps": 56586.6908512603
+      "total_time_ms": 203.038927000307,
+      "throughput_tps": 4925.163931734568
     },
     {
       "system": "PostgreSQL",
       "batch_size": 1000,
       "repetition": 2,
-      "total_time_ms": 328.02100002299994,
-      "throughput_tps": 3048.5853037759252
+      "total_time_ms": 2115.5386429963983,
+      "throughput_tps": 472.69285451747834
     },
     {
       "system": "MongoDB",
       "batch_size": 1000,
       "repetition": 2,
-      "total_time_ms": 29.82479997444898,
-      "throughput_tps": 33529.14356028217
+      "total_time_ms": 181.9420550018549,
+      "throughput_tps": 5496.2553874078485
     },
     {
       "system": "PostgreSQL",
       "batch_size": 1000,
       "repetition": 3,
-      "total_time_ms": 431.791799957864,
-      "throughput_tps": 2315.930965103052
+      "total_time_ms": 1960.607824003091,
+      "throughput_tps": 510.0459091090638
     },
     {
       "system": "MongoDB",
       "batch_size": 1000,
       "repetition": 3,
-      "total_time_ms": 24.45499994792044,
-      "throughput_tps": 40891.43333181794
+      "total_time_ms": 196.77262299956055,
+      "throughput_tps": 5082.007775046192
     },
     {
       "system": "PostgreSQL",
       "batch_size": 1000,
       "repetition": 4,
-      "total_time_ms": 335.4327999986708,
-      "throughput_tps": 2981.2230646614244
+      "total_time_ms": 2111.1616069974843,
+      "throughput_tps": 473.6728806953866
     },
     {
       "system": "MongoDB",
       "batch_size": 1000,
       "repetition": 4,
-      "total_time_ms": 19.660199992358685,
-      "throughput_tps": 50864.18247976466
+      "total_time_ms": 225.92581099888775,
+      "throughput_tps": 4426.231759791815
     }
   ],
   "insertion_latency": [
     {
       "system": "PostgreSQL",
       "samples": 50,
-      "median_ms": 1.6919500194489956,
-      "mean_ms": 1.6958180093206465,
-      "std_ms": 0.35056121448402916,
-      "p90_ms": 2.08320003002882,
-      "p99_ms": 2.811899990774691
+      "median_ms": 22.69056299701333,
+      "mean_ms": 61.74577694022446,
+      "std_ms": 102.01448273705748,
+      "p90_ms": 198.72575800400227,
+      "p99_ms": 551.8942370035802
     },
     {
       "system": "MongoDB",
       "samples": 50,
-      "median_ms": 1.0156499920412898,
-      "mean_ms": 0.9552479907870293,
-      "std_ms": 0.23620093183955898,
-      "p90_ms": 1.2765000574290752,
-      "p99_ms": 1.3886999804526567
+      "median_ms": 1.6920130037760828,
+      "mean_ms": 4.881887619849294,
+      "std_ms": 9.129928625097596,
+      "p90_ms": 21.69485200283816,
+      "p99_ms": 43.20282399567077
     },
     {
       "system": "Blockchain",
       "samples": 20,
-      "median_ms": 20.17490001162514,
-      "mean_ms": 20.92000500415452,
-      "std_ms": 2.2705254362983873,
-      "p90_ms": 25.986999971792102,
-      "p99_ms": 28.484400012530386
+      "median_ms": 152.7628764997644,
+      "mean_ms": 301.0987172991008,
+      "std_ms": 340.51454394838345,
+      "p90_ms": 1230.6955280000693,
+      "p99_ms": 1280.8577589967172
     }
   ],
   "gas_cost": [
     {
-      "avg_gas_per_event": 26228.2,
+      "avg_gas_per_event": 26224.6,
       "gas_price_gwei": 10,
-      "cost_eth": 0.000262282,
-      "cost_usd": 0.524564,
-      "cost_per_1k_events_usd": 524.5640000000001,
-      "cost_per_10k_events_usd": 5245.64
+      "cost_eth": 0.000262246,
+      "cost_usd": 0.524492,
+      "cost_per_1k_events_usd": 524.492,
+      "cost_per_10k_events_usd": 5244.919999999999
     },
     {
-      "avg_gas_per_event": 26228.2,
+      "avg_gas_per_event": 26224.6,
       "gas_price_gwei": 50,
-      "cost_eth": 0.00131141,
-      "cost_usd": 2.62282,
-      "cost_per_1k_events_usd": 2622.8199999999997,
-      "cost_per_10k_events_usd": 26228.2
+      "cost_eth": 0.00131123,
+      "cost_usd": 2.6224600000000002,
+      "cost_per_1k_events_usd": 2622.46,
+      "cost_per_10k_events_usd": 26224.600000000002
     },
     {
-      "avg_gas_per_event": 26228.2,
+      "avg_gas_per_event": 26224.6,
       "gas_price_gwei": 100,
-      "cost_eth": 0.00262282,
-      "cost_usd": 5.24564,
-      "cost_per_1k_events_usd": 5245.639999999999,
-      "cost_per_10k_events_usd": 52456.4
+      "cost_eth": 0.00262246,
+      "cost_usd": 5.2449200000000005,
+      "cost_per_1k_events_usd": 5244.92,
+      "cost_per_10k_events_usd": 52449.200000000004
     }
   ],
   "storage_size": [
     {
       "system": "PostgreSQL",
       "event_count": 1000,
-      "total_bytes": 819200,
-      "bytes_per_event": 819.2
+      "total_bytes": 843776,
+      "bytes_per_event": 843.776
     },
     {
       "system": "MongoDB",
       "event_count": 1000,
-      "total_bytes": 278528,
-      "bytes_per_event": 278.528
+      "total_bytes": 131072,
+      "bytes_per_event": 131.072
     },
     {
       "system": "Blockchain",
       "event_count": 20,
-      "avg_gas_per_event": 26228.2,
-      "estimated_bytes_per_event": 1311.41,
+      "avg_gas_per_event": 26224.6,
+      "estimated_bytes_per_event": 1311.23,
       "note": "Gas-based estimate; actual storage is in event logs"
     }
   ]

@@ -4,23 +4,23 @@
     {
       "concurrency": 10,
       "requests": 100,
-      "successful": 100,
-      "duration_s": 0.7,
-      "throughput_rps": 142.16
+      "successful": 0,
+      "duration_s": 3.69,
+      "throughput_rps": 0.0
     },
     {
       "concurrency": 50,
       "requests": 500,
-      "successful": 500,
-      "duration_s": 1.59,
-      "throughput_rps": 315.07
+      "successful": 0,
+      "duration_s": 31.17,
+      "throughput_rps": 0.0
     },
     {
       "concurrency": 100,
       "requests": 1000,
-      "successful": 1000,
-      "duration_s": 2.68,
-      "throughput_rps": 373.45
+      "successful": 6,
+      "duration_s": 30.96,
+      "throughput_rps": 0.19
     }
   ]
 }
