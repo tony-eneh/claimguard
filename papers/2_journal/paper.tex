@@ -296,7 +296,30 @@ While PACE provides verifiable access control and protection against honest-but-
 
 \subsubsection{Threat Model and Assumptions}
 
-PACE addresses five threat categories common to multi-stakeholder evidence workflows. (1) Honest-but-curious cloud providers (S3/MinIO/IPFS) may attempt to read or enumerate assets; capability-based access prevents retrieval without valid, unexpired tokens issued after on-chain authorization. (2) Compromised insiders may seek cross-case access; on-chain, per-case/per-action ABAC restricts escalation~\cite{xiong2023bdim}. (3) External attackers may steal tokens or credentials; aggressive expirations and cryptographic binding to subject--action--resource tuples limit replay and misuse. (4) Man-in-the-middle adversaries may eavesdrop; PACE assumes TLS/HTTPS with standard PKI~\cite{dorri2017coordination}. (5) Malicious consortium nodes may fork, censor, or delay; we assume Byzantine fault tolerance with honest majorities (e.g., 2-of-3 or higher).
+Table~\ref{tab:threat-model} summarizes the PACE threat model. PACE addresses five threat categories common to multi-stakeholder evidence workflows. (1) Honest-but-curious cloud providers (S3/MinIO/IPFS) may attempt to read or enumerate assets; capability-based access prevents retrieval without valid, unexpired tokens issued after on-chain authorization. (2) Compromised insiders may seek cross-case access; on-chain, per-case/per-action ABAC restricts escalation~\cite{xiong2023bdim}. (3) External attackers may steal tokens or credentials; aggressive expirations and cryptographic binding to subject--action--resource tuples limit replay and misuse. (4) Man-in-the-middle adversaries may eavesdrop; PACE assumes TLS/HTTPS with standard PKI~\cite{dorri2017coordination}. (5) Malicious consortium nodes may fork, censor, or delay; we assume Byzantine fault tolerance with honest majorities (e.g., 2-of-3 or higher).
+
+\begin{table}[!htbp]
+\centering
+\caption{Compact Threat Model for PACE}
+\label{tab:threat-model}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{1.9cm}p{2.6cm}p{3cm}@{}}
+\toprule
+\textbf{Asset} & \textbf{Adversary Capability} & \textbf{Assumption / Mitigation} \\
+\midrule
+Evidence confidentiality & Cloud provider reads/enumerates stored objects & Capability-gated access; no valid token $\Rightarrow$ no retrieval \\
+\addlinespace
+Policy integrity & Inject stale/malicious policy into PDP cache & On-chain policy anchor; versioned updates with revocation signaling \\
+\addlinespace
+Decision authenticity & Forge decision provenance & Decision events tied to signer address; non-repudiable emission trail \\
+\addlinespace
+Audit log integrity & Compromise gateway; rewrite/delete logs & Append-only on-chain events; immutable after block confirmation \\
+\addlinespace
+Consensus safety & Validator collusion or Byzantine faults & PoA$^2$ permissioned validator set with bounded ($<1/3$) Byzantine tolerance \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 Out-of-scope risks include gateway key or host compromise (mitigated operationally via HSMs/IDS), smart-contract vulnerabilities (mitigated via testing, formal verification, audits), consensus capture by majority adversaries, cryptographic breaks in ECDSA/SHA-3, and microarchitectural side-channel attacks on gateway or node hardware.
 
@@ -398,7 +421,7 @@ These scenarios are quantitatively evaluated in Section~VI.C (Adversarial Resili
 Despite the above mitigations, several residual risks remain:
 
 \begin{enumerate}
-	\item \textbf{Consensus Failure:} If $> 1/3$ of blockchain nodes are compromised in a 3-node consortium, Byzantine consensus can fail. Large deployments should use larger consortia (5, 7, 9 nodes) or transition to proof-of-authority (PoA) with economic penalties.
+	\item \textbf{Consensus Failure:} If $> 1/3$ of blockchain nodes are compromised in a 3-node consortium, Byzantine consensus can fail. Large deployments should use larger consortia (5, 7, 9 nodes) or adopt PoA$^2$ with redundant standby validators and association-based trust metrics (Table~\ref{tab:consensus-comparison}).
 
 	\item \textbf{Gateway Availability:} If the gateway is unavailable, no access decisions can be made, regardless of on-chain policy validity. Deployments should implement gateway redundancy and failover.
 
@@ -444,7 +467,30 @@ For this evaluation, we deploy PACE on two contrasting environments to demonstra
 
 PureChain employs Proof-of-Authority and Association (PoA$^2$) consensus~\cite{ICCE2025}, which relies on identity-based validators with reputational and legal accountability rather than proof-of-work or proof-of-stake~\cite{joshi2021feasibility}. PoA$^2$ introduces redundant standby validators that automatically transfer authority upon active validator failure, enabling fault-tolerant operation without disrupting Byzantine consensus~\cite{AHAKONYE2025100354}. PureChain achieves 7,000 transactions per second (TPS), about $233\times$ higher than standard Ethereum (30 TPS) while maintaining deterministic finality within seconds~\cite{KIM2025100397}. This performance stems from the small, known validator set (typically 3--7 consortium members) and the elimination of proof-of-work's computational overhead. The Smart Auto Mining Plus (SAM+) algorithm mines only when transactions are pending, thereby reducing energy consumption. EVM compatibility enables the unmodified deployment of Solidity contracts without porting overhead.
 
-The evaluation results presented in Section~V generalize to other EVM environments, provided appropriate consideration is given to consensus mechanisms, gas costs, and network latency characteristics. Public blockchains such as the Ethereum mainnet provide maximum decentralization but incur higher transaction costs and variable block times. Layer-2 solutions (Polygon, Optimism) offer cost-efficient scaling with sub-second finality. Enterprise blockchains (Besu, Quorum, PureChain) provide data residency, regulatory compliance (CCPA, GDPR), and high throughput suitable for consortium deployments where stakeholders share governance. Organizations can select deployment options based on their specific trust models, performance requirements, and regulatory constraints.
+Table~\ref{tab:consensus-comparison} compares consensus mechanisms relevant to blockchain-backed access control. Proof-of-Work (PoW), while battle-tested, incurs minute-scale finality and high energy costs that preclude real-time authorization~\cite{alzoubi2025pow}. Proof-of-Stake (PoS) reduces energy consumption but retains multi-second finality tied to protocol-dependent confirmation depths~\cite{shen2025consensus,shaikh2025consensus}. Practical Byzantine Fault Tolerance (PBFT) achieves deterministic finality with low latency, yet its $O(n^2)$ message complexity limits scalability beyond small validator sets~\cite{shen2025consensus}. Standard Proof-of-Authority (PoA) provides high throughput via pre-vetted validators but introduces centralization risks, including validator collusion and order manipulation~\cite{islam2025prl}. PoA$^2$ extends PoA with association-based trust metrics and redundant standby validators, achieving transaction-level deterministic finality ($<0.5$\,s), throughput exceeding 3\,K--10\,K+ TPS, and Byzantine tolerance for up to one-third of nodes~\cite{ICCE2025,AHAKONYE2025100354,ibrahim2026purechain}. These characteristics make PoA$^2$-based PureChain well-suited as a deployment target for latency-sensitive, auditable evidence governance.
+
+\begin{table*}[!htbp]
+\centering
+\caption{Performance Comparison of Consensus Mechanisms for Blockchain-Backed Access Control}
+\label{tab:consensus-comparison}
+\scalebox{.93}{
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+\textbf{Mechanism} & \textbf{Tx Finality} & \textbf{Throughput} & \textbf{Energy per} & \textbf{Finality} & \textbf{BFT} & \textbf{Node} & \textbf{Evidence Gov.} \\
+ & \textbf{Latency} & \textbf{(TPS)} & \textbf{Tx (kWh)} & \textbf{Type} & \textbf{Tolerance} & \textbf{Scalability} & \textbf{Suitability} \\
+\midrule
+PoW~\cite{alzoubi2025pow} & 60--600\,s & 7--15 & $\sim$700 & Probabilistic & 50\% hash & High & Very low \\
+PoS~\cite{shen2025consensus,shaikh2025consensus} & 12--384\,s & 15--30 & $\sim$0.03 & Economic & 1/3 stake & High & Low \\
+PBFT~\cite{shen2025consensus} & 1--5\,s & 1\,K--3\,K & $\approx 0$ & Deterministic & 1/3 nodes & Poor ($O(n^2)$) & Moderate \\
+PoA~\cite{islam2025prl} & 1--5\,s & 200--1\,K & $\approx 0$ & Near-determ. & Validator set & Moderate & Moderate \\
+PoA$^2$~\cite{ICCE2025,AHAKONYE2025100354,ibrahim2026purechain} & $<$\,0.5\,s & 3\,K--10\,K+ & $\approx 0$ & Deterministic & 1/3 nodes & Good & \textbf{High} \\
+\bottomrule
+\end{tabular}}
+
+\footnotesize PoW energy figures reflect Bitcoin-class mining~\cite{alzoubi2025pow}; PoS figures reflect post-Merge Ethereum~\cite{shaikh2025consensus}. PoA$^2$ achieves transaction-level finality, eliminating block-interval delays inherent in block-based protocols~\cite{AHAKONYE2025100354}.
+\end{table*}
+
+The evaluation results presented in Section~\ref{sec:implementation-and-observation} generalize to other EVM environments, provided appropriate consideration is given to consensus mechanisms, gas costs, and network latency characteristics. Public blockchains such as the Ethereum mainnet provide maximum decentralization but incur higher transaction costs and variable block times. Layer-2 solutions (Polygon, Optimism) offer cost-efficient scaling with sub-second finality. Enterprise blockchains (Besu, Quorum, PureChain) provide data residency, regulatory compliance (CCPA, GDPR), and high throughput suitable for consortium deployments where stakeholders share governance. Organizations can select deployment options based on their specific trust models, performance requirements, and regulatory constraints.
 
 
 
@@ -463,6 +509,8 @@ This section describes the PACE prototype implementation, the experimental setup
 The prototype includes (i) Ethereum-compatible smart contracts (Subject/Evidence registries + policy manager), (ii) a TypeScript PEG that authenticates clients and issues capabilities, (iii) MinIO S3/IPFS storage, and (iv) a Python workload generator that issues concurrent access requests plus policy/revocation operations. Experiments run in Docker on a commodity multi-core host with pinned toolchain versions for repeatability.
 
 \subsection{Baselines and Comparison Systems}
+To ensure fair, reproducible comparison, all three systems (PACE, RBAC-DB, Hybrid-Audit) are deployed on the same Docker host with identical hardware, network configuration, toolchain versions, and workload generator. This same-testbed methodology eliminates infrastructure confounders and ensures that measured performance differences reflect architectural choices rather than deployment artifacts. Cross-paper latency comparisons with prior work (Section~\ref{sec:implementation-and-observation}.Q) are treated as qualitative due to differences in testbed, operation definitions, and reported statistics.
+
 \textbf{RBAC-DB} makes authorization decisions locally from a SQL permission table (JWT auth) with no blockchain interaction. \textbf{Hybrid-Audit} uses the same local RBAC decision but logs each allow/deny outcome on-chain after the fact, isolating audit overhead without on-chain decision-making.
 
 \subsection{Metrics and Key Performance Indicators}
