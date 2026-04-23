@@ -1,5 +1,4 @@
-\documentclass[journal,comsoc,twoside]{IEEEtran}
-\IEEEoverridecommandlockouts
+\documentclass[final,5p,times,twocolumn]{elsarticle}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -54,41 +53,42 @@
 
 \hyphenation{op-tical net-works semi-conduc-tor IEEE-Xplore}
 
-\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
-
 \begin{document}
+
+\begin{frontmatter}
 
 %\title{Action-Aware ABAC for Heterogeneous Insurance Evidence: Architecture, Evaluation and Results}
 %\title{Evaluating Action-Aware Attribute-Based Access Control for Secure Insurance Evidence Management}
-\title{PACE: A Verifiable On-Chain ABAC and Off-Chain Capability Framework for Digital Evidence Governance in Multi-Stakeholder Environments}
+\title{PACE: A Verifiable On-Chain ABAC and Off-Chain Capability Framework for Digital Evidence Governance in Multi-Stakeholder Environments\tnoteref{funding}}
 
-\author{Anthony Uchenna Eneh\orcidlink{0009-0000-6339-3225},
-Love Allen Chijioke Ahakonye\orcidlink{0000-0003-2840-1693}, \textit{Member, IEEE},\\   Jae-Min Lee\orcidlink{0000-0001-6885-5185}, \textit{Member, IEEE}, Dong-Seong Kim\orcidlink{0000-0002-2977-5964}, \textit{Senior Member, IEEE}
-\thanks{Manuscript received Month XX, 2026; revised Month XX, 2026; accepted Month XX, 2026.}
+\author[aff1]{Anthony Uchenna Eneh\orcidlink{0009-0000-6339-3225}}
+\ead{anthony@kumoh.ac.kr}
 
-\thanks{This work was partly supported by the Innovative Human Resource Development for Local Intellectualization program through the IITP grant funded by the Korea government (MSIT) (IITP-2026-RS-2020-II201612, 25\%), by the Priority Research Centers Program through the NRF funded by the MEST (2018R1A6A1A03024003, 25\%), and by the MSIT, Korea, under the ITRC support program (IITP-2026-RS-2024-00438430, 25\%) and by the Basic Science Research Program through the National Research Foundation of Korea(NRF) funded by the Ministry of Education (RS-2026-25431637, 25\%).}
+\author[aff2]{Love Allen Chijioke Ahakonye\orcidlink{0000-0003-2840-1693}}
+\ead{loveahakonye@kumoh.ac.kr}
 
-\thanks{(Corresponding author: Dong-Seong Kim.)}
-\thanks{A.U. Eneh, and J.-M. Lee, are with the Department of IT Convergence Engineering, Kumoh National Institute of Technology, Gumi 39177, South Korea (e-mail: (anthony; ljmpaul)@kumoh.ac.kr.}
+\author[aff1]{Jae-Min Lee\orcidlink{0000-0001-6885-5185}}
+\ead{ljmpaul@kumoh.ac.kr}
 
-\thanks{D.-S. Kim is with the Department of IT Convergence Engineering and NSLab Co., Ltd., Kumoh National Institute of Technology, Gumi 39177, South Korea (e-mail: dskim@kumoh.ac.kr).}
+\author[aff1,aff3]{Dong-Seong Kim\orcidlink{0000-0002-2977-5964}\corref{cor1}}
+\ead{dskim@kumoh.ac.kr}
 
-\thanks{ L. A. C. Ahakonye is with the ICT Convergence Research Center, Kumoh National Institute of Technology, Gumi 39177, South Korea (e-mail: loveahakonye@kumoh.ac.kr).}
-}
+\cortext[cor1]{Corresponding author.}
+\tnotetext[funding]{This work was partly supported by the Innovative Human Resource Development for Local Intellectualization program through the IITP grant funded by the Korea government (MSIT) (IITP-2026-RS-2020-II201612, 25\%), by the Priority Research Centers Program through the NRF funded by the MEST (2018R1A6A1A03024003, 25\%), and by the MSIT, Korea, under the ITRC support program (IITP-2026-RS-2024-00438430, 25\%) and by the Basic Science Research Program through the National Research Foundation of Korea(NRF) funded by the Ministry of Education (RS-2026-25431637, 25\%).}
 
-\markboth{IEEE Transactions on Information Forensics and Security,~Vol.~XX, No.~XX, Month~2026}{Eneh \MakeLowercase{\textit{et al.}}: PACE}
-
-
-\maketitle
+\address[aff1]{Department of IT Convergence Engineering, Kumoh National Institute of Technology, Gumi 39177, South Korea}
+\address[aff2]{ICT Convergence Research Center, Kumoh National Institute of Technology, Gumi 39177, South Korea}
+\address[aff3]{NSLab Co., Ltd., Kumoh National Institute of Technology, Gumi 39177, South Korea}
 
 \begin{abstract}
 Multi-stakeholder digital evidence workflows (healthcare, legal discovery, insurance, supply chain) require fine-grained, action-aware access controls across organizational boundaries and off-chain storage to minimize costs. Existing blockchain approaches provide tamper resistance but lack a unified, enforceable model that binds on-chain authorization to cloud or distributed backends. We generalize our prior ClaimGuard system into \textbf{PACE (Policy Anchor and Capability Enforcement)}, an Ethereum-compatible ABAC framework that anchors policy on-chain and enforces decisions via short-lived capabilities. This journal extension evaluates PACE against cloud-only RBAC across four new dimensions: baseline comparison under load (E1), public Sepolia testnet conditions (E2), adversarial stress testing (E3), and policy churn at scale up to 1000 policies and subjects (E4). Results show modest local-network latency overhead (60.9\,ms P50 vs.\ 1.9\,ms for RBAC) with improved authorization correctness and integrity; policy evaluation remains stable (2-3\,ms median) across 11-1000 rules, revocation propagates within 1.1\,ms, and attacks such as cloud bypass, gateway abuse, and role spoofing are blocked. Public testnet results confirm operational feasibility. PACE is resource-agnostic and deployable across heterogeneous, multi-stakeholder evidence governance scenarios.
 \end{abstract}
 
-\begin{IEEEkeywords}
-Attribute-Based Access Control, Blockchain, Capability-Based Authorization, ClaimGuard, Enterprise Data Governance, Ethereum, Evidence Management, Multi-Stakeholder Systems, Policy Enforcement Gateway, Smart Contracts
-\end{IEEEkeywords}
+\begin{keyword}
+Attribute-Based Access Control \sep Blockchain \sep Capability-Based Authorization \sep ClaimGuard \sep Enterprise Data Governance \sep Ethereum \sep Evidence Management \sep Multi-Stakeholder Systems \sep Policy Enforcement Gateway \sep Smart Contracts
+\end{keyword}
+
+\end{frontmatter}
 
 \section{Introduction}
 Digital evidence governance in multi-stakeholder environments presents persistent challenges across various industries. Different sectors, such as healthcare, legal, insurance, and supply chain management, each require the selective access and control of sensitive data among a range of stakeholders, under strict regulatory and compliance frameworks~\cite{su172310855}. In these industries, digital records and evidence must be shared in a controlled manner to ensure privacy, integrity, and accountability, with various stakeholders such as service providers, regulatory bodies, and third-party entities involved in the access and management of information~\cite{liang2017mhealth}. Common requirements across these domains include fine-grained access policies that account for the dynamic nature of stakeholder roles, comprehensive audit trails for compliance and transparency, and context-specific constraints, such as temporal limitations and purpose-driven access controls. Additionally, effective governance must address the practical management of large-scale off-chain resources stored in cloud or distributed systems, ensuring that data remains secure and accessible only to authorized parties within defined parameters~\cite{EsSamaali2017BlockchainAccessControl, theodouli2018healthcare}.
@@ -1006,27 +1006,27 @@ The evaluation tested insurance workflows, but broader deployments in healthcare
 
 % For readability and space, we omit the full Solidity listings from the manuscript and instead describe the contract interfaces and evaluation behavior in Sections~\ref{sec:architecture}--\ref{sec:evaluation}. The repository contains the exact versions used to generate all reported results.
 
-\bibliographystyle{IEEEtran}
+\bibliographystyle{elsarticle-num}
 \bibliography{references}
 
-\begin{IEEEbiography}
-[{\includegraphics[width=1.1in,height=1.25in,clip,keepaspectratio]{figures/Anthony.jpg}}]{Anthony Uchenna Eneh} is an Integrated Msc--Ph.D. candidate in IT Convergence Engineering at Kumoh National Institute of Technology, South Korea. He is affiliated with the Networked Systems Laboratory under Prof. Dong-Seong Kim, where his research focuses on blockchain-backed systems, verifiable access control, and artificial intelligence for high-risk and cyber-physical systems. He received his B.Eng. in Electrical and Electronics Engineering from the Federal University of Technology, Owerri, Nigeria in 2014.
+\section*{Author Biographies}
+\noindent\includegraphics[width=1.1in,height=1.25in,clip,keepaspectratio]{figures/Anthony.jpg}
+
+\textbf{Anthony Uchenna Eneh} is an Integrated Msc--Ph.D. candidate in IT Convergence Engineering at Kumoh National Institute of Technology, South Korea. He is affiliated with the Networked Systems Laboratory under Prof. Dong-Seong Kim, where his research focuses on blockchain-backed systems, verifiable access control, and artificial intelligence for high-risk and cyber-physical systems. He received his B.Eng. in Electrical and Electronics Engineering from the Federal University of Technology, Owerri, Nigeria in 2014.
 
 Anthony has over nine years of professional experience in full-stack software engineering, with extensive work in the design and development of web and mobile applications. His work spans distributed systems, AI-enabled applications, and blockchain-integrated architectures.
-\end{IEEEbiography}
 
-\begin{IEEEbiography}
-[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/Love_New_Pix.png}}]{Love Allen Chijioke Ahakonye} 
-received Ph.D. in IT-Convergence Engineering from the Networked System Laboratory, IT-Convergence Engineering, Kumoh National Institute of Technology, Gumi, South Korea in 2024. She holds an MSc in Information Technology from the Federal University of Technology, Nigeria, in 2016. In 2001, she got a B.Sc in  Mathematics/Computer Science from the University of Port Harcourt, Nigeria. She has over a decade of experience in the Nigerian oil and gas sector as a Network and System Administrator from 2002 to 2016. In 2017, she briefly worked as a Logistics Superintendent with the Nigerian Petroleum Development Company until 2019. She is also a postdoctoral researcher at the ICT Convergence Research Center (ICT-CRC), Kumoh National Institute of Technology, Gumi, South Korea. She is a member of the IEEE and the Computer Professionals Registration Council of Nigeria (CPN). Her research interest is artificial intelligence (AI) application to the Internet of Things (IoT) and industrial IoT, Supervisory Control and Data Acquisition (SCADA), and industrial control system (ICS) for intrusion/anomaly detection, cyber-security, fault detection, XAI and manufacturing execution systems. 
-\end{IEEEbiography}
+\noindent\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/Love_New_Pix.png}
 
-\begin{IEEEbiography}
-[{\includegraphics[width=1in,height=1.25in, clip,keepaspectratio]{figures/lee.png}}]{Jae-Min Lee} received his Ph.D. degree in electrical and computer engineering from Seoul National University, Seoul, Korea, in 2005. From 2005 to 2014, he was a senior engineer at Samsung Electronics in Suwon, Korea. From 2015 to 2016, he was a Principal Engineer at Samsung Electronics, Suwon, Korea. Since 2017, he has been an Associate Professor in the School of Electronic Engineering and the Department of IT Convergence Engineering at Kumoh National Institute of Technology, Gyeongbuk, Korea. Since 2024, he has been the Director of the Smart Defense Logistics Innovation Convergence Research Center (ITRC Program). He is a member of IEEE. He is the Executive Director of the Korean Institute of Communications and Information Sciences (KICS). His current main research interests are smart IoT convergence application, industrial wireless control network, UAV, Metaverse and Blockchain.
-\end{IEEEbiography}
+\textbf{Love Allen Chijioke Ahakonye} received Ph.D. in IT-Convergence Engineering from the Networked System Laboratory, IT-Convergence Engineering, Kumoh National Institute of Technology, Gumi, South Korea in 2024. She holds an MSc in Information Technology from the Federal University of Technology, Nigeria, in 2016. In 2001, she got a B.Sc in  Mathematics/Computer Science from the University of Port Harcourt, Nigeria. She has over a decade of experience in the Nigerian oil and gas sector as a Network and System Administrator from 2002 to 2016. In 2017, she briefly worked as a Logistics Superintendent with the Nigerian Petroleum Development Company until 2019. She is also a postdoctoral researcher at the ICT Convergence Research Center (ICT-CRC), Kumoh National Institute of Technology, Gumi, South Korea. She is a member of the IEEE and the Computer Professionals Registration Council of Nigeria (CPN). Her research interest is artificial intelligence (AI) application to the Internet of Things (IoT) and industrial IoT, Supervisory Control and Data Acquisition (SCADA), and industrial control system (ICS) for intrusion/anomaly detection, cyber-security, fault detection, XAI and manufacturing execution systems.
 
-\begin{IEEEbiography}
-[{\includegraphics[width=1in,height=1.25in, clip,keepaspectratio]{figures/Dong.png.jpg}}]{Dong-Seong Kim (SM'14)} received his Ph.D. degree in Electrical and Computer Engineering from Seoul National University, Seoul, Korea, in 2003. From 1994 to 2003, he worked as a full-time researcher at the ERC-ACI at Seoul National University. From March 2003 to February 2005, he served as a postdoctoral researcher at the Wireless Network Laboratory in the School of Electrical and Computer Engineering at Cornell University, NY. Between 2007 and 2009, he was a visiting professor in the Department of Computer Science at the University of California, Davis, CA. He served as Dean of IACF from 2019 to 2022. He is currently a Professor in the Department of IT Convergence Engineering at the School of Electronic Engineering, Kumoh National Institute of Technology, Gumi, South Korea. He is also the director of the KIT Convergence Research Institute and the ICT Convergence Research Center (ITRC and NRF advanced research center program), supported by the Korean government at Kumoh National Institute of Technology, and the director of NSLab Co., Ltd. He is a senior member of IEEE and ACM. His primary research interests include real-time IoT and smart platforms, industrial wireless control networks, networked embedded systems, Fieldbus, metaverse, and blockchain. 
-\end{IEEEbiography}
+\noindent\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/lee.png}
+
+\textbf{Jae-Min Lee} received his Ph.D. degree in electrical and computer engineering from Seoul National University, Seoul, Korea, in 2005. From 2005 to 2014, he was a senior engineer at Samsung Electronics in Suwon, Korea. From 2015 to 2016, he was a Principal Engineer at Samsung Electronics, Suwon, Korea. Since 2017, he has been an Associate Professor in the School of Electronic Engineering and the Department of IT Convergence Engineering at Kumoh National Institute of Technology, Gyeongbuk, Korea. Since 2024, he has been the Director of the Smart Defense Logistics Innovation Convergence Research Center (ITRC Program). He is a member of IEEE. He is the Executive Director of the Korean Institute of Communications and Information Sciences (KICS). His current main research interests are smart IoT convergence application, industrial wireless control network, UAV, Metaverse and Blockchain.
+
+\noindent\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/Dong.png.jpg}
+
+\textbf{Dong-Seong Kim (SM'14)} received his Ph.D. degree in Electrical and Computer Engineering from Seoul National University, Seoul, Korea, in 2003. From 1994 to 2003, he worked as a full-time researcher at the ERC-ACI at Seoul National University. From March 2003 to February 2005, he served as a postdoctoral researcher at the Wireless Network Laboratory in the School of Electrical and Computer Engineering at Cornell University, NY. Between 2007 and 2009, he was a visiting professor in the Department of Computer Science at the University of California, Davis, CA. He served as Dean of IACF from 2019 to 2022. He is currently a Professor in the Department of IT Convergence Engineering at the School of Electronic Engineering, Kumoh National Institute of Technology, Gumi, South Korea. He is also the director of the KIT Convergence Research Institute and the ICT Convergence Research Center (ITRC and NRF advanced research center program), supported by the Korean government at Kumoh National Institute of Technology, and the director of NSLab Co., Ltd. He is a senior member of IEEE and ACM. His primary research interests include real-time IoT and smart platforms, industrial wireless control networks, networked embedded systems, Fieldbus, metaverse, and blockchain.
 
 \end{document}
 
