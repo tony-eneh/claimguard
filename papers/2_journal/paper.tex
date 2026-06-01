@@ -1,24 +1,21 @@
-\documentclass[final,5p,times,twocolumn]{elsarticle}
+\documentclass[pdflatex,sn-mathphys-num]{sn-jnl}
+
+\usepackage[utf8]{inputenc}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{tabularx}
-\usepackage{hyperref}
-\usepackage{algorithm}
-\usepackage{algorithmic}
 \usepackage{textcomp}
-\usepackage{balance}
 \usepackage{xcolor}
-\usepackage{orcidlink}
 \usepackage{multirow}
 \usepackage{listings}
 \usepackage{tikz}
 \usepackage{pifont}
-\usepackage{caption}
+\usepackage{orcidlink}
+
 \newcommand{\cmark}{\ding{51}}
 \newcommand{\xmark}{\ding{55}}
 \usetikzlibrary{arrows.meta,positioning,fit,shapes.misc,calc}
-\usepackage{xcolor}
 \lstset{
     basicstyle=\ttfamily\footnotesize,
     keywordstyle=\color{blue},
@@ -55,42 +52,28 @@
 
 \begin{document}
 
-\begin{frontmatter}
-
 %\title{Action-Aware ABAC for Heterogeneous Insurance Evidence: Architecture, Evaluation and Results}
 %\title{Evaluating Action-Aware Attribute-Based Access Control for Secure Insurance Evidence Management}
 %\title{PACE: A Verifiable On-Chain ABAC and Off-Chain Capability Framework for Digital Evidence Governance in Multi-Stakeholder Environments}
 
-\title{PACE: Blockchain-Anchored Access Control for Multi-Stakeholder Evidence Governance}
+\title[PACE Blockchain-Anchored Access Control]{PACE: Blockchain-Anchored Access Control for Multi-Stakeholder Evidence Governance}
 
-\author[aff1]{Anthony Uchenna Eneh\orcidlink{0009-0000-6339-3225}}
-\ead{anthony@kumoh.ac.kr}
+\author[1]{\fnm{Anthony Uchenna} \sur{Eneh}\orcidlink{0009-0000-6339-3225}}\email{anthony@kumoh.ac.kr}
+\author[2]{\fnm{Love Allen Chijioke} \sur{Ahakonye}\orcidlink{0000-0003-2840-1693}}\email{loveahakonye@kumoh.ac.kr}
+\author[1]{\fnm{Jae-Min} \sur{Lee}\orcidlink{0000-0001-6885-5185}}\email{ljmpaul@kumoh.ac.kr}
+\author*[1,3]{\fnm{Dong-Seong} \sur{Kim}\orcidlink{0000-0002-2977-5964}}\email{dskim@kumoh.ac.kr}
 
-\author[aff2]{Love Allen Chijioke Ahakonye\orcidlink{0000-0003-2840-1693}}
-\ead{loveahakonye@kumoh.ac.kr}
+\affil[1]{\orgdiv{Department of IT Convergence Engineering}, \orgname{Kumoh National Institute of Technology}, \orgaddress{\city{Gumi}, \postcode{39177}, \country{South Korea}}}
+\affil[2]{\orgdiv{ICT Convergence Research Center}, \orgname{Kumoh National Institute of Technology}, \orgaddress{\city{Gumi}, \postcode{39177}, \country{South Korea}}}
+\affil[3]{\orgname{NSLab Co., Ltd.}, \orgaddress{\city{Gumi}, \postcode{39177}, \country{South Korea}}}
 
-\author[aff1]{Jae-Min Lee\orcidlink{0000-0001-6885-5185}}
-\ead{ljmpaul@kumoh.ac.kr}
-
-\author[aff1,aff3]{Dong-Seong Kim\orcidlink{0000-0002-2977-5964}\corref{cor1}}
-\ead{dskim@kumoh.ac.kr}
-
-\cortext[cor1]{Corresponding author.}
-\tnotetext[funding]{This work was partly supported by the Innovative Human Resource Development for Local Intellectualization program through the IITP grant funded by the Korea government (MSIT) (IITP-2026-RS-2020-II201612, 25\%), by the Priority Research Centers Program through the NRF funded by the MEST (2018R1A6A1A03024003, 25\%), and by the MSIT, Korea, under the ITRC support program (IITP-2026-RS-2024-00438430, 25\%) and by the Basic Science Research Program through the National Research Foundation of Korea(NRF) funded by the Ministry of Education (RS-2026-25431637, 25\%).}
-
-\address[aff1]{Department of IT Convergence Engineering, Kumoh National Institute of Technology, Gumi 39177, South Korea}
-\address[aff2]{ICT Convergence Research Center, Kumoh National Institute of Technology, Gumi 39177, South Korea}
-\address[aff3]{NSLab Co., Ltd., Kumoh National Institute of Technology, Gumi 39177, South Korea}
-
-\begin{abstract}
+\abstract{
 Multi-stakeholder digital evidence workflows (healthcare, legal discovery, insurance, supply chain) require fine-grained, action-aware access controls across organizational boundaries and off-chain storage to minimize costs. Existing blockchain approaches provide tamper resistance but lack a unified, enforceable model that binds on-chain authorization to cloud or distributed backends. We generalize our prior ClaimGuard system into \textbf{PACE (Policy Anchor and Capability Enforcement)}, an Ethereum-compatible ABAC framework that anchors policy on-chain and enforces decisions via short-lived capabilities. This journal extension evaluates PACE against cloud-only RBAC across four new dimensions: baseline comparison under load (E1), public Sepolia testnet conditions (E2), adversarial stress testing (E3), and policy churn at scale up to 1000 policies and subjects (E4). Results show modest local-network latency overhead (60.9\,ms P50 vs.\ 1.9\,ms for RBAC) with improved authorization correctness and integrity; policy evaluation remains stable (2-3\,ms median) across 11-1000 rules, revocation propagates within 1.1\,ms, and attacks such as cloud bypass, gateway abuse, and role spoofing are blocked. Public testnet results confirm operational feasibility. PACE is resource-agnostic and deployable across heterogeneous, multi-stakeholder evidence governance scenarios.
-\end{abstract}
+}
 
-\begin{keyword}
-Attribute-Based Access Control \sep Blockchain \sep Capability-Based Authorization \sep ClaimGuard \sep Enterprise Data Governance \sep Ethereum \sep Evidence Management \sep Multi-Stakeholder Systems \sep Policy Enforcement Gateway \sep Smart Contracts
-\end{keyword}
+\keywords{Attribute-Based Access Control, Blockchain, Capability-Based Authorization, ClaimGuard, Enterprise Data Governance, Ethereum, Evidence Management, Multi-Stakeholder Systems, Policy Enforcement Gateway, Smart Contracts}
 
-\end{frontmatter}
+\maketitle
 
 \section{Introduction}
 Digital evidence governance in multi-stakeholder environments presents persistent challenges across various industries. Different sectors, such as healthcare, legal, insurance, and supply chain management, each require the selective access and control of sensitive data among a range of stakeholders, under strict regulatory and compliance frameworks~\cite{su172310855}. In these industries, digital records and evidence must be shared in a controlled manner to ensure privacy, integrity, and accountability, with various stakeholders such as service providers, regulatory bodies, and third-party entities involved in the access and management of information~\cite{liang2017mhealth}. Common requirements across these domains include fine-grained access policies that account for the dynamic nature of stakeholder roles, comprehensive audit trails for compliance and transparency, and context-specific constraints, such as temporal limitations and purpose-driven access controls. Additionally, effective governance must address the practical management of large-scale off-chain resources stored in cloud or distributed systems, ensuring that data remains secure and accessible only to authorized parties within defined parameters~\cite{EsSamaali2017BlockchainAccessControl, theodouli2018healthcare}.
@@ -132,7 +115,7 @@ The remainder of this paper is organized as follows: Section~\ref{rel} surveys r
 	\centering
 	%\small
 	\caption{Comparison of Related Blockchain-Based Access Control Systems}\label{tab:comparison}
-    \scalebox{.95}{
+    \small
 	\setlength{\tabcolsep}{3.5pt}
 	\begin{tabular}{@{}p{2.5cm}p{1.8cm}p{2cm}p{1.8cm}p{1.6cm}p{1.4cm}p{1.4cm}p{1.8cm}@{}}
 		\toprule
@@ -158,7 +141,7 @@ The remainder of this paper is organized as follows: Section~\ref{rel} surveys r
 		\midrule
 		\textbf{PACE (This Work)}                      & \textbf{Multi-Stakeholder} & \textbf{Resource-Agnostic} & \textbf{Ethereum ABAC} & \textbf{Yes}  & \textbf{Yes}               & \textbf{Yes}      & \textbf{Quantitative \& Qualitative} \\
 		\bottomrule
-	\end{tabular}}
+	\end{tabular}
 	\end{table*}
 
 \subsection{Multi-Stakeholder Data Governance Challenges}
@@ -673,7 +656,7 @@ Table~\ref{tab:e2-latency} compares end-to-end latency for the
 	\centering
 	\caption{Access Latency: Local vs Public Network (E2)}
 	\label{tab:e2-latency}
-    \scalebox{.8}{
+	\small
 	\begin{tabular}{lrrr}
 		\toprule
 		\textbf{Metric} & \textbf{Local (ms)} & \textbf{Sepolia (ms)} & \textbf{Overhead} \\
@@ -685,7 +668,7 @@ Table~\ref{tab:e2-latency} compares end-to-end latency for the
 		Min             & 13.84               & 214.22                & 1447.8\%          \\
 		Max             & 34.04               & 515.25                & 1413.7\%          \\
 		\bottomrule
-	\end{tabular}}
+	\end{tabular}
 \end{table}
 
 \begin{figure}[!htbp]
@@ -705,7 +688,7 @@ performance under concurrency levels 10, 50, and 100.
 	\centering
 	\caption{Throughput: Local vs Public Network (E2)}
 	\label{tab:e2-throughput}
-    \scalebox{.9}{
+	\small
 	\begin{tabular}{lrrr}
 		\toprule
 		\textbf{Concurrency} & \textbf{Local (req/s)} & \textbf{Sepolia (req/s)} & \textbf{Reduction} \\
@@ -714,7 +697,7 @@ performance under concurrency levels 10, 50, and 100.
 		50                   & 998.76                 & 315.07                   & 68.5\%             \\
 		100                  & 782.64                 & 373.45                   & 52.3\%             \\
 		\bottomrule
-	\end{tabular}}
+	\end{tabular}
 \end{table}
 \begin{figure}[!htbp]
 	\centering
@@ -836,7 +819,7 @@ Table~\ref{tab:domain-mapping} maps each PACE architectural component to the mul
 	\centering
 	%\small
 	\caption{PACE Component-to-Requirement Mapping: Domain-Agnostic Architecture}\label{tab:domain-mapping}
-    \scalebox{.8}{
+	\scriptsize
 	\begin{tabularx}{\textwidth}{@{}l X X X X X@{}}
 		\toprule
 		\textbf{PACE Component} & \textbf{Multi-Org Trust} & \textbf{Dynamic Attributes} & \textbf{Off-Chain Storage} & \textbf{Action-Aware} & \textbf{Audit Trail} \\
@@ -849,7 +832,7 @@ Table~\ref{tab:domain-mapping} maps each PACE architectural component to the mul
 		\midrule
 		Audit Log Contract & \cmark (shared record) & \cmark (attr. snapshots) & \cmark (access context) & \cmark (action tracking) & \cmark (immutable trail) \\
 		\bottomrule
-	\end{tabularx}}
+	\end{tabularx}
 	\end{table*}
 
 Empirical validation of cross-domain generality would require E6 experiments repeating E1--E5 workloads with healthcare policies and stakeholder definitions, but the architectural analysis above establishes that such experiments would yield comparable latency, throughput, and security results (within the variance expected from different blockchain deployment environments). The roadmap in Section VI articulates these empirical validation studies as future work.
@@ -1010,8 +993,7 @@ The evaluation tested insurance workflows, but broader deployments in healthcare
 
 % For readability and space, we omit the full Solidity listings from the manuscript and instead describe the contract interfaces and evaluation behavior in Sections~\ref{sec:architecture}--\ref{sec:evaluation}. The repository contains the exact versions used to generate all reported results.
 
-\bibliographystyle{elsarticle-num}
-\bibliography{references}
+\backmatter
 
 \section*{Author Biographies}
 \noindent\includegraphics[width=1.1in,height=1.25in,clip,keepaspectratio]{figures/Anthony.jpg}
@@ -1031,6 +1013,28 @@ Anthony has over nine years of professional experience in full-stack software en
 \noindent\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/Dong.png.jpg}
 
 \textbf{Dong-Seong Kim (SM'14)} received his Ph.D. degree in Electrical and Computer Engineering from Seoul National University, Seoul, Korea, in 2003. From 1994 to 2003, he worked as a full-time researcher at the ERC-ACI at Seoul National University. From March 2003 to February 2005, he served as a postdoctoral researcher at the Wireless Network Laboratory in the School of Electrical and Computer Engineering at Cornell University, NY. Between 2007 and 2009, he was a visiting professor in the Department of Computer Science at the University of California, Davis, CA. He served as Dean of IACF from 2019 to 2022. He is currently a Professor in the Department of IT Convergence Engineering at the School of Electronic Engineering, Kumoh National Institute of Technology, Gumi, South Korea. He is also the director of the KIT Convergence Research Institute and the ICT Convergence Research Center (ITRC and NRF advanced research center program), supported by the Korean government at Kumoh National Institute of Technology, and the director of NSLab Co., Ltd. He is a senior member of IEEE and ACM. His primary research interests include real-time IoT and smart platforms, industrial wireless control networks, networked embedded systems, Fieldbus, metaverse, and blockchain.
+
+\section*{Funding}
+This work was partly supported by the Innovative Human Resource Development for Local Intellectualization program through the IITP grant funded by the Korea government (MSIT) (IITP-2026-RS-2020-II201612, 25\%), by the Priority Research Centers Program through the NRF funded by the MEST (2018R1A6A1A03024003, 25\%), and by the MSIT, Korea, under the ITRC support program (IITP-2026-RS-2024-00438430, 25\%) and by the Basic Science Research Program through the National Research Foundation of Korea (NRF) funded by the Ministry of Education (RS-2026-25431637, 25\%).
+
+\section*{Declarations}
+
+\bmhead{Competing interests}
+The authors declare no competing interests.
+
+\bmhead{Ethics approval and consent to participate}
+Not applicable.
+
+\bmhead{Consent for publication}
+All authors have read and agreed to the submitted version of the manuscript.
+
+\bmhead{Data availability}
+The experimental data and analysis artifacts are available in the public project repository cited in the manuscript.
+
+\bmhead{Code availability}
+The smart contracts, gateway implementation, and evaluation scripts are available in the public project repository cited in the manuscript.
+
+\bibliography{references}
 
 \end{document}
 
