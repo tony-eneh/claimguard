@@ -75,7 +75,7 @@ Multi-stakeholder digital evidence workflows (healthcare, legal discovery, insur
 \maketitle
 
 \section{Introduction}
-Digital evidence governance in multi-stakeholder environments presents persistent challenges across various industries. Different sectors, such as healthcare, legal, insurance, and supply chain management, each require the selective access and control of sensitive data among a range of stakeholders, under strict regulatory and compliance frameworks~\cite{su172310855}. In these industries, digital records and evidence must be shared in a controlled manner to ensure privacy, integrity, and accountability, with various stakeholders such as service providers, regulatory bodies, and third-party entities involved in the access and management of information~\cite{liang2017mhealth}. Common requirements across these domains include fine-grained access policies that account for the dynamic nature of stakeholder roles, comprehensive audit trails for compliance and transparency, and context-specific constraints, such as temporal limitations and purpose-driven access controls. Additionally, effective governance must address the practical management of large-scale off-chain resources stored in cloud or distributed systems, ensuring that data remains secure and accessible only to authorized parties within defined parameters~\cite{EsSamaali2017BlockchainAccessControl, theodouli2018healthcare}.
+Digital evidence governance in multi-stakeholder environments presents persistent challenges across various industries. Different sectors, such as healthcare, legal, insurance, and supply chain management, each require the selective access and control of sensitive data among a range of stakeholders, under strict regulatory and compliance frameworks~\cite{su172310855}. In these industries, digital records and evidence must be shared in a controlled manner to ensure privacy, integrity, and accountability, with various stakeholders, such as service providers, regulatory bodies, and third-party entities, involved in accessing and managing information~\cite{liang2017mhealth}. Common requirements across these domains include fine-grained access policies that account for the dynamic nature of stakeholder roles, comprehensive audit trails for compliance and transparency, and context-specific constraints, such as temporal limitations and purpose-driven access controls. Additionally, effective governance must address the practical management of large-scale off-chain resources stored in cloud or distributed systems, ensuring that data remains secure and accessible only to authorized parties within defined parameters~\cite{EsSamaali2017BlockchainAccessControl, theodouli2018healthcare}.
 
 % Digital evidence governance in multi-stakeholder environments presents persistent challenges across healthcare, legal, insurance, and supply chain domains. In healthcare, electronic medical records must be accessed selectively by hospitals, specialists, insurance providers, and researchers under strict HIPAA compliance and patient consent requirements. Legal discovery processes require controlled sharing of evidence among law firms, courts, expert witnesses, and regulators with time-bounded access and chain-of-custody tracking. Insurance claims involve diverse stakeholders including insurers, adjusters, repair vendors, law enforcement, and reinsurers accessing heterogeneous evidence such as accident reports, medical documents, telematics logs, and high-resolution media. Supply chain workflows generate provenance documentation shared among manufacturers, distributors, customs authorities, and auditors with jurisdiction-specific disclosure rules. These domains share common requirements: fine-grained policies respecting dynamic stakeholder attributes, comprehensive audit trails for compliance, context-dependent constraints including temporal windows and purpose restrictions, and practical management of large off-chain resources stored in cloud or distributed systems~\cite{EsSamaali2017BlockchainAccessControl, liang2017mhealth, theodouli2018healthcare}.
 
@@ -144,19 +144,19 @@ The remainder of this paper is organized as follows: Section~\ref{rel} surveys r
 	\end{table*}
 
 \subsection{Multi-Stakeholder Data Governance Challenges}
-Multi-stakeholder digital evidence workflows span diverse domains including healthcare, legal discovery, insurance, and supply chain management. In healthcare, electronic medical record (EMR) systems must govern access among patients, providers, specialists, insurers, and researchers under HIPAA and patient consent requirements~\cite{liang2017mhealth,theodouli2018healthcare,sun2020emr,rana2022healthcare}. Legal discovery processes require controlled evidence sharing among law firms, courts, expert witnesses, and regulators with chain-of-custody tracking and time-bounded access. Insurance claims involve insurers, adjusters, repair vendors, law enforcement, reinsurers, and regulators accessing heterogeneous evidence including reports, medical documents, telematics, and media~\cite{sun2020insurance, liu2021auto, raikwar2018insurance, tarr2018insurance, singh2019ubi}. Supply chain workflows generate provenance documentation shared among manufacturers, distributors, customs, and auditors with jurisdiction-specific disclosure rules.
+Multi-stakeholder digital evidence workflows span diverse domains including healthcare, legal discovery, insurance, and supply chain management. In healthcare, electronic medical record (EMR) systems must govern access among patients, providers, specialists, insurers, and researchers under HIPAA and patient consent requirements~\cite{liang2017mhealth, theodouli2018healthcare, sun2020emr, rana2022healthcare}. Legal discovery processes require controlled sharing of evidence among law firms, courts, expert witnesses, and regulators, with chain-of-custody tracking and time-bound access. Insurance claims involve insurers, adjusters, repair vendors, law enforcement, reinsurers, and regulators accessing heterogeneous evidence including reports, medical documents, telematics, and media~\cite{sun2020insurance, liu2021auto, raikwar2018insurance, tarr2018insurance, singh2019ubi}. Supply chain workflows generate provenance documentation shared among manufacturers, distributors, customs, and auditors with jurisdiction-specific disclosure rules.
 
 These domains share fundamental requirements: fine-grained policies respecting dynamic stakeholder attributes and organizational boundaries, comprehensive audit trails for regulatory compliance, context-dependent constraints including temporal windows and purpose restrictions, practical management of large off-chain resources in cloud or distributed storage, and enforcement mechanisms that operate across organizational trust boundaries. Traditional centralized IAM systems address single-organization scenarios but fail when stakeholders span competing or legally independent entities with conflicting governance requirements.
 
 \subsection{Blockchain-Based Access Control Architectures}
 Blockchain-enabled access control systems leverage distributed ledger technology to provide tamper-resistant policy state and cross-organizational auditability. Sun \emph{et al.}~\cite{sun2020insurance} propose a blockchain--IPFS insurance data storage scheme integrating ciphertext-policy attribute-based encryption (CP-ABE) for cryptographic enforcement. While CP-ABE provides strong confidentiality, the approach tightly couples policies to encryption schemes, requires complex key management and re-encryption for policy updates, and does not naturally express action-level permissions beyond decryptability. Liu \emph{et al.}~\cite{liu2021auto} employ proxy re-encryption for auto-insurance data sharing, addressing secure delegation but similarly lacking generalized action-aware access control across heterogeneous evidence types. Hybrid cryptographic protocols for secure vehicular data exchange have also been explored~\cite{brousmiche2018hybrid}, while consortium-chain deployments enable cross-organizational data sharing and customized services in intelligent transportation systems~\cite{wang2020secure}.
 
-Smart contract-based authorization systems encode access policies directly in blockchain logic. Raikwar \emph{et al.}~\cite{raikwar2018insurance} introduce a blockchain framework for generic insurance processes with role-based access control governing state transitions. Tekale and Rahul~\cite{tekale2023claims} apply RBAC to claim settlement workflows. Decentralized insurance platform designs have also been proposed~\cite{alwis2022decentralized}. Recent vehicle insurance frameworks~\cite{thukral2023vehicle, hombalimath2024vehicleclaim} apply smart contracts to claim processes and security assurance. Beyond claims, blockchain has been applied to vehicle lifecycle provenance and consortium deployments reporting operational lessons~\cite{syed2020vehicle, brousmiche2018digitizing}, as well as secure vehicle health records~\cite{singh2020vcare}.
+Smart contract-based authorization systems encode access policies directly in blockchain logic. Raikwar \emph{et al.}~\cite{raikwar2018insurance} introduce a blockchain framework for generic insurance processes with role-based access control governing state transitions. Tekale and Rahul~\cite{tekale2023claims} apply RBAC to claim settlement workflows. Designs for decentralized insurance platforms have also been proposed~\cite{alwis2022decentralized}. Recent vehicle insurance frameworks~\cite{thukral2023vehicle, hombalimath2024vehicleclaim} apply smart contracts to claim processes and security assurance. Beyond claims, blockchain has been applied to vehicle lifecycle provenance and to consortium deployments that report operational lessons~\cite{syed2020vehicle, brousmiche2018digitizing}, as well as to secure vehicle health records~\cite{singh2020vcare}.
 
-Healthcare systems employ blockchain-backed ABAC for electronic health record (EHR) governance across multiple stakeholders. Kaur \emph{et al.}~\cite{kaur2024ehrabac} propose an Ethereum-based EHR storage scheme utilizing IPFS as an off-chain repository, demonstrating the integration of blockchain policy evaluation with distributed storage. De Oliveira \emph{et al.}~\cite{oliveira2022smartaccess} introduce SmartAccess, an ABAC system implemented via smart contracts for protecting medical records, and validate the approach across two healthcare use cases. Jiang \emph{et al.}~\cite{jiang2022abeblockchain} combine attribute-based encryption with blockchain protection for EHRs, proposing multiauthority signature schemes. Rouhani \emph{et al.}~\cite{rouhani2021distributed} present a distributed ABAC system using permissioned blockchain where edge nodes store EHR data off-chain while enforcing access controls through on-chain smart contracts. However, these healthcare-specific designs often assume patient-centric ownership models and do not extend to collaborative multi-stakeholder workflows involving dynamic evidence creation, partial disclosure, and complex legal or regulatory mandates spanning insurance, legal discovery, or supply chain domains.
+Healthcare systems employ blockchain-backed ABAC for electronic health record (EHR) governance across multiple stakeholders. Kaur \emph{et al.}~\cite{kaur2024ehrabac} propose an Ethereum-based EHR storage scheme utilizing IPFS as an off-chain repository, demonstrating the integration of blockchain policy evaluation with distributed storage. De Oliveira \emph{et al.}~\cite{oliveira2022smartaccess} introduce SmartAccess, an ABAC system implemented via smart contracts to protect medical records, and validate the approach in two healthcare use cases. Jiang \emph{et al.}~\cite{jiang2022abeblockchain} combine attribute-based encryption with blockchain protection for EHRs, proposing multiauthority signature schemes. Rouhani \emph{et al.}~\cite{rouhani2021distributed} present a distributed ABAC system using permissioned blockchain where edge nodes store EHR data off-chain while enforcing access controls through on-chain smart contracts. However, these healthcare-specific designs often assume patient-centric ownership models and do not extend to collaborative multi-stakeholder workflows involving dynamic evidence creation, partial disclosure, and complex legal or regulatory mandates spanning insurance, legal discovery, or supply chain domains.
 
 \subsubsection{Supply Chain and Multi-Stakeholder Governance}
-Supply chain provenance and multi-stakeholder data governance have emerged as significant application domains for blockchain-based access control. Sarfaraz \emph{et al.}~\cite{sarfaraz2023accesschain} propose AccessChain, an ABAC framework for blockchain-enabled supply chains addressing trust, provenance, and data access restrictions across manufacturers, distributors, and auditors. Malik \emph{et al.}~\cite{malik2022privchain} introduce PrivChain for provenance and privacy preservation in supply chains, employing zero-knowledge range proofs for privacy-preserving access control. Li \emph{et al.}~\cite{li2022blockchainsupply} present a blockchain-based secure storage and access control scheme for supply chain finance, utilizing ABAC models with smart contracts to manage data streams across organizational boundaries.
+Supply chain provenance and multi-stakeholder data governance have emerged as significant application domains for blockchain-based access control. Sarfaraz \emph{et al.}~\cite{sarfaraz2023accesschain} propose AccessChain, an ABAC framework for blockchain-enabled supply chains addressing trust, provenance, and data access restrictions across manufacturers, distributors, and auditors. Malik \emph{et al.}~\cite{malik2022privchain} introduce PrivChain to preserve provenance and privacy in supply chains, employing zero-knowledge range proofs for privacy-preserving access control. Li \emph{et al.}~\cite{li2022blockchainsupply} present a blockchain-based secure storage and access control scheme for supply chain finance, utilizing ABAC models with smart contracts to manage data streams across organizational boundaries.
 
 Garcia \emph{et al.}~\cite{garcia2022blockchainmulti} address multi-stakeholder data governance through a blockchain-aided privacy-preserving framework enabling consent management, selective disclosure, and provenance tracking. They went on to validate the approach through an e-prescription case study involving patients, pharmacies, physicians, and insurers. These multi-stakeholder systems demonstrate the value of decentralized policy evaluation for cross-organizational scenarios, but typically do not address action-aware authorization, distinguishing read, modify, and disclose operations, nor do they provide systematic performance comparison against cloud-only baselines.
 
@@ -205,7 +205,7 @@ PACE anchors authorization on Ethereum-compatible smart contracts and enforces a
 
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=0.45\textwidth]{figures/architecture.png}
+	\includegraphics[width=0.5\textwidth]{figures/architecture.png}
 	\caption{System architecture: clients call the PEG, which queries blockchain smart contracts and issues short-lived capabilities for cloud/IPFS evidence access.}
 	\label{fig:architecture}
 \end{figure}
@@ -463,7 +463,7 @@ Evidence in our evaluation spans structured documents (reports, estimates, forms
 \subsection{Reproducibility and Smart Contracts}
 Code, configs, and scripts are available at \cite{claimguard-repo}. Each experiment is repeated multiple times with fixed random seeds; we report mean and standard deviation. The complete smart-contract implementations (\texttt{EvidenceRegistry}, \texttt{SubjectAttributeRegistry}, and \texttt{AccessPolicyManager}), the gateway, and all evaluation scripts are available in the public artifact repository:
 \url{https://github.com/tony-eneh/blockchain_action_aware_abac_for_auto_insurance}.
-For readability and space, we omit the full Solidity listings from the manuscript and instead describe the contract interfaces and evaluation behavior in Sections~\ref{sec:architecture}--\ref{sec:implementation-and-observation}. The repository contains the exact versions used to generate all reported results.
+For readability and space, we omit the full Solidity listings from the manuscript and instead describe the contract interfaces and evaluation behavior in Sections~\ref{sec:architecture}-\ref{sec:implementation-and-observation}. The repository contains the exact versions used to generate all reported results.
 
 %\subsection{Reproducibility}
 
@@ -501,7 +501,7 @@ Table~\ref{tab:latency} shows that PACE increases median end-to-end latency vers
 \subsection{System Throughput (Q2)}
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[width=.4\textwidth]{./figures/throughput.png}
+	\includegraphics[width=.45\textwidth]{./figures/throughput.png}
 	\caption{Throughput vs. Concurrent Users (W1 Normal Load)}
 	\label{fig:throughput}
 \end{figure}
@@ -576,7 +576,7 @@ To evaluate governance realism, we focus on the \emph{policy plane} by increasin
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[width=0.4\textwidth]{./figures/e4_policy_count_vs_latency_p50.png}
+	\includegraphics[width=0.48\textwidth]{./figures/e4_policy_count_vs_latency_p50.png}
 	\caption{Policy-plane scaling: \texttt{checkAccess} latency vs.\ active policy count (E4).}
 	\label{fig:e4-policy-latency}
 \end{figure}
@@ -621,7 +621,7 @@ file server. These tests measure whether unauthorized evidence access remains
 impossible even under malicious or compromised conditions.
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[width=.42\textwidth]{./figures/e3_attack_block_rates.png}
+	\includegraphics[width=.48\textwidth]{./figures/e3_attack_block_rates.png}
 	\caption{E3 attack block rates by vector.}
 	\label{fig:e3-attacks}
 \end{figure}
@@ -656,7 +656,7 @@ Table~\ref{tab:e2-latency} compares end-to-end latency for the
 	\caption{Access Latency: Local vs Public Network (E2)}
 	\label{tab:e2-latency}
 	\small
-	\begin{tabular}{lrrr}
+	\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrr@{}}
 		\toprule
 		\textbf{Metric} & \textbf{Local (ms)} & \textbf{Sepolia (ms)} & \textbf{Overhead} \\
 		\midrule
@@ -667,12 +667,12 @@ Table~\ref{tab:e2-latency} compares end-to-end latency for the
 		Min             & 13.84               & 214.22                & 1447.8\%          \\
 		Max             & 34.04               & 515.25                & 1413.7\%          \\
 		\bottomrule
-	\end{tabular}
+	\end{tabular*}
 \end{table}
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[width=.4\textwidth]{./figures/e2_latency_comparison.png}
+	\includegraphics[width=.48\textwidth]{./figures/e2_latency_comparison.png}
 	\caption{Access latency: local vs public network (E2).}
 	\label{fig:e2-latency}
 \end{figure}
@@ -730,7 +730,7 @@ and confirmation times.
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[width=.4\textwidth]{./figures/e2_policy_comparison.png}
+	\includegraphics[width=.48\textwidth]{./figures/e2_policy_comparison.png}
 	\caption{Policy confirmation time: local vs public network (E2).}
 	\label{fig:e2-policy}
 \end{figure}
@@ -935,32 +935,118 @@ The following code samples illustrate how PACE policies remain structurally iden
 
 These examples demonstrate three key structural invariants that prove policy portability across domains. \textit{First}, the policy structure remains constant: all policies have \texttt{subjectConditions}, \texttt{resourceConditions}, \texttt{contextConditions}, \texttt{action}, and \texttt{effect} fields. \textit{Second}, the condition evaluation logic uses identical operators: \texttt{\$gte} (greater-or-equal), \texttt{\$lte} (less-or-equal), \texttt{\$ne} (not-equal), field membership, and inequality comparisons. \textit{Third}, the action and effect models are identical: all policies specify an action (Read, Write, Append, Delete, Analyze, Disclose) and an effect (Allow/Deny), evaluated uniformly by the smart contract \texttt{checkAccess} function regardless of domain. The variation across domains is purely semantic: substituting insurance-specific attributes (Adjuster, caseId, DamagePhoto) with healthcare equivalents (Specialist, patientId, LabResults) without changing policy evaluation logic.
 
-\paragraph{Architecture Instantiation Across Domains}
 
+
+\paragraph{Architecture Instantiation Across Domains}
+\begin{table*}[!htbp]
+\caption{PACE Architecture Instantiation: Generic Components Mapped to Domain-Specific Contexts}
+\label{tab:domain-instantiation}
+\centering
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{}p{1.5cm}
+>{\raggedright\arraybackslash}X
+>{\raggedright\arraybackslash}X
+>{\raggedright\arraybackslash}X
+>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{PACE Component} &
+\textbf{Insurance} &
+\textbf{Healthcare} &
+\textbf{Legal Discovery} &
+\textbf{Supply Chain} \\
+\midrule
+
+\textbf{Subject Attribute Registry}
+&
+Roles: Adjuster, Investigator, Reinsurer; Orgs: Primary Insurer, Reinsurer; Clearance: fraud-analyst, routine-handler
+&
+Roles: Specialist, Researcher, PCP; Orgs: Hospital, Payer, Research-Inst; Certs: Board-Certified, IRB-Approved
+&
+Roles: Attorney, Expert-Witness, Judge; Orgs: Law-Firm, Court; Privs: Trial-Attorney, Expert-Disclosure
+&
+Roles: Manufacturer, Auditor, Distributor; Orgs: Tier-1-Supplier, Tier-2-Supplier; Certs: ISO-9001, Trade-Compliance
+\\
+\midrule
+
+\textbf{Evidence Registry}
+&
+Resource Types: DamagePhoto, AccidentReport, Telematics, MedicalReport; Classifications: Public, Internal, Confidential, PHI; Metadata: case-id, evidence-date
+&
+Resource Types: LabResults, Imaging, ClinicalNotes, Prescriptions; Classifications: Public, Protected-Health-Info, Behavioral-Health; Metadata: patient-id, visit-date
+&
+Resource Types: Complaint, Deposition, Court-Order, Evidence-Exhibit; Classifications: Public, Sealed, Confidential, Attorney-Client; Metadata: case-id, filing-date
+&
+Resource Types: QualityReport, ManufacturerCert, SupplyChain-Provenance, Customs-Doc; Classifications: Public, Trade-Secret, Confidential; Metadata: shipment-id, manufacturing-date
+\\
+\midrule
+
+\textbf{Access Policy Manager}
+&
+Policies: Adjuster reads (DamagePhoto + Report) where case-assigned; Investigator reads all where fraud-suspected; Reinsurer reads claims $>\$1M$; Revocation: immediate-all-subjects
+&
+Policies: Specialist reads (Labs + Imaging) where patient-consent and specialty-match; Researcher reads de-identified records where IRB-approved; Payer reads claims-data only; Revocation: per-patient
+&
+Policies: Attorney reads all case-docs where trial-active; Expert reads deposition + exhibits where court-ordered; Judge has unlimited read; Revocation: case-closure
+&
+Policies: Auditor reads provenance where jurisdiction-match; Manufacturer reads own-records; Distributor reads supply-chain-docs; Revocation: certification-expiry
+\\
+\midrule
+
+\textbf{Policy Enforcement Gateway}
+&
+Auth: OAuth via Insurer-SSO; Subject-Mapping: employee-id $\rightarrow$ eth-address; Capability: (subject, case-id, read, 5-min-ttl)
+&
+Auth: OAuth via Hospital-IdP; Subject-Mapping: provider-npi $\rightarrow$ eth-address; Capability: (subject, patient-id, read, 1-hour-ttl)
+&
+Auth: SAML via Courts; Subject-Mapping: bar-number $\rightarrow$ eth-address; Capability: (subject, case-id, read, trial-duration)
+&
+Auth: LDAP via Trade-Assn; Subject-Mapping: supplier-code $\rightarrow$ eth-address; Capability: (subject, shipment-id, read, audit-period)
+\\
+\midrule
+
+\textbf{Audit Log Contract}
+&
+Events: access-attempt(adjuster-X, case-Y, DamagePhoto, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, admin-id)
+&
+Events: access-attempt(specialist-X, patient-Y, LabResults, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, hospital-admin-id)
+&
+Events: access-attempt(attorney-X, case-Y, Deposition, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, court-clerk-id)
+&
+Events: access-attempt(auditor-X, shipment-Y, Provenance, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, compliance-officer-id)
+\\
+
+\bottomrule
+\end{tabularx}
+\endgroup
+\end{table*}
 Table~\ref{tab:domain-instantiation} illustrates how PACE's architectural components instantiate across four representative domains. The table demonstrates that all architectural elements, Subject Attribute Registry, Evidence Registry, Access Policy Manager, Policy Enforcement Gateway, and Audit Log, map uniformly to domain-specific stakeholders, evidence types, and policies, with no architectural changes required.
 
-\begin{table*}[!htbp]
-	\centering
-	\scriptsize
-	\caption{PACE Architecture Instantiation: Generic Components Mapped to Domain-Specific Contexts}
-    %\scalebox{.86}{
-	\begin{tabularx}{\textwidth}{@{}l X X X X@{}}
-		\toprule
-		\textbf{PACE Component} & \textbf{Insurance} & \textbf{Healthcare} & \textbf{Legal Discovery} & \textbf{Supply Chain} \\
-		\midrule
-		\textbf{Subject Attribute Registry} & Roles: Adjuster, Investigator, Reinsurer; Orgs: Primary Insurer, Reinsurer; Clearance: fraud-analyst, routine-handler & Roles: Specialist, Researcher, PCP; Orgs: Hospital, Payer, Research-Inst; Certs: Board-Certified, IRB-Approved & Roles: Attorney, Expert-Witness, Judge; Orgs: Law-Firm, Court; Privs: Trial-Attorney, Expert-Disclosure & Roles: Manufacturer, Auditor, Distributor; Orgs: Tier-1-Supplier, Tier-2-Supplier; Certs: ISO-9001, Trade-Compliance \\
-		\midrule
-		\textbf{Evidence Registry} & Resource Types: DamagePhoto, AccidentReport, Telematics, MedicalReport; Classifications: Public, Internal, Confidential, PHI; Metadata: case-id, evidence-date & Resource Types: LabResults, Imaging, ClinicalNotes, Prescriptions; Classifications: Public, Protected-Health-Info, Behavioral-Health; Metadata: patient-id, visit-date & Resource Types: Complaint, Deposition, Court-Order, Evidence-Exhibit; Classifications: Public, Sealed, Confidential, Attorney-Client; Metadata: case-id, filing-date & Resource Types: QualityReport, ManufacturerCert, SupplyChain-Provenance, Customs-Doc; Classifications: Public, Trade-Secret, Confidential; Metadata: shipment-id, manufacturing-date \\
-		\midrule
-		\textbf{Access Policy Manager} & Policies: Adjuster reads (DamagePhoto + Report) where case-assigned; Investigator reads all where fraud-suspected; Reinsurer reads (claims $> \$1M$); Revocation: immediate-all-subjects & Policies: Specialist reads (Labs + Imaging) where patient-consent and specialty-match; Researcher reads de-identified records where IRB-approved; Payer reads claims-data only; Revocation: per-patient & Policies: Attorney reads all case-docs where trial-active; Expert reads deposition + exhibits where court-ordered; Judge has unlimited read; Revocation: case-closure & Policies: Auditor reads provenance where jurisdiction-match; Manufacturer reads own-records; Distributor reads supply-chain-docs; Revocation: certification-expiry \\
-		\midrule
-		\textbf{Policy Enforcement Gateway} & Auth: OAuth via Insurer-SSO; Subject-Mapping: employee-id $\rightarrow$ eth-address; Capability: (subject, case-id, read, 5-min-ttl) & Auth: OAuth via Hospital-IdP; Subject-Mapping: provider-npi $\rightarrow$ eth-address; Capability: (subject, patient-id, read, 1-hour-ttl) & Auth: SAML via Courts; Subject-Mapping: bar-number $\rightarrow$ eth-address; Capability: (subject, case-id, read, trial-duration) & Auth: LDAP via Trade-Assn; Subject-Mapping: supplier-code $\rightarrow$ eth-address; Capability: (subject, shipment-id, read, audit-period) \\
-		\midrule
-		\textbf{Audit Log Contract} & Events: access-attempt(adjuster-X, case-Y, DamagePhoto, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, admin-id) & Events: access-attempt(specialist-X, patient-Y, LabResults, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, hospital-admin-id) & Events: access-attempt(attorney-X, case-Y, Deposition, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, court-clerk-id) & Events: access-attempt(auditor-X, shipment-Y, Provenance, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, compliance-officer-id) \\
-		\bottomrule
-	\end{tabularx}
-	\label{tab:domain-instantiation}
-\end{table*}
+% \begin{table*}[!htbp]
+% 	\centering
+% 	\scriptsize
+% 	\caption{PACE Architecture Instantiation: Generic Components Mapped to Domain-Specific Contexts}\label{tab:domain-instantiation}
+%     \scalebox{.85}{
+% 	\begin{tabularx}{\textwidth}{@{}l X X X X@{}}
+% 		\toprule
+% 		\textbf{PACE Component} & \textbf{Insurance} & \textbf{Healthcare} & \textbf{Legal Discovery} & \textbf{Supply Chain} \\
+% 		\midrule
+% 		\textbf{Subject Attribute Registry} & Roles: Adjuster, Investigator, Reinsurer; Orgs: Primary Insurer, Reinsurer; Clearance: fraud-analyst, routine-handler & Roles: Specialist, Researcher, PCP; Orgs: Hospital, Payer, Research-Inst; Certs: Board-Certified, IRB-Approved & Roles: Attorney, Expert-Witness, Judge; Orgs: Law-Firm, Court; Privs: Trial-Attorney, Expert-Disclosure & Roles: Manufacturer, Auditor, Distributor; Orgs: Tier-1-Supplier, Tier-2-Supplier; Certs: ISO-9001, Trade-Compliance \\
+% 		\midrule
+% 		\textbf{Evidence Registry} & Resource Types: DamagePhoto, AccidentReport, Telematics, MedicalReport; Classifications: Public, Internal, Confidential, PHI; Metadata: case-id, evidence-date & Resource Types: LabResults, Imaging, ClinicalNotes, Prescriptions; Classifications: Public, Protected-Health-Info, Behavioral-Health; Metadata: patient-id, visit-date & Resource Types: Complaint, Deposition, Court-Order, Evidence-Exhibit; Classifications: Public, Sealed, Confidential, Attorney-Client; Metadata: case-id, filing-date & Resource Types: QualityReport, ManufacturerCert, SupplyChain-Provenance, Customs-Doc; Classifications: Public, Trade-Secret, Confidential; Metadata: shipment-id, manufacturing-date \\
+% 		\midrule
+% 		\textbf{Access Policy Manager} & Policies: Adjuster reads (DamagePhoto + Report) where case-assigned; Investigator reads all where fraud-suspected; Reinsurer reads (claims $> \$1M$); Revocation: immediate-all-subjects & Policies: Specialist reads (Labs + Imaging) where patient-consent and specialty-match; Researcher reads de-identified records where IRB-approved; Payer reads claims-data only; Revocation: per-patient & Policies: Attorney reads all case-docs where trial-active; Expert reads deposition + exhibits where court-ordered; Judge has unlimited read; Revocation: case-closure & Policies: Auditor reads provenance where jurisdiction-match; Manufacturer reads own-records; Distributor reads supply-chain-docs; Revocation: certification-expiry \\
+% 		\midrule
+% 		\textbf{Policy Enforcement Gateway} & Auth: OAuth via Insurer-SSO; Subject-Mapping: employee-id $\rightarrow$ eth-address; Capability: (subject, case-id, read, 5-min-ttl) & Auth: OAuth via Hospital-IdP; Subject-Mapping: provider-npi $\rightarrow$ eth-address; Capability: (subject, patient-id, read, 1-hour-ttl) & Auth: SAML via Courts; Subject-Mapping: bar-number $\rightarrow$ eth-address; Capability: (subject, case-id, read, trial-duration) & Auth: LDAP via Trade-Assn; Subject-Mapping: supplier-code $\rightarrow$ eth-address; Capability: (subject, shipment-id, read, audit-period) \\
+% 		\midrule
+% 		\textbf{Audit Log Contract} & Events: access-attempt(adjuster-X, case-Y, DamagePhoto, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, admin-id) & Events: access-attempt(specialist-X, patient-Y, LabResults, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, hospital-admin-id) & Events: access-attempt(attorney-X, case-Y, Deposition, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, court-clerk-id) & Events: access-attempt(auditor-X, shipment-Y, Provenance, allow/deny); Policy-changes: (policy-id, old-rules, new-rules, compliance-officer-id) \\
+% 		\bottomrule
+% 	\end{tabularx}}
+% 	\end{table*}
+
+
 
 This instantiation table emphasizes a critical insight: the PACE architecture defines the \emph{structure} and \emph{semantics} of access control, but not the \emph{vocabulary}. Adapting PACE to a new domain requires configuring the vocabulary (subject roles, evidence types, policy rules) but demands no changes to the underlying smart contracts, gateway logic, capability token model, or audit trail structure. This separation of concerns is precisely what enables verifiable, multi-stakeholder access control to scale across diverse regulatory and organizational contexts.
 
@@ -994,29 +1080,35 @@ The evaluation tested insurance workflows, but broader deployments in healthcare
 
 \backmatter
 
-\section*{Author Biographies}
-\noindent\includegraphics[width=1.1in,height=1.25in,clip,keepaspectratio]{figures/Anthony.jpg}
+% \section*{Author Biographies}
+% \noindent\includegraphics[width=1.1in,height=1.25in,clip,keepaspectratio]{figures/Anthony.jpg}
 
-\textbf{Anthony Uchenna Eneh} is an Integrated Msc--Ph.D. candidate in IT Convergence Engineering at Kumoh National Institute of Technology, South Korea. He is affiliated with the Networked Systems Laboratory under Prof. Dong-Seong Kim, where his research focuses on blockchain-backed systems, verifiable access control, and artificial intelligence for high-risk and cyber-physical systems. He received his B.Eng. in Electrical and Electronics Engineering from the Federal University of Technology, Owerri, Nigeria in 2014.
+% \textbf{Anthony Uchenna Eneh} is an Integrated Msc--Ph.D. candidate in IT Convergence Engineering at Kumoh National Institute of Technology, South Korea. He is affiliated with the Networked Systems Laboratory under Prof. Dong-Seong Kim, where his research focuses on blockchain-backed systems, verifiable access control, and artificial intelligence for high-risk and cyber-physical systems. He received his B.Eng. in Electrical and Electronics Engineering from the Federal University of Technology, Owerri, Nigeria in 2014.
 
-Anthony has over nine years of professional experience in full-stack software engineering, with extensive work in the design and development of web and mobile applications. His work spans distributed systems, AI-enabled applications, and blockchain-integrated architectures.
+% Anthony has over nine years of professional experience in full-stack software engineering, with extensive work in the design and development of web and mobile applications. His work spans distributed systems, AI-enabled applications, and blockchain-integrated architectures.
 
-\noindent\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/Love_New_Pix.png}
+% \noindent\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/Love_New_Pix.png}
 
-\textbf{Love Allen Chijioke Ahakonye} received Ph.D. in IT-Convergence Engineering from the Networked System Laboratory, IT-Convergence Engineering, Kumoh National Institute of Technology, Gumi, South Korea in 2024. She holds an MSc in Information Technology from the Federal University of Technology, Nigeria, in 2016. In 2001, she got a B.Sc in  Mathematics/Computer Science from the University of Port Harcourt, Nigeria. She has over a decade of experience in the Nigerian oil and gas sector as a Network and System Administrator from 2002 to 2016. In 2017, she briefly worked as a Logistics Superintendent with the Nigerian Petroleum Development Company until 2019. She is also a postdoctoral researcher at the ICT Convergence Research Center (ICT-CRC), Kumoh National Institute of Technology, Gumi, South Korea. She is a member of the IEEE and the Computer Professionals Registration Council of Nigeria (CPN). Her research interest is artificial intelligence (AI) application to the Internet of Things (IoT) and industrial IoT, Supervisory Control and Data Acquisition (SCADA), and industrial control system (ICS) for intrusion/anomaly detection, cyber-security, fault detection, XAI and manufacturing execution systems.
+% \textbf{Love Allen Chijioke Ahakonye} received Ph.D. in IT-Convergence Engineering from the Networked System Laboratory, IT-Convergence Engineering, Kumoh National Institute of Technology, Gumi, South Korea in 2024. She holds an MSc in Information Technology from the Federal University of Technology, Nigeria, in 2016. In 2001, she got a B.Sc in  Mathematics/Computer Science from the University of Port Harcourt, Nigeria. She has over a decade of experience in the Nigerian oil and gas sector as a Network and System Administrator from 2002 to 2016. In 2017, she briefly worked as a Logistics Superintendent with the Nigerian Petroleum Development Company until 2019. She is also a postdoctoral researcher at the ICT Convergence Research Center (ICT-CRC), Kumoh National Institute of Technology, Gumi, South Korea. She is a member of the IEEE and the Computer Professionals Registration Council of Nigeria (CPN). Her research interest is artificial intelligence (AI) application to the Internet of Things (IoT) and industrial IoT, Supervisory Control and Data Acquisition (SCADA), and industrial control system (ICS) for intrusion/anomaly detection, cyber-security, fault detection, XAI and manufacturing execution systems.
 
-\noindent\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/lee.png}
+% \noindent\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/lee.png}
 
-\textbf{Jae-Min Lee} received his Ph.D. degree in electrical and computer engineering from Seoul National University, Seoul, Korea, in 2005. From 2005 to 2014, he was a senior engineer at Samsung Electronics in Suwon, Korea. From 2015 to 2016, he was a Principal Engineer at Samsung Electronics, Suwon, Korea. Since 2017, he has been an Associate Professor in the School of Electronic Engineering and the Department of IT Convergence Engineering at Kumoh National Institute of Technology, Gyeongbuk, Korea. Since 2024, he has been the Director of the Smart Defense Logistics Innovation Convergence Research Center (ITRC Program). He is a member of IEEE. He is the Executive Director of the Korean Institute of Communications and Information Sciences (KICS). His current main research interests are smart IoT convergence application, industrial wireless control network, UAV, Metaverse and Blockchain.
+% \textbf{Jae-Min Lee} received his Ph.D. degree in electrical and computer engineering from Seoul National University, Seoul, Korea, in 2005. From 2005 to 2014, he was a senior engineer at Samsung Electronics in Suwon, Korea. From 2015 to 2016, he was a Principal Engineer at Samsung Electronics, Suwon, Korea. Since 2017, he has been an Associate Professor in the School of Electronic Engineering and the Department of IT Convergence Engineering at Kumoh National Institute of Technology, Gyeongbuk, Korea. Since 2024, he has been the Director of the Smart Defense Logistics Innovation Convergence Research Center (ITRC Program). He is a member of IEEE. He is the Executive Director of the Korean Institute of Communications and Information Sciences (KICS). His current main research interests are smart IoT convergence application, industrial wireless control network, UAV, Metaverse and Blockchain.
 
-\noindent\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/Dong.png.jpg}
+% \noindent\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/Dong.png.jpg}
 
-\textbf{Dong-Seong Kim (SM'14)} received his Ph.D. degree in Electrical and Computer Engineering from Seoul National University, Seoul, Korea, in 2003. From 1994 to 2003, he worked as a full-time researcher at the ERC-ACI at Seoul National University. From March 2003 to February 2005, he served as a postdoctoral researcher at the Wireless Network Laboratory in the School of Electrical and Computer Engineering at Cornell University, NY. Between 2007 and 2009, he was a visiting professor in the Department of Computer Science at the University of California, Davis, CA. He served as Dean of IACF from 2019 to 2022. He is currently a Professor in the Department of IT Convergence Engineering at the School of Electronic Engineering, Kumoh National Institute of Technology, Gumi, South Korea. He is also the director of the KIT Convergence Research Institute and the ICT Convergence Research Center (ITRC and NRF advanced research center program), supported by the Korean government at Kumoh National Institute of Technology, and the director of NSLab Co., Ltd. He is a senior member of IEEE and ACM. His primary research interests include real-time IoT and smart platforms, industrial wireless control networks, networked embedded systems, Fieldbus, metaverse, and blockchain.
+% \textbf{Dong-Seong Kim (SM'14)} received his Ph.D. degree in Electrical and Computer Engineering from Seoul National University, Seoul, Korea, in 2003. From 1994 to 2003, he worked as a full-time researcher at the ERC-ACI at Seoul National University. From March 2003 to February 2005, he served as a postdoctoral researcher at the Wireless Network Laboratory in the School of Electrical and Computer Engineering at Cornell University, NY. Between 2007 and 2009, he was a visiting professor in the Department of Computer Science at the University of California, Davis, CA. He served as Dean of IACF from 2019 to 2022. He is currently a Professor in the Department of IT Convergence Engineering at the School of Electronic Engineering, Kumoh National Institute of Technology, Gumi, South Korea. He is also the director of the KIT Convergence Research Institute and the ICT Convergence Research Center (ITRC and NRF advanced research center program), supported by the Korean government at Kumoh National Institute of Technology, and the director of NSLab Co., Ltd. He is a senior member of IEEE and ACM. His primary research interests include real-time IoT and smart platforms, industrial wireless control networks, networked embedded systems, Fieldbus, metaverse, and blockchain.
 
-\section*{Funding}
+\section*{Funding Declaration}
+The authors declare that this work was funded as mentioned in the acknowledgments below.
+
+\section*{Acknowledgments}
 This work was partly supported by the Innovative Human Resource Development for Local Intellectualization program through the IITP grant funded by the Korea government (MSIT) (IITP-2026-RS-2020-II201612, 25\%), by the Priority Research Centers Program through the NRF funded by the MEST (2018R1A6A1A03024003, 25\%), and by the MSIT, Korea, under the ITRC support program (IITP-2026-RS-2024-00438430, 25\%) and by the Basic Science Research Program through the National Research Foundation of Korea (NRF) funded by the Ministry of Education (RS-2026-25431637, 25\%).
 
 \section*{Declarations}
+
+\bmhead{Authors' Contributions}
+{Conceptualization:} Anthony Uchenna Eneh, Love Allen Chijioke Ahakonye; {Methodology:} Anthony Uchenna Eneh, Love Allen Chijioke Ahakonye; {Formal analysis and investigation:} Anthony Uchenna Eneh, Love Allen Chijioke Ahakonye; {Writing—original draft preparation:} Anthony Uchenna Eneh, Love Allen Chijioke Ahakonye; {Writing—review and editing:}  Love Allen Chijioke Ahakonye, Jae Min Lee, Kim, Dong-Seong Kim; {Visualization:} Anthony Uchenna Eneh, Love Allen Chijioke Ahakonye; {Supervision:} Love Allen Chijioke Ahakonye, Jae Min Lee, Dong-Seong Kim; {Project administration:} Dong-Seong Kim, Jae Min Lee; {Funding acquisition:} Dong-Seong Kim, Jae Min Lee
 
 \bmhead{Competing interests}
 The authors declare no competing interests.
@@ -1027,8 +1119,11 @@ Not applicable.
 \bmhead{Consent for publication}
 All authors have read and agreed to the submitted version of the manuscript.
 
-\bmhead{Data availability}
-The experimental data and analysis artifacts are available in the public project repository cited in the manuscript.
+
+\bmhead{Data availability}The datasets analyzed during the study are available in the public project repository cited in the manuscript (\url{https://github.com/tony-eneh/blockchain_action_aware_abac_for_auto_insurance}) and are available on request.
+
+% \bmhead{Data availability}
+% The experimental data and analysis artifacts are available in the public project repository cited in the manuscript.
 
 \bmhead{Code availability}
 The smart contracts, gateway implementation, and evaluation scripts are available in the public project repository cited in the manuscript.
