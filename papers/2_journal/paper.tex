@@ -183,7 +183,7 @@ In contrast, PACE combines verifiable on-chain ABAC with off-chain enforcement v
 
 \section{System Methodology}
 \label{met}
-The ClaimGuard architecture and core components were introduced in our prior conference publication~\cite{eneh2025claimguard}; this journal extension generalizes that design into PACE. Here, we summarize the methodology and design rationale that support the extended evaluation. Detailed implementation specifics are available in the conference paper and the open-source repository~\cite{claimguard-repo}.
+The ClaimGuard architecture and core components were introduced in our prior conference publication~\cite{eneh2025claimguard}; this journal extension generalizes that design into PACE. Here, we summarize the methodology and design rationale that support the extended evaluation. Detailed implementation specifics are available in the conference paper and the open-source repository~\cite{pace-repo}.
 
 Multi-stakeholder evidence workflows span healthcare, legal discovery, insurance, and supply chains, involving data owners, processors, auditors, regulators, and external service providers~\cite{raghav2024optimizing}. Evidence ranges from structured documents to unstructured media and telemetry, and it moves through creation, validation, analysis, and settlement or archival phases.
 Because evidence is stored off-chain (cloud object stores or IPFS) for scale and cost, the core challenge is binding blockchain-backed policy decisions to storage systems that lack on-chain semantics. Stakeholders need action-level permissions (read, append, update, delete, analyze, disclose) constrained by case scope, time windows, jurisdiction, and purpose.
@@ -461,8 +461,7 @@ Evidence in our evaluation spans structured documents (reports, estimates, forms
 
 
 \subsection{Reproducibility and Smart Contracts}
-Code, configs, and scripts are available at \cite{claimguard-repo}. Each experiment is repeated multiple times with fixed random seeds; we report mean and standard deviation. The complete smart-contract implementations (\texttt{EvidenceRegistry}, \texttt{SubjectAttributeRegistry}, and \texttt{AccessPolicyManager}), the gateway, and all evaluation scripts are available in the public artifact repository:
-\url{https://github.com/tony-eneh/blockchain_action_aware_abac_for_auto_insurance}.
+Code, configs, and scripts are available in the public artifact repository~\cite{pace-repo}.
 For readability and space, we omit the full Solidity listings from the manuscript and instead describe the contract interfaces and evaluation behavior in Sections~\ref{sec:architecture}-\ref{sec:implementation-and-observation}. The repository contains the exact versions used to generate all reported results.
 
 %\subsection{Reproducibility}
@@ -1120,13 +1119,13 @@ Not applicable.
 All authors have read and agreed to the submitted version of the manuscript.
 
 
-\bmhead{Data availability}The datasets analyzed during the study are available in the public project repository cited in the manuscript (\url{https://github.com/tony-eneh/blockchain_action_aware_abac_for_auto_insurance}) and are available on request.
+\bmhead{Data availability}The datasets analyzed during the study are available in the public project repository~\cite{pace-repo} and are available on request.
 
 % \bmhead{Data availability}
 % The experimental data and analysis artifacts are available in the public project repository cited in the manuscript.
 
 \bmhead{Code availability}
-The smart contracts, gateway implementation, and evaluation scripts are available in the public project repository cited in the manuscript.
+The smart contracts, gateway implementation, and evaluation scripts are available in the public project repository~\cite{pace-repo}.
 
 \bibliography{references}
 
